@@ -1,0 +1,68 @@
+{
+    "hero": {
+      "title": "Next Generation",
+      "highlight": "Shopping Experience",
+      "explore": "Explore Now",
+      "campaigns": "Campaigns"
+    },
+    "categories": {
+      "title": "Popular",
+      "highlight": "Categories",
+      "viewProducts": "View Products",
+      "electronics": {
+        "title": "Electronics",
+        "desc": "Cutting-edge tech products"
+      },
+      "fashion": {
+        "title": "Fashion",
+        "desc": "Trendy styles of the season"
+      },
+      "home": {
+        "title": "Home & Living",
+        "desc": "Comfortable living spaces"
+      }
+    },
+    "newProducts": "New Products",
+"deals": "Deals",
+"searchPlaceholder": "Search for products...",
+"account": "Account",
+"login": "Login",
+"register": "Register",
+"wishlist": "Wishlist",
+"cart": "Cart"
+
+    ,
+    "products": {
+      "featured": "Featured",
+      "items": "Products",
+      "addToCart": "Add to Cart",
+      "stock": "In Stock",
+      "smartwatch": { "name": "Smartwatch Pro" },
+      "headphones": { "name": "Wireless Headphones" },
+      "camera": { "name": "4K Digital Camera" }
+    },
+    "advantages": {
+      "shipping": "Free Shipping",
+      "shippingDesc": "Valid on all orders over 200 TL",
+      "eco": "Eco Packaging",
+      "ecoDesc": "Environmentally friendly packaging system",
+      "support": "24/7 Support",
+      "supportDesc": "Live customer support"
+    },
+    "footer": {
+      "companyDescription": "We bring technology to everyone at affordable prices",
+      "customerService": "Customer Service",
+      "orderTracking": "Order Tracking",
+      "returns": "Returns & Exchanges",
+      "faq": "Frequently Asked Questions",
+      "liveSupport": "Live Support",
+      "legalInfo": "Legal Information",
+      "privacyPolicy": "Privacy Policy",
+      "termsOfUse": "Terms of Use",
+      "cookiePolicy": "Cookie Policy",
+      "salesAgreement": "Distance Sales Agreement",
+      "rightsReserved": "All rights reserved",
+      "developedBy": "Developed by"
+    }
+  }
+  

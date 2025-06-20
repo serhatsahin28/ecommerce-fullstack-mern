@@ -1,0 +1,26 @@
+/* src/components/layout/Header.css */
+
+.category-menu {
+  width: 80vw;
+  max-width: 600px;
+  left: 0 !important;
+}
+
+.hover-bg:hover {
+  background-color: #f8f9fa;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.navbar .form-control {
+  min-width: 200px;
+}
+
+@media (max-width: 768px) {
+  .category-menu {
+    width: 100vw;
+  }
+
+  .navbar .form-control {
+    min-width: 100px;
+  }
+}

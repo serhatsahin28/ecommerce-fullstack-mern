@@ -1,0 +1,13 @@
+{
+  "login_title": "Login",
+  "email": "Email",
+  "password": "Password",
+  "login": "Login",
+  "register": "Register",
+  "register_title": "Create an Account",
+  "name": "Name",
+  "no_account": "Don't have an account?",
+  "already_have_account": "Already have an account?",
+  "invalid_credentials": "Invalid email or password.",
+  "registration_failed": "Registration failed. Please try again."
+}

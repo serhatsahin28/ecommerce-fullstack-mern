@@ -1,0 +1,49 @@
+{
+  "page_title": "Anasayfa",
+  "page_subtitle": "En iyi fırsatlar ve en yeni ürünler burada!",
+  "heroSlides": [
+    { "title": "Yaz Fırsatları Başladı!", "subtitle": "Seçili ürünlerde %20 indirim.", "cta": "Alışverişe Başla", "cta_link": "/tr/products?campaign=summer", "image": "/assets/banners/summer.jpg" }
+  ],
+  "special_offer": "Yaza Özel %20 İndirim!",
+  "special_offer_desc": "Seçili ürünlerde geçerli, fırsatı kaçırma.",
+  "shop_now": "Şimdi İncele",
+  "advantages": [
+    { "icon": "🚚", "text": "Hızlı Kargo" },
+    { "icon": "🔄", "text": "Kolay İade" },
+    { "icon": "🔒", "text": "Güvenli Alışveriş" }
+  ],
+  "stats": [
+    { "value": "10.000+", "desc": "Mutlu Müşteri" },
+    { "value": "4.9/5", "desc": "Müşteri Puanı" },
+    { "value": "7/24", "desc": "Destek" }
+  ],
+  "page_title": "Discover Our Featured Collection",
+  "page_subtitle": "Explore our curated selection of high-quality products. We've brought together the latest trends and timeless classics just for you.",
+  "view_all": "View All",
+  "featured_products": "Featured Products",
+  "best_sellers": "Best Sellers",
+  "loading": "Loading...",
+  "heroSlides": [
+    {
+      "image": "/images/hero1.jpg",
+      "title": "Summer Sale Has Begun",
+      "subtitle": "Up to 70% off on selected items",
+      "cta": "Start Shopping",
+      "cta_link": "/en/products?campaign=summer"
+    },
+    {
+      "image": "/images/hero2.jpg",
+      "title": "New Arrivals",
+      "subtitle": "Discover our 2025 collection",
+      "cta": "Browse",
+      "cta_link": "/en/products?sort=new"
+    },
+    {
+      "image": "/images/hero3.jpg",
+      "title": "Smart Home Technologies",
+      "subtitle": "Experience the future of home systems",
+      "cta": "Explore",
+      "cta_link": "/en/products?category=smart_home"
+    }
+  ]
+}

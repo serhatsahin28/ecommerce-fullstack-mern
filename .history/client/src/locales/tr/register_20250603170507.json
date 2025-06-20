@@ -1,0 +1,12 @@
+{
+  "title": "Kayıt Ol",
+  "name": "Ad Soyad",
+  "email": "E-posta",
+  "password": "Şifre",
+  "confirm_password": "Şifreyi Onayla",
+  "button": "Kayıt Ol",
+  "already_account": "Zaten bir hesabınız var mı?",
+  "login": "Giriş yap",
+  "error": "Bir hata oluştu. Lütfen tekrar deneyin.",
+  "success": "Kayıt başarılı!"
+}

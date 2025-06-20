@@ -1,0 +1,11 @@
+.categoryMenu {
+    width: 80vw;
+    max-width: 600px;
+    left: 0 !important;
+  }
+  
+  .hoverBg:hover {
+    background-color: #f8f9fa;
+    transition: background-color 0.2s ease-in-out;
+  }
+  

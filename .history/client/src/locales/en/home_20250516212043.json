@@ -1,0 +1,32 @@
+{
+  "page_title": "Öne Çıkan Koleksiyonumuzla Tanışın",
+  "page_subtitle": "Yüksek kaliteli ürünlerden oluşan seçilmiş koleksiyonumuzu keşfedin. Sizin için en yeni trendleri ve zamansız klasikleri bir araya getirdik.",
+  "view_all": "Tümünü Gör",
+  "featured_products": "Öne Çıkan Ürünler",
+  "best_sellers": "En Çok Satanlar",
+  "loading": "Yükleniyor...",
+  "heroSlides": [
+    {
+      "image": "/images/hero1.jpg",
+      "title": "Yaz İndirimi Başladı",
+      "subtitle": "Seçili ürünlerde %70'e varan indirim fırsatı",
+      "cta": "Alışverişe Başla",
+      "cta_link": "/tr/products?campaign=summer"
+    },
+    {
+      "image": "/images/hero2.jpg",
+      "title": "Yeni Gelenler",
+      "subtitle": "2025 koleksiyonumuzu keşfedin",
+      "cta": "İncele",
+      "cta_link": "/tr/products?sort=new"
+    },
+    {
+      "image": "/images/hero3.jpg",
+      "title": "Akıllı Ev Teknolojileri",
+      "subtitle": "Geleceğin ev sistemleriyle tanışın",
+      "cta": "Keşfet",
+      "cta_link": "/tr/products?category=smart_home"
+    }
+    
+  ]
+}

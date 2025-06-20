@@ -1,0 +1,11 @@
+{
+    "title": "Shop",
+    "subtitle": "Browse our products",
+    "filter": {
+      "all": "All Products",
+      "electronics": "Electronics",
+      "fashion": "Fashion",
+      "home": "Home & Living"
+    }
+  }
+  

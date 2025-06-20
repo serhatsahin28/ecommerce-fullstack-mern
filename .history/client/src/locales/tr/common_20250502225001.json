@@ -1,0 +1,46 @@
+{
+  "categories": {
+    "title": "Kategoriler",
+    "items": [
+      {
+        "id": 1,
+        "title": "Moda",
+        "subtitle": "Giyim & Aksesuar",
+        "icon": "fashion"
+      },
+      {
+        "id": 2,
+        "title": "Elektronik",
+        "subtitle": "Teknoloji Ürünleri",
+        "icon": "electronics"
+      },
+      {
+        "id": 3,
+        "title": "Ev & Yaşam",
+        "subtitle": "Ev Dekorasyon",
+        "icon": "home"
+      },
+      {
+        "id": 4,
+        "title": "Kitap",
+        "subtitle": "Edebiyat & Kırtasiye",
+        "icon": "books"
+      }
+    ]
+  },
+  "products":{
+    "title":"Products"
+  },
+  "footer": {
+    "aboutTitle": "Hakkımızda",
+    "aboutText": "Shoppy - Kaliteli alışveriş deneyimi",
+    "categories": {
+      "title": "Popüler Kategoriler",
+      "electronics": "Elektronik",
+      "fashion": "Moda",
+      "home": "Ev & Yaşam"
+    },
+    "contactTitle": "İletişim",
+    "contactText": "7/24 Müşteri Desteği: 0850 000 00 00"
+  }
+}
