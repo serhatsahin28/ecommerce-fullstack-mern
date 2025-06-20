@@ -1,0 +1,12 @@
+{
+  "title": "Register",
+  "name": "Full Name",
+  "email": "Email",
+  "password": "Password",
+  "confirm_password": "Confirm Password",
+  "button": "Register",
+  "already_account": "Already have an account?",
+  "login": "Sign in",
+  "error": "Something went wrong. Please try again.",
+  "success": "Registration successful!"
+}

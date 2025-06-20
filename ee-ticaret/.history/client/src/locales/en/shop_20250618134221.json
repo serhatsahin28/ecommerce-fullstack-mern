@@ -1,0 +1,11 @@
+{
+    "title": "Shop",
+    "filter": {
+      "all": "All",
+      "electronics": "Electronics",
+      "fashion": "Fashion",
+      "home": "Home & Living"
+    },
+    "add_to_card":"Add to card"
+  }
+  

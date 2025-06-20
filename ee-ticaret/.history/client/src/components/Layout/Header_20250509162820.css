@@ -1,0 +1,45 @@
+/* src/components/layout/Header.css */
+
+/* Menu styling for categories dropdown */
+.category-menu {
+  width: 80vw;
+  max-width: 600px;
+  left: 0 !important;
+}
+
+/* Styling when user hovers over category items */
+.hover-bg:hover {
+  background-color: #f8f9fa;
+  transition: background-color 0.2s ease-in-out;
+}
+
+/* Navbar search input width adjustments */
+.navbar .form-control {
+  min-width: 200px;
+}
+
+@media (max-width: 992px) {
+  .category-menu {
+    width: 100vw;
+  }
+
+  .navbar .form-control {
+    min-width: 100px;
+  }
+}
+
+@media (max-width: 576px) {
+  /* On smaller screens, hide some elements */
+  .category-dropdown {
+    display: none; /* Hide the category dropdown */
+  }
+
+  .navbar .form-control {
+    min-width: 0;
+  }
+
+  .category-dropdown.show {
+    display: block !important; /* Ensure it shows when toggled on mobile */
+  }
+}
+

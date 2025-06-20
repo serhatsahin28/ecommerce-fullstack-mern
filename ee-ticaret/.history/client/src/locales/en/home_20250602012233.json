@@ -1,0 +1,47 @@
+{
+  "page_title": "Discover Our Featured Collection",
+  "page_subtitle": "Explore our curated selection of high-quality products. We've brought together the latest trends and timeless classics just for you.",
+  "view_all": "View All",
+  "featured_products": "Featured Products",
+  "best_sellers": "Best Sellers",
+  "loading": "Loading...",
+  "heroSlides": [
+    {
+      "image": "/images/summer-sale.jpg",
+      "title": "Summer Sale Has Begun",
+      "subtitle": "Up to 70% off on selected items",
+      "cta": "Start Shopping",
+      "cta_link": "/en/products?campaign=summer"
+    },
+    {
+      "image": "/images/fashion.png",
+      "title": "New Arrivals",
+      "subtitle": "Discover our 2025 collection",
+      "cta": "Browse",
+      "cta_link": "/en/products?sort=new"
+    },
+    {
+      "image": "/images/smart-technology.jpg",
+      "title": "Smart Home Technologies",
+      "subtitle": "Experience the future of home systems",
+      "cta": "Explore",
+      "cta_link": "/en/products?category=smart_home"
+    }
+  ],
+  "banner": {
+    "title": "20% Off For Summer!",
+    "desc": "Valid on selected items, don’t miss out.",
+    "cta": "Check Now",
+    "cta_link": "/en/products?campaign=summer"
+  },
+  "advantages": [
+    { "icon": "🚚", "text": "Fast Delivery" },
+    { "icon": "🔄", "text": "Easy Returns" },
+    { "icon": "🔒", "text": "Secure Shopping" }
+  ],
+  "stats": [
+    { "value": "10,000+", "desc": "Happy Customers" },
+    { "value": "4.9/5", "desc": "Customer Rating" },
+    { "value": "24/7", "desc": "Support" }
+  ]
+}

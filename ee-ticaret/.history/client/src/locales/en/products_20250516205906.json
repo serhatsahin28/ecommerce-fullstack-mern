@@ -1,0 +1,187 @@
+{
+  "page_title": "Discover Our Premier Collection",
+  "page_subtitle": "Explore our curated selection of high-quality items. Find the latest innovations and timeless essentials tailored for you.",
+  "items": [
+    {
+      "id": "P001",
+      "name": "Modern Smartphone X",
+      "description": "Latest generation smartphone with a stunning 6.7-inch OLED display, advanced AI triple-camera system, and all-day battery life. 5G capable.",
+      "price": 799.99,
+      "category_key": "electronics",
+      "image": "../public/images/phone.jpeg",
+      "tags": ["new", "tech", "mobile"],
+      "stock": 150,
+      "rating": 4.8
+    },
+    {
+      "id": "P002",
+      "name": "Classic Cotton T-Shirt",
+      "description": "Comfortable and stylish 100% premium organic cotton t-shirt. Available in various colors and sizes. Perfect for everyday wear.",
+      "price": 24.99,
+      "category_key": "fashion",
+      "image": "https://via.placeholder.com/400x300/4CAF50/FFFFFF?text=Cotton+T-Shirt",
+      "tags": ["apparel", "casual", "eco-friendly"],
+      "stock": 300,
+      "rating": 4.5
+    },
+    {
+      "id": "P003",
+      "name": "UltraThin Laptop Pro",
+      "description": "Powerful and lightweight laptop for professionals on the go. Features a 14-inch QHD display, Intel Core i7, and 16GB RAM.",
+      "price": 1299.00,
+      "category_key": "electronics",
+      "image": "https://via.placeholder.com/400x300/2196F3/FFFFFF?text=Laptop+Pro",
+      "tags": ["work", "portable", "high-performance"],
+      "stock": 75,
+      "rating": 4.9
+    },
+    {
+      "id": "P004",
+      "name": "Ergonomic Office Chair",
+      "description": "Supportive and adjustable ergonomic chair designed for long working hours. Features lumbar support, breathable mesh, and smooth casters.",
+      "price": 199.50,
+      "category_key": "home_office",
+      "image": "https://via.placeholder.com/400x300/9C27B0/FFFFFF?text=Office+Chair",
+      "tags": ["comfort", "office", "health"],
+      "stock": 120,
+      "rating": 4.6
+    },
+    {
+      "id": "P005",
+      "name": "The Great Novel: Collector's Edition",
+      "description": "A captivating story that will keep you on the edge of your seat. This hardcover collector's edition includes author's notes and illustrations.",
+      "price": 29.99,
+      "category_key": "books",
+      "image": "https://via.placeholder.com/400x300/795548/FFFFFF?text=The+Great+Novel",
+      "tags": ["fiction", "bestseller", "reading"],
+      "stock": 200,
+      "rating": 4.7
+    },
+    {
+      "id": "P006",
+      "name": "Wireless Noise-Cancelling Headphones",
+      "description": "Immersive sound experience with industry-leading active noise cancellation, plush earcups, and 30-hour battery life.",
+      "price": 149.00,
+      "category_key": "electronics",
+      "image": "https://via.placeholder.com/400x300/FFC107/000000?text=Headphones",
+      "tags": ["audio", "travel", "music"],
+      "stock": 90,
+      "rating": 4.9
+    },
+    {
+      "id": "P007",
+      "name": "Premium Leather Wallet",
+      "description": "Elegant genuine full-grain leather wallet with multiple card slots, RFID blocking technology, and a sleek design.",
+      "price": 49.99,
+      "category_key": "fashion",
+      "image": "https://via.placeholder.com/400x300/607D8B/FFFFFF?text=Leather+Wallet",
+      "tags": ["accessory", "gift", "style"],
+      "stock": 250,
+      "rating": 4.7
+    },
+    {
+      "id": "P008",
+      "name": "Professional Yoga Mat",
+      "description": "Eco-friendly, non-slip yoga mat providing excellent cushioning and grip for your practice. Includes a carrying strap.",
+      "price": 39.99,
+      "category_key": "sports",
+      "image": "https://via.placeholder.com/400x300/009688/FFFFFF?text=Yoga+Mat",
+      "tags": ["fitness", "wellness", "exercise"],
+      "stock": 180,
+      "rating": 4.6
+    },
+    {
+      "id": "P009",
+      "name": "Smart Home Hub Central",
+      "description": "Control all your smart home devices from one central hub. Compatible with Alexa, Google Assistant, and Apple HomeKit.",
+      "price": 99.00,
+      "category_key": "smart_home",
+      "image": "https://via.placeholder.com/400x300/F44336/FFFFFF?text=Smart+Hub",
+      "tags": ["iot", "automation", "convenience"],
+      "stock": 60,
+      "rating": 4.5
+    },
+    {
+      "id": "P010",
+      "name": "Gourmet Coffee Beans - Dark Roast",
+      "description": "1kg bag of premium, ethically sourced Arabica coffee beans, dark roasted for a rich and intense flavor. Perfect for espresso or French press.",
+      "price": 18.50,
+      "category_key": "food_drink",
+      "image": "https://via.placeholder.com/400x300/A1887F/FFFFFF?text=Coffee+Beans",
+      "tags": ["beverage", "morning", "gourmet"],
+      "stock": 400,
+      "rating": 4.9
+    },
+    {
+      "id": "P011",
+      "name": "Designer Silk Scarf",
+      "description": "Luxurious 100% silk scarf with an exclusive print. A perfect accessory to elevate any outfit.",
+      "price": 89.90,
+      "category_key": "fashion",
+      "image": "https://via.placeholder.com/400x300/E91E63/FFFFFF?text=Silk+Scarf",
+      "tags": ["luxury", "accessory", "designer"],
+      "stock": 50,
+      "rating": 4.9
+    },
+    {
+      "id": "P012",
+      "name": "Running Shoes X-Trainer",
+      "description": "Lightweight and responsive running shoes designed for maximum comfort and performance on any terrain.",
+      "price": 119.99,
+      "category_key": "sports",
+      "image": "https://via.placeholder.com/400x300/03A9F4/000000?text=Running+Shoes",
+      "tags": ["athletic", "comfort", "performance"],
+      "stock": 120,
+      "rating": 4.7
+    }
+  ],
+  "categories": {
+    "electronics": "Electronics & Gadgets",
+    "fashion": "Fashion & Apparel",
+    "home_office": "Home & Office",
+    "books": "Books & Literature",
+    "sports": "Sports & Outdoors",
+    "smart_home": "Smart Home",
+    "food_drink": "Food & Drink",
+    "uncategorized_key": "Miscellaneous"
+  },
+  "product_card": {
+    "unnamed_product": "Unnamed Product",
+    "add_to_cart": "Add to Cart",
+    "view_details": "View Details",
+    "out_of_stock": "Out of Stock"
+  },
+  "filters_sort": {
+    "search_placeholder": "Search by name, description, or tags...",
+    "filter_by_category_label": "Filter by Category",
+    "all_categories_option": "All Categories",
+    "sort_by_label": "Sort by",
+    "sort_options": {
+      "default": "Relevance",
+      "price_asc": "Price: Low to High",
+      "price_desc": "Price: High to Low",
+      "name_asc": "Name: A-Z",
+      "name_desc": "Name: Z-A",
+      "rating_desc": "Rating: High to Low"
+    }
+  },
+  "feedback_messages": {
+    "loading": "Loading our exclusive collection...",
+    "no_results": {
+      "title": "No Treasures Found Yet",
+      "message": "It seems we couldn't find products matching your current criteria. Why not broaden your search or explore all our categories?",
+      "show_all_button": "Explore All Products"
+    },
+    "error": {
+      "data_format": "Product data seems to be in an unexpected format. Our team is on it!",
+      "loading_failed": "Oops! We had trouble loading products. Please refresh or try again in a moment."
+    }
+  },
+  "labels": {
+    "uncategorized": "Other Great Finds",
+    "default_image_path": "/images/default_product_image.png"
+  },
+  "category_section": {
+    "view_all_button_text": "View All"
+  }
+}

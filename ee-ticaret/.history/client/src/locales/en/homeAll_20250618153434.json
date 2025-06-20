@@ -1,0 +1,245 @@
+{
+  "page_title": "Discover Our Featured Collection",
+  "page_subtitle": "Explore our selection of quality products. We've brought together the latest trends and timeless classics for you.",
+  "view_all": "View All",
+  "featured_products": "Featured Products",
+  "best_sellers": "Best Sellers",
+  "loading": "Loading...",
+  "heroSlides": [
+    {
+      "image": "/images/smart-technology.jpg",
+      "title": "Smart Home Technologies",
+      "subtitle": "Experience the future of home systems",
+      "cta": "Discover",
+      "cta_link": "/en/products?category=smart_home"
+    },
+    {
+      "image": "/images/summer-sale.jpg",
+      "title": "Summer Sale Started",
+      "subtitle": "Up to 70% off on selected products",
+      "cta": "Start Shopping",
+      "cta_link": "/en/products?campaign=summer"
+    },
+    {
+      "image": "/images/fashion.png",
+      "title": "New Season Products",
+      "subtitle": "Discover the 2025 collection",
+      "cta": "Explore",
+      "cta_link": "/en/products?sort=new"
+    }
+  ],
+  "banner": {
+    "title": "Special 20% Summer Discount!",
+    "desc": "Valid on selected products, don't miss out.",
+    "cta": "Check Now",
+    "cta_link": "/en/products?campaign=summer"
+  },
+  "advantages": [
+    { "icon": "🚚", "text": "Fast Shipping" },
+    { "icon": "🔄", "text": "Easy Returns" },
+    { "icon": "🔒", "text": "Secure Shopping" }
+  ],
+  "stats": [
+    { "value": "10,000+", "desc": "Happy Customers" },
+    { "value": "4.9/5", "desc": "Customer Rating" },
+    { "value": "24/7", "desc": "Support" }
+  ],
+  "categories": [
+    {
+      "category_key": "electronics",
+      "title": "Electronics",
+      "products": [
+        {
+          "_id": "684cc068d420cd4245fb1800",
+          "category_key": "electronics",
+          "price": 799,
+          "rating": 4.7,
+          "image": "/images/laptop.jpg",
+          "images": [
+            "/images/laptop.jpg",
+            "/images/laptop2.jpg",
+            "/images/laptop3.jpg",
+            "/images/laptop4.jpg"
+          ],
+          "translations": {
+            "tr": {
+              "name": "Akıllı Telefon A",
+              "description": "Güçlü batarya ve yapay zeka destekli kamera",
+              "features": [
+                "2 yıl garanti",
+                "Hafif tasarım",
+                "Hızlı şarj desteklenir",
+                "Gürültü engelleme"
+              ],
+              "reviews": [
+                "Kalite harika.",
+                "Mükemmel ürün, beklentileri aştı!"
+              ]
+            },
+            "en": {
+              "name": "Smartphone A",
+              "description": "Strong battery and AI-powered camera",
+              "features": [
+                "2-year warranty",
+                "Lightweight design",
+                "Fast charging supported",
+                "Noise cancellation"
+              ],
+              "reviews": [
+                "The quality is outstanding.",
+                "Excellent product, exceeded expectations!"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "category_key": "books",
+      "title": "Books",
+      "products": [
+        {
+          "_id": "684cc068d420cd4245fb1801",
+          "category_key": "books",
+          "price": 120,
+          "rating": 4.8,
+          "image": "/images/book1.jpg",
+          "images": [
+            "/images/book1.jpg",
+            "/images/book1-2.jpg",
+            "/images/book1-3.jpg",
+            "/images/book1-4.jpg"
+          ],
+          "translations": {
+            "tr": {
+              "name": "Yenilikçi Yazarlık",
+              "description": "Modern edebiyatın başyapıtı",
+              "features": [
+                "Özgün içerik",
+                "Yumuşak kapak",
+                "Genişletilmiş baskı",
+                "İmzalı nüsha"
+              ],
+              "reviews": [
+                "Çok etkileyici.",
+                "Okurken büyülendim!"
+              ]
+            },
+            "en": {
+              "name": "Innovative Writing",
+              "description": "Masterpiece of modern literature",
+              "features": [
+                "Original content",
+                "Soft cover",
+                "Expanded edition",
+                "Signed copy"
+              ],
+              "reviews": [
+                "Very impressive.",
+                "I was mesmerized while reading!"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "category_key": "fashion",
+      "title": "Fashion",
+      "products": [
+        {
+          "_id": "684cc068d420cd4245fb1802",
+          "category_key": "fashion",
+          "price": 350,
+          "rating": 4.5,
+          "image": "/images/fashion1.jpg",
+          "images": [
+            "/images/fashion1.jpg",
+            "/images/fashion1-2.jpg",
+            "/images/fashion1-3.jpg",
+            "/images/fashion1-4.jpg"
+          ],
+          "translations": {
+            "tr": {
+              "name": "Şık Elbise",
+              "description": "Günlük ve özel günler için",
+              "features": [
+                "Nefes alabilen kumaş",
+                "Çabuk kuruyan",
+                "Hafif ve rahat",
+                "Farklı renk seçenekleri"
+              ],
+              "reviews": [
+                "Çok rahat ve şık.",
+                "Fiyatına değer."
+              ]
+            },
+            "en": {
+              "name": "Elegant Dress",
+              "description": "For casual and special days",
+              "features": [
+                "Breathable fabric",
+                "Quick drying",
+                "Lightweight and comfortable",
+                "Multiple color options"
+              ],
+              "reviews": [
+                "Very comfortable and stylish.",
+                "Worth the price."
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "category_key": "home_office",
+      "title": "Home & Office",
+      "products": [
+        {
+          "_id": "684cc068d420cd4245fb1803",
+          "category_key": "home_office",
+          "price": 199,
+          "rating": 4.6,
+          "image": "/images/office1.jpg",
+          "images": [
+            "/images/office1.jpg",
+            "/images/office1-2.jpg",
+            "/images/office1-3.jpg",
+            "/images/office1-4.jpg"
+          ],
+          "translations": {
+            "tr": {
+              "name": "Ergonomik Ofis Sandalyesi",
+              "description": "Uzun çalışma saatleri için konfor",
+              "features": [
+                "Ayarlanabilir yükseklik",
+                "Nefes alabilen sırtlık",
+                "Dayanıklı malzeme",
+                "Modern tasarım"
+              ],
+              "reviews": [
+                "Çok rahat.",
+                "Çalışma verimimi artırdı."
+              ]
+            },
+            "en": {
+              "name": "Ergonomic Office Chair",
+              "description": "Comfort for long working hours",
+              "features": [
+                "Adjustable height",
+                "Breathable backrest",
+                "Durable material",
+                "Modern design"
+              ],
+              "reviews": [
+                "Very comfortable.",
+                "Increased my productivity."
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,171 @@
+{
+  "categories": {
+    "electronics": "Electronics",
+    "fashion": "Fashion",
+    "home_office": "Home & Office",
+    "books": "Books",
+    "sports": "Sports"
+  },
+  "items": [
+    {
+      "id": "P001",
+      "name": "Modern Smartphone X",
+      "description": "Next-gen smartphone with an amazing screen and AI-powered camera.",
+      "price": 799.99,
+      "category_key": "electronics",
+      "image": "/images/phone.jpeg"
+    },
+    {
+      "id": "P003",
+      "name": "UltraThin Laptop Pro",
+      "description": "Powerful and lightweight laptop for professionals.",
+      "price": 1299.00,
+      "category_key": "electronics",
+      "image": "/images/phone.jpeg"
+    },
+    {
+      "id": "P006",
+      "name": "Wireless Noise-Cancelling Headphones",
+      "description": "Immersive sound experience with active noise cancellation.",
+      "price": 149.00,
+      "category_key": "electronics",
+      "image": "/images/phone.jpeg"
+    },
+    {
+      "id": "P008",
+      "name": "Smartwatch Z",
+      "description": "Modern smartwatch for health tracking and notifications.",
+      "price": 199.99,
+      "category_key": "electronics",
+      "image": "/images/phone.jpeg"
+    },
+    {
+      "id": "P002",
+      "name": "Classic Cotton T-Shirt",
+      "description": "Comfortable and stylish 100% cotton t-shirt.",
+      "price": 24.99,
+      "category_key": "fashion",
+      "image": "/images/phone.jpeg"
+    },
+    {
+      "id": "P007",
+      "name": "Leather Wallet",
+      "description": "Genuine leather wallet with multiple compartments.",
+      "price": 49.99,
+      "category_key": "fashion",
+      "image": "/images/phone.jpeg"
+    },
+    {
+      "id": "P009",
+      "name": "Sport Shoes",
+      "description": "Lightweight and comfortable sport shoes for daily use.",
+      "price": 89.99,
+      "category_key": "fashion",
+      "image": "/images/phone.jpeg"
+    },
+    {
+      "id": "P010",
+      "name": "Denim Jeans",
+      "description": "Classic fit jeans made from high-quality denim.",
+      "price": 69.90,
+      "category_key": "fashion",
+      "image": "/images/phone.jpeg"
+    },
+    {
+      "id": "P004",
+      "name": "Ergonomic Office Chair",
+      "description": "Supportive chair for long working hours.",
+      "price": 199.50,
+      "category_key": "home_office",
+      "image": "/images/phone.jpeg"
+    },
+    {
+      "id": "P011",
+      "name": "Wooden Work Desk",
+      "description": "Modern multipurpose desk.",
+      "price": 299.99,
+      "category_key": "home_office",
+      "image": "/images/phone.jpeg"
+    },
+    {
+      "id": "P012",
+      "name": "Desk Lamp",
+      "description": "Adjustable desk lamp with LED lighting.",
+      "price": 39.99,
+      "category_key": "home_office",
+      "image": "/images/phone.jpeg"
+    },
+    {
+      "id": "P013",
+      "name": "Bookshelf",
+      "description": "Minimalist 4-shelf bookcase.",
+      "price": 179.00,
+      "category_key": "home_office",
+      "image": "/images/phone.jpeg"
+    },
+    {
+      "id": "P005",
+      "name": "The Great Novel",
+      "description": "A gripping story that keeps you on the edge of your seat.",
+      "price": 19.99,
+      "category_key": "books",
+      "image": "/images/phone.jpeg"
+    },
+    {
+      "id": "P014",
+      "name": "Personal Development Guide",
+      "description": "Motivational book to transform your life.",
+      "price": 29.50,
+      "category_key": "books",
+      "image": "/images/phone.jpeg"
+    },
+    {
+      "id": "P015",
+      "name": "Sci-Fi Saga",
+      "description": "An epic science fiction tale set in the future.",
+      "price": 34.90,
+      "category_key": "books",
+      "image": "/images/phone.jpeg"
+    },
+    {
+      "id": "P016",
+      "name": "Historical Atlas",
+      "description": "Comprehensive atlas illustrating world history.",
+      "price": 45.00,
+      "category_key": "books",
+      "image": "/images/phone.jpeg"
+    },
+    {
+      "id": "P017",
+      "name": "Yoga Mat",
+      "description": "Durable, non-slip yoga mat.",
+      "price": 39.99,
+      "category_key": "sports",
+      "image": "/images/phone.jpeg"
+    },
+    {
+      "id": "P018",
+      "name": "Dumbbell Set",
+      "description": "Pair of weights for home workouts.",
+      "price": 79.99,
+      "category_key": "sports",
+      "image": "/images/phone.jpeg"
+    },
+    {
+      "id": "P019",
+      "name": "Treadmill",
+      "description": "Foldable treadmill with digital display.",
+      "price": 899.00,
+      "category_key": "sports",
+      "image": "/images/phone.jpeg"
+    },
+    {
+      "id": "P020",
+      "name": "Football Ball",
+      "description": "Durable, professional-size football.",
+      "price": 29.90,
+      "category_key": "sports",
+      "image": "/images/phone.jpeg"
+    }
+  ]
+}

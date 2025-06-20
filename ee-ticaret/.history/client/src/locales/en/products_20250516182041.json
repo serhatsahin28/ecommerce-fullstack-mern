@@ -1,0 +1,120 @@
+{
+  "page_title": "Discover Our Premier Collection",
+  "page_subtitle": "Explore our curated selection of high-quality items. Find the latest innovations and timeless essentials tailored for you.",
+
+  "items": [
+    // ... (your existing items - ensure you have enough to populate categories)
+    // Example: Add more items to 'fashion' or other categories if needed for testing.
+    {
+      "id": "P001",
+      "name": "Modern Smartphone X",
+      "description": "Latest generation smartphone with a stunning 6.7-inch OLED display, advanced AI triple-camera system, and all-day battery life. 5G capable.",
+      "price": 799.99,
+      "category_key": "electronics",
+      "image": "https://via.placeholder.com/400x300/FFA500/000000?text=Smartphone+X",
+      "tags": ["new", "tech", "mobile"],
+      "stock": 150,
+      "rating": 4.8
+    },
+    {
+      "id": "P002",
+      "name": "Classic Cotton T-Shirt",
+      "description": "Comfortable and stylish 100% premium organic cotton t-shirt. Available in various colors and sizes. Perfect for everyday wear.",
+      "price": 24.99,
+      "category_key": "fashion",
+      "image": "https://via.placeholder.com/400x300/4CAF50/FFFFFF?text=Cotton+T-Shirt",
+      "tags": ["apparel", "casual", "eco-friendly"],
+      "stock": 300,
+      "rating": 4.5
+    },
+    {
+      "id": "P003",
+      "name": "UltraThin Laptop Pro",
+      "description": "Powerful and lightweight laptop for professionals on the go. Features a 14-inch QHD display, Intel Core i7, and 16GB RAM.",
+      "price": 1299.00,
+      "category_key": "electronics",
+      "image": "https://via.placeholder.com/400x300/2196F3/FFFFFF?text=Laptop+Pro",
+      "tags": ["work", "portable", "high-performance"],
+      "stock": 75,
+      "rating": 4.9
+    },
+    {
+        "id": "P011",
+        "name": "Designer Silk Scarf",
+        "description": "Luxurious 100% silk scarf with an exclusive print. A perfect accessory to elevate any outfit.",
+        "price": 89.90,
+        "category_key": "fashion",
+        "image": "https://via.placeholder.com/400x300/E91E63/FFFFFF?text=Silk+Scarf",
+        "tags": ["luxury", "accessory", "designer"],
+        "stock": 50,
+        "rating": 4.9
+    },
+    {
+        "id": "P012",
+        "name": "Running Shoes X-Trainer",
+        "description": "Lightweight and responsive running shoes designed for maximum comfort and performance on any terrain.",
+        "price": 119.99,
+        "category_key": "sports",
+        "image": "https://via.placeholder.com/400x300/03A9F4/000000?text=Running+Shoes",
+        "tags": ["athletic", "comfort", "performance"],
+        "stock": 120,
+        "rating": 4.7
+    }
+    // ... add other items from your full JSON here
+  ],
+
+  "categories": {
+    "electronics": "Electronics & Gadgets",
+    "fashion": "Fashion & Apparel",
+    "home_office": "Home & Office",
+    "books": "Books & Literature",
+    "sports": "Sports & Outdoors",
+    "smart_home": "Smart Home",
+    "food_drink": "Food & Drink",
+    "uncategorized_key": "Miscellaneous" // If you want a specific name for the key itself
+  },
+
+  "product_card": {
+    "unnamed_product": "Unnamed Product",
+    "add_to_cart": "Add to Cart",
+    "view_details": "View Details",
+    "out_of_stock": "Out of Stock"
+  },
+
+  "filters_sort": {
+    "search_placeholder": "Search by name, description, or tags...",
+    "filter_by_category_label": "Filter by Category",
+    "all_categories_option": "All Categories",
+    "sort_by_label": "Sort by",
+    "sort_options": {
+      "default": "Relevance",
+      "price_asc": "Price: Low to High",
+      "price_desc": "Price: High to Low",
+      "name_asc": "Name: A-Z",
+      "name_desc": "Name: Z-A",
+      "rating_desc": "Rating: High to Low"
+    }
+  },
+
+  "feedback_messages": {
+    "loading": "Loading our exclusive collection...",
+    "no_results": {
+      "title": "No Treasures Found Yet",
+      "message": "It seems we couldn't find products matching your current criteria. Why not broaden your search or explore all our categories?",
+      "show_all_button": "Explore All Products"
+    },
+    "error": {
+      "data_format": "Product data seems to be in an unexpected format. Our team is on it!",
+      "loading_failed": "Oops! We had trouble loading products. Please refresh or try again in a moment."
+    }
+  },
+
+  "labels": {
+    "uncategorized": "Other Great Finds", // User-facing name for uncategorized items
+    "default_image_path": "/images/default_product_image.png" // A more descriptive default
+  },
+
+  "category_section": {
+    "view_all_button_text": "View All"
+  }
+}

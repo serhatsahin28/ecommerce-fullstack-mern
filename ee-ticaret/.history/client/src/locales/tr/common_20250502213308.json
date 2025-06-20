@@ -1,0 +1,28 @@
+{
+    "search": "Ara",
+    "products": {
+      "title": "Ürünler"
+    },
+    "categories": {
+      "title": "Kategoriler",
+      "electronics": {
+        "title": "Elektronik"
+      },
+      "fashion": {
+        "title": "Moda"
+      },
+      "home": {
+        "title": "Ev & Yaşam"
+      }
+    },
+    "footer": {
+      "aboutTitle": "Hakkımızda",
+      "aboutText": "Shoppy, modern alışveriş deneyimi sunar.",
+      "contactTitle": "İletişim",
+      "contactText": "Bize her zaman ulaşabilirsiniz.",
+      "categories": {
+        "title": "Kategoriler"
+      }
+    }
+  }
+  

@@ -1,0 +1,94 @@
+{
+  "title": "Welcome to Shoppy!",
+  "subtitle": "Discover bestsellers, hot deals, and explore our categories.",
+  "best_sellers": "Top Rated Products",
+  "discounted": "Deals You Can’t Miss",
+  "categories_overview": "Explore by Categories",
+  "view_all": "View All",
+  "loading": "Loading homepage content...",
+
+  "newsletter": {
+    "title": "Subscribe to Our Newsletter",
+    "subtitle": "Get exclusive updates, deals, and more.",
+    "placeholder": "Enter your email",
+    "button": "Subscribe",
+    "privacy": "We respect your privacy. Unsubscribe anytime."
+  },
+
+  "testimonialTitle": "What Our Customers Say",
+
+  "defaultTestimonials": {
+    "testimonial1": {
+      "text": "I love the quality of their products! Will definitely shop here again.",
+      "author": "Jane Smith",
+      "location": "New York"
+    },
+    "testimonial2": {
+      "text": "Fast shipping and excellent customer service.",
+      "author": "John Brown",
+      "location": "Los Angeles"
+    },
+    "testimonial3": {
+      "text": "The best online shopping experience I've ever had!",
+      "author": "Emily Johnson",
+      "location": "Chicago"
+    }
+  },
+
+  "defaultProducts": {
+    "product1": {
+      "title": "Premium T-Shirt",
+      "description": "High-quality cotton t-shirt with modern design"
+    },
+    "product2": {
+      "title": "Classic Jeans",
+      "description": "Comfortable jeans suitable for any occasion"
+    },
+    "product3": {
+      "title": "Sport Shoes",
+      "description": "Lightweight and durable running shoes"
+    }
+  },
+
+  "defaultBlogPosts": {
+    "post1": {
+      "title": "Summer Fashion Trends",
+      "excerpt": "Discover the hottest fashion trends for this summer season.",
+      "date": "May 2, 2025",
+      "category": "Fashion"
+    },
+    "post2": {
+      "title": "How to Style Your Wardrobe",
+      "excerpt": "Tips and tricks for creating the perfect wardrobe combination.",
+      "date": "April 28, 2025",
+      "category": "Lifestyle"
+    },
+    "post3": {
+      "title": "Sustainable Fashion Guide",
+      "excerpt": "How to make eco-friendly choices when shopping for clothes.",
+      "date": "April 23, 2025",
+      "category": "Sustainability"
+    }
+  },
+
+  "hero": {
+    "title1": "Summer Sale",
+    "subtitle1": "Up to 70% off",
+    "cta1": "Shop Now",
+
+    "title2": "New Arrivals",
+    "subtitle2": "Check out our latest products",
+    "cta2": "Shop Now",
+
+    "title3": "Featured Products",
+    "subtitle3": "Discover our exclusive collection",
+    "cta3": "Explore"
+  },
+
+  "sort": {
+    "title": "Sort Options"
+  },
+
+  "allArticles": "All Articles",
+  "readMore": "Read More"
+}
