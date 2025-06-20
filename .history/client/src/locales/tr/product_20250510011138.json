@@ -1,0 +1,80 @@
+{
+    "items": [
+      {
+        "id": "P001",
+        "name": "Modern Akıllı Telefon X",
+        "description": "Harika ekranlı ve yapay zeka kameralı en son nesil akıllı telefon.",
+        "price": 799.99,
+        "category_key": "electronics",
+        "image": "https://via.placeholder.com/300x200/FFA500/000000?text=AkilliTelefonX"
+      },
+      {
+        "id": "P002",
+        "name": "Klasik Pamuklu Tişört",
+        "description": "Rahat ve şık %100 pamuklu tişört.",
+        "price": 24.99,
+        "category_key": "fashion",
+        "image": "https://via.placeholder.com/300x200/4CAF50/FFFFFF?text=Tshirt"
+      },
+      {
+        "id": "P003",
+        "name": "Ultraİnce Laptop Pro",
+        "description": "Profesyoneller için güçlü ve hafif dizüstü bilgisayar.",
+        "price": 1299.00,
+        "category_key": "electronics",
+        "image": "https://via.placeholder.com/300x200/2196F3/FFFFFF?text=LaptopPro"
+      },
+      {
+        "id": "P004",
+        "name": "Ergonomik Ofis Koltuğu",
+        "description": "Uzun çalışma saatleri için destekleyici koltuk.",
+        "price": 199.50,
+        "category_key": "home_office",
+        "image": "https://via.placeholder.com/300x200/9C27B0/FFFFFF?text=OfisKoltugu"
+      },
+      {
+        "id": "P005",
+        "name": "Harika Roman",
+        "description": "Sizi koltuğunuzun ucunda tutacak sürükleyici bir hikaye.",
+        "price": 19.99,
+        "category_key": "books",
+        "image": "https://via.placeholder.com/300x200/795548/FFFFFF?text=Roman"
+      },
+      {
+        "id": "P006",
+        "name": "Kablosuz Gürültü Engelleme Özellikli Kulaklık",
+        "description": "Aktif gürültü engelleme ile sürükleyici ses deneyimi.",
+        "price": 149.00,
+        "category_key": "electronics",
+        "image": "https://via.placeholder.com/300x200/FFC107/000000?text=Kulaklik"
+      },
+      {
+        "id": "P007",
+        "name": "Deri Cüzdan",
+        "description": "Çok bölmeli, şık, hakiki deri cüzdan.",
+        "price": 49.99,
+        "category_key": "fashion",
+        "image": "https://via.placeholder.com/300x200/607D8B/FFFFFF?text=Cuzdan"
+      }
+    ],
+    "categories": {
+      "electronics": "Elektronik",
+      "fashion": "Moda",
+      "home_office": "Ev & Ofis",
+      "books": "Kitaplar",
+      "sports": "Spor"
+    },
+    "filter_by_category": "Kategoriye Göre Filtrele",
+    "all_categories": "Tüm Kategoriler",
+    "sort_by": "Sırala",
+    "sort_options": {
+      "default": "Varsayılan",
+      "price_asc": "Fiyat: Düşükten Yüksek",
+      "price_desc": "Fiyat: Yüksekten Düşük",
+      "name_asc": "İsim: A-Z",
+      "name_desc": "İsim: Z-A"
+    },
+    "no_products_found": "Kriterlerinize uygun ürün bulunamadı.",
+    "add_to_cart": "Sepete Ekle",
+    "loading_products": "Ürünler yükleniyor..."
+  }

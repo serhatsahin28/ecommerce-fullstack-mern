@@ -1,0 +1,1006 @@
+{
+  "page_subtitle": "Discover our selection of high-quality products. Find the latest innovations and timeless essentials tailored for you.",
+  "add_to_cart": "Sepete Ekle",
+  "items": [
+    {
+      "id": "E1",
+      "name": "Akıllı Telefon A",
+      "description": "Güçlü batarya ve yapay zeka destekli kamera",
+      "price": 799,
+      "category_key": "electronics",
+      "image": "/images/phone1.jpg",
+      "features": [
+        "2 yıl garanti",
+        "Lightweight design",
+        "Hızlı şarj desteklenir",
+        "Noise cancellation"
+      ],
+      "rating": 4.7,
+      "reviews": [
+        "The quality is outstanding.",
+        "Mükemmel ürün, beklentileri aştı!"
+      ],
+      "images": [
+        "/images/phone11.jpg",
+        "/images/phone12.jpg",
+        "/images/phone13.jpg",
+        "/images/phone14.jpg"
+      ]
+    },
+    {
+      "id": "E2",
+      "name": "Kablosuz Kulaklık",
+      "description": "HD ses, Bluetooth 5.0",
+      "price": 149,
+      "category_key": "electronics",
+      "image": "/images/headphones.jpg",
+      "features": [
+        "2 yıl garanti",
+        "Ergonomic design",
+        "Lightweight design",
+        "Hızlı şarj desteklenir"
+      ],
+      "rating": 4.2,
+      "reviews": [
+        "Satın almaktan çok memnunum.",
+        "Good value for the price."
+      ],
+      "images": [
+        "/images/headphones1.jpg",
+        "/images/headphones2.jpg",
+        "/images/headphones3.jpg",
+        "/images/headphones4.jpg"
+      ]
+    },
+    {
+      "id": "E3",
+      "name": "Laptop Pro",
+      "description": "İnce tasarım, SSD depolama",
+      "price": 1199,
+      "category_key": "electronics",
+      "image": "/images/laptop.jpg",
+      "features": [
+        "Noise cancellation",
+        "Water resistant",
+        "Touchscreen support",
+        "Free shipping"
+      ],
+      "rating": 3.0,
+      "reviews": [
+        "The quality is outstanding.",
+        "It arrived on time and in perfect condition."
+      ],
+      "images": [
+        "/images/laptop.jpg",
+        "/images/apple.jpg",
+        "/images/airpods.jpg",
+        "/images/sony.jpg"
+      ]
+    },
+    {
+      "id": "E4",
+      "name": "Akıllı Saat X",
+      "description": "Nabız ve uyku takibi",
+      "price": 249,
+      "category_key": "electronics",
+      "image": "/images/watch.jpg",
+      "features": [
+        "Free shipping",
+        "Kullanıcılar tarafından yüksek puan aldı",
+        "Noise cancellation",
+        "2 yıl garanti"
+      ],
+      "rating": 3.0,
+      "reviews": [
+        "Good value for the price.",
+        "Satın almaktan çok memnunum."
+      ],
+      "images": [
+        "/images/watch1.jpg",
+        "/images/watch2.jpg",
+        "/images/watch3.jpg",
+        "/images/watch4.jpg"
+      ]
+    },
+    {
+      "id": "E5",
+      "name": "Drone Mini",
+      "description": "HD kamera, uzun uçuş süresi",
+      "price": 599,
+      "category_key": "electronics",
+      "image": "/images/drone.jpg",
+      "features": [
+        "Çoklu renk seçeneği",
+        "Noise cancellation",
+        "Lightweight design",
+        "Kullanıcılar tarafından yüksek puan aldı"
+      ],
+      "rating": 4.7,
+      "reviews": [
+        "Satın almaktan çok memnunum.",
+        "Good value for the price."
+      ],
+      "images": [
+        "/images/drone1.jpg",
+        "/images/drone2.jpg",
+        "/images/drone3.jpg",
+        "/images/drone4.jpg"
+      ]
+    },
+    {
+      "id": "E6",
+      "name": "Tablet Z",
+      "description": "10 inç ekran, 64GB hafıza",
+      "price": 649,
+      "category_key": "electronics",
+      "image": "/images/tablet.jpg",
+      "features": [
+        "Extended battery life",
+        "Eco-friendly materials",
+        "Water resistant",
+        "Çoklu renk seçeneği"
+      ],
+      "rating": 4.0,
+      "reviews": [
+        "It arrived on time and in perfect condition.",
+        "Mükemmel ürün, beklentileri aştı!"
+      ],
+      "images": [
+        "/images/tablet1.jpg",
+        "/images/tablet2.jpg",
+        "/images/tablet3.jpg",
+        "/images/tablet4.jpg"
+      ]
+    },
+    {
+      "id": "E7",
+      "name": "Bluetooth Hoparlör",
+      "description": "Taşınabilir, su geçirmez",
+      "price": 89,
+      "category_key": "electronics",
+      "image": "/images/speaker.jpg",
+      "features": [
+        "Eco-friendly materials",
+        "Kullanıcılar tarafından yüksek puan aldı",
+        "Touchscreen support",
+        "Water resistant"
+      ],
+      "rating": 3.4,
+      "reviews": [
+        "Good value for the price.",
+        "The quality is outstanding."
+      ],
+      "images": [
+        "/images/speaker1.jpg",
+        "/images/speaker2.jpg",
+        "/images/speaker3.jpg",
+        "/images/speaker4.jpg"
+      ]
+    },
+    {
+      "id": "E8",
+      "name": "Akıllı Ev Prizi",
+      "description": "Mobil kontrol, zamanlama",
+      "price": 59,
+      "category_key": "electronics",
+      "image": "/images/smartplug.jpg",
+      "features": [
+        "Free shipping",
+        "Çoklu renk seçeneği",
+        "Touchscreen support",
+        "Eco-friendly materials"
+      ],
+      "rating": 3.4,
+      "reviews": [
+        "Highly recommend to others.",
+        "Açıklandığı gibi çalışıyor."
+      ],
+      "images": [
+        "/images/smartplug1.jpg",
+        "/images/smartplug2.jpg",
+        "/images/smartplug3.jpg",
+        "/images/smartplug4.jpg"
+      ]
+    },
+    {
+      "id": "F1",
+      "name": "Klasik Tişört",
+      "description": "%100 pamuk",
+      "price": 29.9,
+      "category_key": "fashion",
+      "image": "/images/tshirt.jpg",
+      "features": [
+        "Lightweight design",
+        "Kullanıcılar tarafından yüksek puan aldı",
+        "Hızlı şarj desteklenir",
+        "Çoklu renk seçeneği"
+      ],
+      "rating": 4.5,
+      "reviews": [
+        "Satın almaktan çok memnunum.",
+        "It arrived on time and in perfect condition."
+      ],
+      "images": [
+        "/images/tshirt1.jpg",
+        "/images/tshirt2.jpg",
+        "/images/tshirt3.jpg",
+        "/images/tshirt4.jpg"
+      ]
+    },
+    {
+      "id": "F2",
+      "name": "Jean Pantolon",
+      "description": "Dar kesim denim",
+      "price": 69.9,
+      "category_key": "fashion",
+      "image": "/images/jeans.jpg",
+      "features": [
+        "Kullanıcılar tarafından yüksek puan aldı",
+        "Lightweight design",
+        "Water resistant",
+        "Extended battery life"
+      ],
+      "rating": 4.8,
+      "reviews": [
+        "Açıklandığı gibi çalışıyor.",
+        "Good value for the price."
+      ],
+      "images": [
+        "/images/jeans1.jpg",
+        "/images/jeans2.jpg",
+        "/images/jeans3.jpg",
+        "/images/jeans4.jpg"
+      ]
+    },
+    {
+      "id": "F3",
+      "name": "Şık Elbise",
+      "description": "Gece davetleri için ideal",
+      "price": 129,
+      "category_key": "fashion",
+      "image": "/images/dress.jpg",
+      "features": [
+        "Noise cancellation",
+        "Hızlı şarj desteklenir",
+        "Water resistant",
+        "Eco-friendly materials"
+      ],
+      "rating": 3.2,
+      "reviews": [
+        "Good value for the price.",
+        "Satın almaktan çok memnunum."
+      ],
+      "images": [
+        "/images/dress1.jpg",
+        "/images/dress2.jpg",
+        "/images/dress3.jpg",
+        "/images/dress4.jpg"
+      ]
+    },
+    {
+      "id": "F4",
+      "name": "Spor Ayakkabı",
+      "description": "Yürüyüş ve koşu için",
+      "price": 99.9,
+      "category_key": "fashion",
+      "image": "/images/shoes.jpg",
+      "features": [
+        "Extended battery life",
+        "Çoklu renk seçeneği",
+        "2 yıl garanti",
+        "Lightweight design"
+      ],
+      "rating": 3.2,
+      "reviews": [
+        "Satın almaktan çok memnunum.",
+        "Highly recommend to others."
+      ],
+      "images": [
+        "/images/shoes1.jpg",
+        "/images/shoes2.jpg",
+        "/images/shoes3.jpg",
+        "/images/shoes4.jpg"
+      ]
+    },
+    {
+      "id": "F5",
+      "name": "Deri Cüzdan",
+      "description": "Hakiki deri, çok bölmeli",
+      "price": 49,
+      "category_key": "fashion",
+      "image": "/images/wallet.jpg",
+      "features": [
+        "Lightweight design",
+        "2 yıl garanti",
+        "Free shipping",
+        "Kullanıcılar tarafından yüksek puan aldı"
+      ],
+      "rating": 4.3,
+      "reviews": [
+        "Highly recommend to others.",
+        "Satın almaktan çok memnunum."
+      ],
+      "images": [
+        "/images/wallet1.jpg",
+        "/images/wallet2.jpg",
+        "/images/wallet3.jpg",
+        "/images/wallet4.jpg"
+      ]
+    },
+    {
+      "id": "F6",
+      "name": "Kazak",
+      "description": "Sıcak tutan yünlü kazak",
+      "price": 79.9,
+      "category_key": "fashion",
+      "image": "/images/sweater.jpg",
+      "features": [
+        "Kullanıcılar tarafından yüksek puan aldı",
+        "Ergonomic design",
+        "Eco-friendly materials",
+        "Extended battery life"
+      ],
+      "rating": 3.1,
+      "reviews": [
+        "Highly recommend to others.",
+        "Satın almaktan çok memnunum."
+      ],
+      "images": [
+        "/images/sweater1.jpg",
+        "/images/sweater2.jpg",
+        "/images/sweater3.jpg",
+        "/images/sweater4.jpg"
+      ]
+    },
+    {
+      "id": "F7",
+      "name": "Kot Ceket",
+      "description": "Rahat ve şık",
+      "price": 109,
+      "category_key": "fashion",
+      "image": "/images/jacket.jpg",
+      "features": [
+        "Noise cancellation",
+        "Kullanıcılar tarafından yüksek puan aldı",
+        "Water resistant",
+        "Touchscreen support"
+      ],
+      "rating": 3.6,
+      "reviews": [
+        "It arrived on time and in perfect condition.",
+        "Açıklandığı gibi çalışıyor."
+      ],
+      "images": [
+        "/images/jacket1.jpg",
+        "/images/jacket2.jpg",
+        "/images/jacket3.jpg",
+        "/images/jacket4.jpg"
+      ]
+    },
+    {
+      "id": "F8",
+      "name": "Atkı ve Bere Seti",
+      "description": "Kış için sıcak kombin",
+      "price": 39.9,
+      "category_key": "fashion",
+      "image": "/images/scarfset.jpg",
+      "features": [
+        "Lightweight design",
+        "Çoklu renk seçeneği",
+        "Noise cancellation",
+        "Kullanıcılar tarafından yüksek puan aldı"
+      ],
+      "rating": 3.6,
+      "reviews": [
+        "Satın almaktan çok memnunum.",
+        "Highly recommend to others."
+      ],
+      "images": [
+        "/images/scarfset1.jpg",
+        "/images/scarfset2.jpg",
+        "/images/scarfset3.jpg",
+        "/images/scarfset4.jpg"
+      ]
+    },
+    {
+      "id": "B1",
+      "name": "Roman: Gece Yolu",
+      "description": "Dram ve gizem",
+      "price": 29.9,
+      "category_key": "books",
+      "image": "/images/book1.jpg",
+      "features": [
+        "Extended battery life",
+        "Çoklu renk seçeneği",
+        "Touchscreen support",
+        "Free shipping"
+      ],
+      "rating": 3.1,
+      "reviews": [
+        "Good value for the price.",
+        "Highly recommend to others."
+      ],
+      "images": [
+        "/images/book11.jpg",
+        "/images/book12.jpg",
+        "/images/book13.jpg",
+        "/images/book14.jpg"
+      ]
+    },
+    {
+      "id": "B2",
+      "name": "Kişisel Gelişim",
+      "description": "Başarı teknikleri",
+      "price": 34.5,
+      "category_key": "books",
+      "image": "/images/book2.jpg",
+      "features": [
+        "Touchscreen support",
+        "Hızlı şarj desteklenir",
+        "2 yıl garanti",
+        "Eco-friendly materials"
+      ],
+      "rating": 4.5,
+      "reviews": [
+        "Açıklandığı gibi çalışıyor.",
+        "Highly recommend to others."
+      ],
+      "images": [
+        "/images/book21.jpg",
+        "/images/book22.jpg",
+        "/images/book23.jpg",
+        "/images/book24.jpg"
+      ]
+    },
+    {
+      "id": "B3",
+      "name": "Tarih Atlası",
+      "description": "Dünya tarihine yolculuk",
+      "price": 45,
+      "category_key": "books",
+      "image": "/images/book3.jpg",
+      "features": [
+        "2 yıl garanti",
+        "Çoklu renk seçeneği",
+        "Ergonomic design",
+        "Noise cancellation"
+      ],
+      "rating": 4.3,
+      "reviews": [
+        "Mükemmel ürün, beklentileri aştı!",
+        "Good value for the price."
+      ],
+      "images": [
+        "/images/book31.jpg",
+        "/images/book32.jpg",
+        "/images/book33.jpg",
+        "/images/book34.jpg"
+      ]
+    },
+    {
+      "id": "B4",
+      "name": "Yemek Kitabı",
+      "description": "100 tarif",
+      "price": 39.9,
+      "category_key": "books",
+      "image": "/images/book4.jpg",
+      "features": [
+        "Touchscreen support",
+        "Ergonomic design",
+        "Hızlı şarj desteklenir",
+        "Free shipping"
+      ],
+      "rating": 4.9,
+      "reviews": [
+        "Açıklandığı gibi çalışıyor.",
+        "It arrived on time and in perfect condition."
+      ],
+      "images": [
+        "/images/book41.jpg",
+        "/images/book42.jpg",
+        "/images/book43.jpg",
+        "/images/book44.jpg"
+      ]
+    },
+    {
+      "id": "B5",
+      "name": "Bilim Kurgu",
+      "description": "Geleceğe yolculuk",
+      "price": 29,
+      "category_key": "books",
+      "image": "/images/book5.jpg",
+      "features": [
+        "Lightweight design",
+        "Touchscreen support",
+        "Eco-friendly materials",
+        "Free shipping"
+      ],
+      "rating": 3.5,
+      "reviews": [
+        "Good value for the price.",
+        "Açıklandığı gibi çalışıyor."
+      ],
+      "images": [
+        "/images/book51.jpg",
+        "/images/book52.jpg",
+        "/images/book53.jpg",
+        "/images/book54.jpg"
+      ]
+    },
+    {
+      "id": "B6",
+      "name": "Çocuk Masalları",
+      "description": "Renkli hikayeler",
+      "price": 24.9,
+      "category_key": "books",
+      "image": "/images/book6.jpg",
+      "features": [
+        "Kullanıcılar tarafından yüksek puan aldı",
+        "Eco-friendly materials",
+        "Lightweight design",
+        "Çoklu renk seçeneği"
+      ],
+      "rating": 4.8,
+      "reviews": [
+        "Good value for the price.",
+        "Satın almaktan çok memnunum."
+      ],
+      "images": [
+        "/images/book61.jpg",
+        "/images/book62.jpg",
+        "/images/book63.jpg",
+        "/images/book64.jpg"
+      ]
+    },
+    {
+      "id": "B7",
+      "name": "Klasikler: Anna Karenina",
+      "description": "Tolstoy'dan başyapıt",
+      "price": 59,
+      "category_key": "books",
+      "image": "/images/book7.jpg",
+      "features": [
+        "Noise cancellation",
+        "Touchscreen support",
+        "Ergonomic design",
+        "Extended battery life"
+      ],
+      "rating": 4.9,
+      "reviews": [
+        "The quality is outstanding.",
+        "It arrived on time and in perfect condition."
+      ],
+      "images": [
+        "/images/book71.jpg",
+        "/images/book72.jpg",
+        "/images/book73.jpg",
+        "/images/book74.jpg"
+      ]
+    },
+    {
+      "id": "B8",
+      "name": "Felsefe 101",
+      "description": "Düşünmeyi öğren",
+      "price": 27.5,
+      "category_key": "books",
+      "image": "/images/book8.jpg",
+      "features": [
+        "Hızlı şarj desteklenir",
+        "2 yıl garanti",
+        "Kullanıcılar tarafından yüksek puan aldı",
+        "Lightweight design"
+      ],
+      "rating": 5.0,
+      "reviews": [
+        "Satın almaktan çok memnunum.",
+        "It arrived on time and in perfect condition."
+      ],
+      "images": [
+        "/images/book81.jpg",
+        "/images/book82.jpg",
+        "/images/book83.jpg",
+        "/images/book84.jpg"
+      ]
+    },
+    {
+      "id": "H1",
+      "name": "Çalışma Masası",
+      "description": "Modern tasarım",
+      "price": 349,
+      "category_key": "home_office",
+      "image": "/images/desk.jpg",
+      "features": [
+        "Free shipping",
+        "Lightweight design",
+        "2 yıl garanti",
+        "Kullanıcılar tarafından yüksek puan aldı"
+      ],
+      "rating": 4.2,
+      "reviews": [
+        "Highly recommend to others.",
+        "Satın almaktan çok memnunum."
+      ],
+      "images": [
+        "/images/desk1.jpg",
+        "/images/desk2.jpg",
+        "/images/desk3.jpg",
+        "/images/desk4.jpg"
+      ]
+    },
+    {
+      "id": "H2",
+      "name": "Ergonomik Ofis Koltuğu",
+      "description": "Bel destekli",
+      "price": 499,
+      "category_key": "home_office",
+      "image": "/images/chair.jpg",
+      "features": [
+        "Water resistant",
+        "Lightweight design",
+        "Noise cancellation",
+        "Touchscreen support"
+      ],
+      "rating": 3.4,
+      "reviews": [
+        "Good value for the price.",
+        "Açıklandığı gibi çalışıyor."
+      ],
+      "images": [
+        "/images/chair1.jpg",
+        "/images/chair2.jpg",
+        "/images/chair3.jpg",
+        "/images/chair4.jpg"
+      ]
+    },
+    {
+      "id": "H3",
+      "name": "Masa Lambası",
+      "description": "LED, dokunmatik",
+      "price": 79.9,
+      "category_key": "home_office",
+      "image": "/images/lamp.jpg",
+      "features": [
+        "Çoklu renk seçeneği",
+        "Extended battery life",
+        "2 yıl garanti",
+        "Touchscreen support"
+      ],
+      "rating": 3.1,
+      "reviews": [
+        "Mükemmel ürün, beklentileri aştı!",
+        "Highly recommend to others."
+      ],
+      "images": [
+        "/images/lamp1.jpg",
+        "/images/lamp2.jpg",
+        "/images/lamp3.jpg",
+        "/images/lamp4.jpg"
+      ]
+    },
+    {
+      "id": "H4",
+      "name": "Kitaplık",
+      "description": "5 raflı, ceviz rengi",
+      "price": 229,
+      "category_key": "home_office",
+      "image": "/images/bookshelf.jpg",
+      "features": [
+        "Eco-friendly materials",
+        "Touchscreen support",
+        "Kullanıcılar tarafından yüksek puan aldı",
+        "Hızlı şarj desteklenir"
+      ],
+      "rating": 4.4,
+      "reviews": [
+        "Satın almaktan çok memnunum.",
+        "Highly recommend to others."
+      ],
+      "images": [
+        "/images/bookshelf1.jpg",
+        "/images/bookshelf2.jpg",
+        "/images/bookshelf3.jpg",
+        "/images/bookshelf4.jpg"
+      ]
+    },
+    {
+      "id": "H5",
+      "name": "Dosya Dolabı",
+      "description": "Kilitli ve metal",
+      "price": 299,
+      "category_key": "home_office",
+      "image": "/images/cabinet.jpg",
+      "features": [
+        "Extended battery life",
+        "Çoklu renk seçeneği",
+        "2 yıl garanti",
+        "Noise cancellation"
+      ],
+      "rating": 4.4,
+      "reviews": [
+        "Highly recommend to others.",
+        "Satın almaktan çok memnunum."
+      ],
+      "images": [
+        "/images/cabinet1.jpg",
+        "/images/cabinet2.jpg",
+        "/images/cabinet3.jpg",
+        "/images/cabinet4.jpg"
+      ]
+    },
+    {
+      "id": "H6",
+      "name": "Mouse Pad",
+      "description": "Kaymaz taban",
+      "price": 29.9,
+      "category_key": "home_office",
+      "image": "/images/mousepad.jpg",
+      "features": [
+        "Free shipping",
+        "Touchscreen support",
+        "Noise cancellation",
+        "Eco-friendly materials"
+      ],
+      "rating": 4.6,
+      "reviews": [
+        "Satın almaktan çok memnunum.",
+        "Good value for the price."
+      ],
+      "images": [
+        "/images/mousepad1.jpg",
+        "/images/mousepad2.jpg",
+        "/images/mousepad3.jpg",
+        "/images/mousepad4.jpg"
+      ]
+    },
+    {
+      "id": "H7",
+      "name": "Webcam",
+      "description": "HD görüntü",
+      "price": 199,
+      "category_key": "home_office",
+      "image": "/images/webcam.jpg",
+      "features": [
+        "Noise cancellation",
+        "Kullanıcılar tarafından yüksek puan aldı",
+        "Ergonomic design",
+        "Hızlı şarj desteklenir"
+      ],
+      "rating": 4.3,
+      "reviews": [
+        "Açıklandığı gibi çalışıyor.",
+        "Highly recommend to others."
+      ],
+      "images": [
+        "/images/webcam1.jpg",
+        "/images/webcam2.jpg",
+        "/images/webcam3.jpg",
+        "/images/webcam4.jpg"
+      ]
+    },
+    {
+      "id": "H8",
+      "name": "Kablosuz Klavye",
+      "description": "Sessiz tuşlar",
+      "price": 119,
+      "category_key": "home_office",
+      "image": "/images/keyboard.jpg",
+      "features": [
+        "Noise cancellation",
+        "Ergonomic design",
+        "Touchscreen support",
+        "2 yıl garanti"
+      ],
+      "rating": 3.4,
+      "reviews": [
+        "The quality is outstanding.",
+        "Mükemmel ürün, beklentileri aştı!"
+      ],
+      "images": [
+        "/images/keyboard1.jpg",
+        "/images/keyboard2.jpg",
+        "/images/keyboard3.jpg",
+        "/images/keyboard4.jpg"
+      ]
+    },
+    {
+      "id": "S1",
+      "name": "Yoga Matı",
+      "description": "Kaymaz, 6mm",
+      "price": 59.9,
+      "category_key": "sports",
+      "image": "/images/yogamat.jpg",
+      "features": [
+        "Ergonomic design",
+        "Extended battery life",
+        "Lightweight design",
+        "Kullanıcılar tarafından yüksek puan aldı"
+      ],
+      "rating": 3.7,
+      "reviews": [
+        "It arrived on time and in perfect condition.",
+        "Good value for the price."
+      ],
+      "images": [
+        "/images/yogamat1.jpg",
+        "/images/yogamat2.jpg",
+        "/images/yogamat3.jpg",
+        "/images/yogamat4.jpg"
+      ]
+    },
+    {
+      "id": "S2",
+      "name": "Dambıl Seti",
+      "description": "2x5kg ağırlık",
+      "price": 129,
+      "category_key": "sports",
+      "image": "/images/dumbbells.jpg",
+      "features": [
+        "Kullanıcılar tarafından yüksek puan aldı",
+        "Touchscreen support",
+        "Noise cancellation",
+        "2 yıl garanti"
+      ],
+      "rating": 4.8,
+      "reviews": [
+        "The quality is outstanding.",
+        "Mükemmel ürün, beklentileri aştı!"
+      ],
+      "images": [
+        "/images/dumbbells1.jpg",
+        "/images/dumbbells2.jpg",
+        "/images/dumbbells3.jpg",
+        "/images/dumbbells4.jpg"
+      ]
+    },
+    {
+      "id": "S3",
+      "name": "Koşu Bandı",
+      "description": "Dijital ekranlı",
+      "price": 1799,
+      "category_key": "sports",
+      "image": "/images/treadmill.jpg",
+      "features": [
+        "Hızlı şarj desteklenir",
+        "Lightweight design",
+        "Extended battery life",
+        "Touchscreen support"
+      ],
+      "rating": 4.5,
+      "reviews": [
+        "Good value for the price.",
+        "Açıklandığı gibi çalışıyor."
+      ],
+      "images": [
+        "/images/treadmill1.jpg",
+        "/images/treadmill2.jpg",
+        "/images/treadmill3.jpg",
+        "/images/treadmill4.jpg"
+      ]
+    },
+    {
+      "id": "S4",
+      "name": "Futbol Topu",
+      "description": "Profesyonel boyut",
+      "price": 39.9,
+      "category_key": "sports",
+      "image": "/images/football.jpg",
+      "features": [
+        "Free shipping",
+        "Extended battery life",
+        "Lightweight design",
+        "Hızlı şarj desteklenir"
+      ],
+      "rating": 4.3,
+      "reviews": [
+        "Satın almaktan çok memnunum.",
+        "Highly recommend to others."
+      ],
+      "images": [
+        "/images/football1.jpg",
+        "/images/football2.jpg",
+        "/images/football3.jpg",
+        "/images/football4.jpg"
+      ]
+    },
+    {
+      "id": "S5",
+      "name": "Pilates Topu",
+      "description": "Anti-patlayan",
+      "price": 69.9,
+      "category_key": "sports",
+      "image": "/images/pilates.jpg",
+      "features": [
+        "Touchscreen support",
+        "Free shipping",
+        "Çoklu renk seçeneği",
+        "Hızlı şarj desteklenir"
+      ],
+      "rating": 4.9,
+      "reviews": [
+        "Açıklandığı gibi çalışıyor.",
+        "Good value for the price."
+      ],
+      "images": [
+        "/images/pilates1.jpg",
+        "/images/pilates2.jpg",
+        "/images/pilates3.jpg",
+        "/images/pilates4.jpg"
+      ]
+    },
+    {
+      "id": "S6",
+      "name": "Direnç Bandı Seti",
+      "description": "Farklı sertliklerde",
+      "price": 49.9,
+      "category_key": "sports",
+      "image": "/images/resistance.jpg",
+      "features": [
+        "Lightweight design",
+        "Extended battery life",
+        "Water resistant",
+        "Ergonomic design"
+      ],
+      "rating": 4.8,
+      "reviews": [
+        "Highly recommend to others.",
+        "Good value for the price."
+      ],
+      "images": [
+        "/images/resistance1.jpg",
+        "/images/resistance2.jpg",
+        "/images/resistance3.jpg",
+        "/images/resistance4.jpg"
+      ]
+    },
+    {
+      "id": "S7",
+      "name": "Atlama İpi",
+      "description": "Ayarlanabilir uzunluk",
+      "price": 19.9,
+      "category_key": "sports",
+      "image": "/images/jumprope.jpg",
+      "features": [
+        "Free shipping",
+        "Eco-friendly materials",
+        "Hızlı şarj desteklenir",
+        "2 yıl garanti"
+      ],
+      "rating": 3.1,
+      "reviews": [
+        "Satın almaktan çok memnunum.",
+        "Açıklandığı gibi çalışıyor."
+      ],
+      "images": [
+        "/images/jumprope1.jpg",
+        "/images/jumprope2.jpg",
+        "/images/jumprope3.jpg",
+        "/images/jumprope4.jpg"
+      ]
+    },
+    {
+      "id": "S8",
+      "name": "Antrenman Eldiveni",
+      "description": "Kaymaz yüzey",
+      "price": 29.9,
+      "category_key": "sports",
+      "image": "/images/gloves.jpg",
+      "features": [
+        "Water resistant",
+        "Eco-friendly materials",
+        "2 yıl garanti",
+        "Touchscreen support"
+      ],
+      "rating": 3.3,
+      "reviews": [
+        "The quality is outstanding.",
+        "Mükemmel ürün, beklentileri aştı!"
+      ],
+      "images": [
+        "/images/gloves1.jpg",
+        "/images/gloves2.jpg",
+        "/images/gloves3.jpg",
+        "/images/gloves4.jpg"
+      ]
+    }
+  ]
+}

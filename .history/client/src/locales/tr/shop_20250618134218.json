@@ -1,0 +1,12 @@
+{
+    "title": "Mağaza",
+    "filter": {
+      "all": "Tümü",
+      "electronics": "Elektronik",
+      "fashion": "Moda",
+      "home": "Ev & Yaşam"
+    },
+    "add_to_card":"Sepete Ekle"
+
+  }
+  

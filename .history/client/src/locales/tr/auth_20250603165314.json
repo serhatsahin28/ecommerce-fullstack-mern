@@ -1,0 +1,9 @@
+{
+  "login_title": "Giriş Yap",
+  "email": "E-posta",
+  "password": "Şifre",
+  "login": "Giriş",
+  "register": "Kayıt Ol",
+  "no_account": "Hesabınız yok mu?",
+  "invalid_credentials": "E-posta veya şifre hatalı."
+}

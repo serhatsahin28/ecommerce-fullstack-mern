@@ -1,0 +1,11 @@
+{
+  "title": "Login",
+  "email": "Email",
+  "password": "Password",
+  "login_button": "Log In",
+  "no_account": "Don't have an account?",
+  "register_link": "Register here",
+  "error_empty_fields": "Please fill in all fields.",
+  "error_invalid_credentials": "Invalid email or password.",
+  "success_login": "Login successful!"
+}

@@ -1,0 +1,45 @@
+{
+  "categories": {
+    "title": "Categories",
+    "items": [
+      {
+        "id": 1,
+        "title": "Fashion",
+        "subtitle": "Clothing & Accessories",
+        "icon": "fashion"
+      },
+      {
+        "id": 2,
+        "title": "Electronics",
+        "subtitle": "Tech Products",
+        "icon": "electronics"
+      },
+      {
+        "id": 3,
+        "title": "Home_office",
+        "subtitle": "Home Decor",
+        "icon": "home"
+      },
+      {
+        "id": 4,
+        "title": "Books",
+        "subtitle": "Literature & Stationery",
+        "icon": "books"
+      }
+    ]
+  }, "products":{
+    "title":"Products"
+  },
+  "footer": {
+    "aboutTitle": "About Us",
+    "aboutText": "Shoppy - Quality Shopping Experience",
+    "categories": {
+      "title": "Popular Categories",
+      "electronics": "Electronics",
+      "fashion": "Fashion",
+      "home": "Home & Living"
+    },
+    "contactTitle": "Contact",
+    "contactText": "24/7 Support: +1 800 000 0000"
+  }
+}

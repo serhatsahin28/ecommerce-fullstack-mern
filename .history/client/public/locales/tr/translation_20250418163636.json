@@ -1,0 +1,58 @@
+{
+    "hero": {
+      "title": "Yeni Nesil",
+      "highlight": "Alışveriş Deneyimi",
+      "explore": "Hemen Keşfet",
+      "campaigns": "Kampanyalar"
+    },
+    "categories": {
+      "title": "Popüler",
+      "highlight": "Kategoriler",
+      "viewProducts": "Ürünleri Görüntüle",
+      "electronics": {
+        "title": "Elektronik",
+        "desc": "Son teknoloji ürünler"
+      },
+      "fashion": {
+        "title": "Moda",
+        "desc": "Sezonun trendleri"
+      },
+      "home": {
+        "title": "Ev & Yaşam",
+        "desc": "Konforlu yaşam alanları"
+      }
+    },
+    "products": {
+      "featured": "Öne Çıkan",
+      "items": "Ürünler",
+      "addToCart": "Sepete Ekle",
+      "stock": "Stok",
+      "smartwatch": { "name": "Akıllı Saat Pro" },
+      "headphones": { "name": "Kablosuz Kulaklık" },
+      "camera": { "name": "4K Dijital Kamera" }
+    },
+    "advantages": {
+      "shipping": "Ücretsiz Kargo",
+      "shippingDesc": "200 TL üzeri tüm siparişlerde geçerlidir",
+      "eco": "Eko Paketleme",
+      "ecoDesc": "Çevre dostu ambalajlama sistemi",
+      "support": "7/24 Destek",
+      "supportDesc": "Canlı müşteri hizmetleri"
+    },
+    "footer": {
+      "companyDescription": "Teknolojiyi uygun fiyata herkesle buluşturuyoruz",
+      "customerService": "Müşteri Hizmetleri",
+      "orderTracking": "Sipariş Takibi",
+      "returns": "İade & Değişim",
+      "faq": "Sıkça Sorulan Sorular",
+      "liveSupport": "Canlı Destek",
+      "legalInfo": "Yasal Bilgiler",
+      "privacyPolicy": "Gizlilik Politikası",
+      "termsOfUse": "Kullanım Şartları",
+      "cookiePolicy": "Çerez Politikası",
+      "salesAgreement": "Mesafeli Satış Sözleşmesi",
+      "rightsReserved": "Tüm hakları saklıdır",
+      "developedBy": "Geliştiren"
+    }
+  }
+  
