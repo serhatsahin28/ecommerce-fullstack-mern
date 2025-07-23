@@ -161,12 +161,28 @@ export default function ProductsEn() {
             {filteredProducts.map(product => (
               <Col key={product._id}>
                 <Card className="h-100 shadow-sm d-flex flex-column">
-                  <Card.Img
-                    variant="top"
-                    src={product.image}
-                    alt={product.name}
-                    style={{ objectFit: 'cover', height: 180 }}
-                  />
+                  <div
+                    style={{
+                      height: "300px",
+                      width: "100%",
+                      backgroundColor: "#f8f9fa",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      overflow: "hidden",
+                    }}
+                  >
+                    <Card.Img
+                      variant="top"
+                      src={product.image}
+                      alt={product.name}
+                      style={{
+                        maxWidth: "100%",
+                        maxHeight: "100%",
+                        objectFit: "contain",
+                      }}
+                    />
+                  </div>
                   <Card.Body className="d-flex flex-column">
                     <Card.Title>
                       <Link to={`/en/${product.category_key}/${product._id}`} className="text-decoration-none text-dark">
@@ -174,13 +190,6 @@ export default function ProductsEn() {
                       </Link>
                     </Card.Title>
 
-                    <Card.Text>{product.description}</Card.Text>
-
-                    <ul className="small text-muted mb-3">
-                      {product.features?.slice(0, 2).map((f, i) => (
-                        <li key={i}>{f}</li>
-                      ))}
-                    </ul>
 
                     <div className="mt-auto">
                       <div className="fw-bold text-primary mb-2">${product.price}</div>

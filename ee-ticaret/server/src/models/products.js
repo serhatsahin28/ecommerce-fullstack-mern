@@ -11,6 +11,7 @@ const productSchema = new mongoose.Schema({
   category_key: { type: String, required: true },
   price: { type: Number, required: true },
   rating: { type: Number, default: 0 },
+  stock: { type: Number, default: 0 },  // Yeni stok alanı, default 0
   image: { type: String },
   images: [String],
   translations: {

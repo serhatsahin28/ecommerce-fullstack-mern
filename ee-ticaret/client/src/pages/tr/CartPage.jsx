@@ -3,6 +3,16 @@ import React, { useContext } from 'react';
 import { CartContext } from '../../components/common/CartContext';
 import { Container, Table, Image, Button } from 'react-bootstrap';
 import { FaPlus, FaMinus, FaTrash } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+
+// Kategori slug haritası
+const categorySlugMap = {
+  electronics: { tr: 'elektronik', en: 'electronics' },
+  fashion:     { tr: 'moda',       en: 'fashion' },
+  books:       { tr: 'kitaplar',   en: 'books' },
+  sports:      { tr: 'spor',       en: 'sports' },
+  home_office: { tr: 'ev-ofis',    en: 'home-office' }
+};
 
 const CartPageTR = () => {
   const {
@@ -17,12 +27,6 @@ const CartPageTR = () => {
     (sum, item) => sum + item.price * item.quantity,
     0
   );
-
-// console.log("cartpage: "+cartItems);
-// console.log("increaseQuantity: "+increaseQuantity);
-// console.log("decreaseQuantity: "+decreaseQuantity);
-// console.log("cartpage: "+cartItems);
-
 
   return (
     <Container className="py-5">
@@ -43,42 +47,62 @@ const CartPageTR = () => {
               </tr>
             </thead>
             <tbody>
-              {cartItems.map((item) => (
-                <tr key={item.id}>
-                  <td className="d-flex align-items-center gap-3">
-                    <Image
-                      src={item.image}
-                      alt={item.name}
-                      width={60}
-                      height={60}
-                      rounded
-                    />
-                    <span>{item.name}</span>
-                  </td>
-                  <td className="text-center">
-                    <div className="d-flex align-items-center justify-content-center gap-2">
-                      <Button variant="light" size="sm" onClick={() => decreaseQuantity(item.id)}>
-                        <FaMinus />
+              {cartItems.map((item) => {
+                const itemId = item.product_id || item.id;
+                const itemName = item.name || item.translations?.tr?.name || 'Ürün';
+                const categoryKey = item.category_key || 'genel';
+                const slug = categorySlugMap[categoryKey]?.tr || categoryKey;
+
+                return (
+                  <tr key={itemId}>
+                    <td className="d-flex align-items-center gap-3">
+                      <Image
+                        src={item.image}
+                        alt={itemName}
+                        width={60}
+                        height={60}
+                        rounded
+                      />
+                      <Link
+                        to={`/tr/${slug}/${itemId}`}
+                        className="text-decoration-none text-dark"
+                      >
+                        <span>{itemName}</span>
+                      </Link>
+                    </td>
+                    <td className="text-center">
+                      <div className="d-flex align-items-center justify-content-center gap-2">
+                        <Button
+                          variant="light"
+                          size="sm"
+                          onClick={() => decreaseQuantity(itemId)}
+                        >
+                          <FaMinus />
+                        </Button>
+                        <span className="mx-2">{item.quantity}</span>
+                        <Button
+                          variant="light"
+                          size="sm"
+                          onClick={() => increaseQuantity(itemId)}
+                        >
+                          <FaPlus />
+                        </Button>
+                      </div>
+                    </td>
+                    <td>{item.price.toFixed(2)} ₺</td>
+                    <td>{(item.price * item.quantity).toFixed(2)} ₺</td>
+                    <td>
+                      <Button
+                        variant="danger"
+                        size="sm"
+                        onClick={() => removeFromCart(itemId)}
+                      >
+                        <FaTrash /> Sil
                       </Button>
-                      <span className="mx-2">{item.quantity}</span>
-                      <Button variant="light" size="sm" onClick={() => increaseQuantity(item.id)}>
-                        <FaPlus />
-                      </Button>
-                    </div>
-                  </td>
-                  <td>{item.price.toFixed(2)} ₺</td>
-                  <td>{(item.price * item.quantity).toFixed(2)} ₺</td>
-                  <td>
-                    <Button
-                      variant="danger"
-                      size="sm"
-                      onClick={() => removeFromCart(item.id)}
-                    >
-                      <FaTrash /> Sil
-                    </Button>
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </Table>
 

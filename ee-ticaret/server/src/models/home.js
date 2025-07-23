@@ -1,66 +1,79 @@
 const mongoose = require('mongoose');
-
-const TranslationSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  description: { type: String, required: true },
-  features: [String],
-  reviews: [String]
+// Çok dilli metinler için kullanılacak ortak şema
+const MultiLangStringSchema = new mongoose.Schema({
+  tr: { type: String, default: '' },
+  en: { type: String, default: '' }
 }, { _id: false });
 
-const TranslationsSchema = new mongoose.Schema({
-  tr: { type: TranslationSchema, required: true },
-  en: { type: TranslationSchema, required: true }
+const TranslationSchema = new mongoose.Schema({
+  name: { type: MultiLangStringSchema, required: true },
+  description: { type: MultiLangStringSchema, default: '' },
+  features: { type: [MultiLangStringSchema], default: [] },
+  reviews: { type: [MultiLangStringSchema], default: [] }
 }, { _id: false });
 
 const ProductSchema = new mongoose.Schema({
-  _id: { type: mongoose.Schema.Types.ObjectId, required: true, auto: false }, // Verilen id kullanılacak
-  category_key: { type: String, required: true },
+  product_id: { type: String, required: true, unique: true },
   price: { type: Number, required: true },
+  stock: { type: Number, required: true },
   rating: { type: Number, required: true },
   image: { type: String, required: true },
-  images: [String],
-  translations: { type: TranslationsSchema, required: true }
+  images: { type: [String], default: [] },
+  translations: {
+    tr: {
+      name: { type: String, required: true },
+      description: { type: String, required: true },
+      features: [String],
+      reviews: [String]
+    },
+    en: {
+      name: { type: String, required: true },
+      description: { type: String, required: true },
+      features: [String],
+      reviews: [String]
+    }
+  }
 }, { _id: false });
 
 const CategorySchema = new mongoose.Schema({
   category_key: { type: String, required: true },
-  title: { type: String, required: true },
-  products: [ProductSchema]
+  title: { type: MultiLangStringSchema, required: true },
+  products: { type: [ProductSchema], default: [] }
 }, { _id: false });
 
 const HeroSlideSchema = new mongoose.Schema({
-  image: { type: String, required: true },
-  title: { type: String, required: true },
-  subtitle: { type: String, required: true },
-  cta: { type: String, required: true },
-  cta_link: { type: String, required: true }
-}, { _id: false });
+  image: { type: String, required: false },
+  title: { type: MultiLangStringSchema, required: true },
+  subtitle: { type: MultiLangStringSchema, required: true },
+  cta: { type: MultiLangStringSchema, required: false },
+  cta_link: { type: MultiLangStringSchema, required: false }
+});
 
 const BannerSchema = new mongoose.Schema({
-  title: { type: String, required: true },
-  desc: { type: String, required: true },
-  cta: { type: String, required: true },
-  cta_link: { type: String, required: true }
+  title: { type: MultiLangStringSchema, required: true },
+  desc: { type: MultiLangStringSchema, required: true },
+  cta: { type: MultiLangStringSchema, required: true },
+  cta_link: { type: MultiLangStringSchema, required: true }
 }, { _id: false });
 
 const AdvantageSchema = new mongoose.Schema({
   icon: { type: String, required: true },
-  text: { type: String, required: true }
+  text: { type: MultiLangStringSchema, required: true }
 }, { _id: false });
 
 const StatSchema = new mongoose.Schema({
   value: { type: String, required: true },
-  desc: { type: String, required: true }
+  desc: { type: MultiLangStringSchema, required: true }
 }, { _id: false });
 
 const HomeSchema = new mongoose.Schema({
-  page_language: { type: String, required: true },
-  page_title: { type: String, required: true },
-  page_subtitle: { type: String, required: true },
-  view_all: { type: String, required: true },
-  featured_products: { type: String, required: true },
-  best_sellers: { type: String, required: true },
-  loading: { type: String, required: true },
+  page_language: { type: [String], required: true },
+  page_title: { type: MultiLangStringSchema, required: true },
+  page_subtitle: { type: MultiLangStringSchema, required: true },
+  view_all: { type: MultiLangStringSchema, required: true },
+  featured_products: { type: MultiLangStringSchema, required: true },
+  best_sellers: { type: MultiLangStringSchema, required: true },
+  loading: { type: MultiLangStringSchema, required: true },
   heroSlides: { type: [HeroSlideSchema], required: true },
   banner: { type: BannerSchema, required: true },
   advantages: { type: [AdvantageSchema], required: true },

@@ -1,6 +1,13 @@
 import React from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Layout from '../components/Layout/Layout';
+import AdminHome from '../pages/admin/Home';
+// import Orders from '../pages/admin/Orders';
+import Products from '../pages/admin/Products';
+import AdminLayout from '../pages/admin/AdminLayout';
+
+
+
 
 // TR pages
 import HomeTR from '../pages/tr/Home';
@@ -28,13 +35,14 @@ export default function AppRouter() {
   const language = useLocation().pathname.split('/')[1];
 
   // ✅ Eğer dil tr veya en değilse, doğrudan 404'e yönlendir
-  if (language && !['tr', 'en'].includes(language)) {
+  if (language && !['tr', 'en', 'admin'].includes(language)) {
     return <Navigate to="/tr/404" replace />;
   }
 
   return (
     <Routes>
       <Route path="/" element={<Navigate to="/tr" replace />} />
+
 
       {/* TR Routes */}
       <Route path="/tr" element={<Layout />}>
@@ -59,9 +67,17 @@ export default function AppRouter() {
         <Route path="register" element={<RegisterEN />} />
         <Route path="account" element={<ProfileEN />} />
 
-      
         <Route path="404" element={<NotFoundEn />} />
       </Route>
+
+      <Route path='/admin' element={<AdminLayout />}>
+        <Route index element={< AdminHome />} />
+        <Route path="products" index element={< Products />} />
+        
+
+
+      </Route>
+
 
       {/* Fallback */}
       <Route path="*" element={<Navigate to={`/${language || 'tr'}/404`} replace />} />

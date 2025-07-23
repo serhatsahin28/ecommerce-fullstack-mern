@@ -1,46 +1,49 @@
+// src/context/CartContext.js
+
 import React, { createContext, useState, useEffect } from 'react';
 
-// 1. Context nesnesini oluştur
+// 1. Context nesnesi oluşturuluyor
 export const CartContext = createContext();
 
-// 2. Provider bileşeni
+// 2. Provider bileşeni tanımlanıyor
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState(() => {
     const stored = localStorage.getItem('cart');
     return stored ? JSON.parse(stored) : [];
   });
 
-  // 3. LocalStorage güncelle
+  // 3. Sepet her değiştiğinde localStorage'a kaydet
   useEffect(() => {
     localStorage.setItem('cart', JSON.stringify(cartItems));
   }, [cartItems]);
 
-  // 4. Sepete ürün ekle (id normalize edilir)
+  // 4. Sepete ürün ekle
   const addToCart = (product) => {
-    const normalizedProduct = {
-      ...product,
-      id: product._id || product.id, // _id varsa id olarak ata
-    };
-
-    setCartItems((prev) => {
-      const existing = prev.find((item) => item.id === normalizedProduct.id);
-      if (existing) {
-        return prev.map((item) =>
-          item.id === normalizedProduct.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      }
-      return [...prev, { ...normalizedProduct, quantity: 1 }];
-    });
+  const normalizedProduct = {
+    ...product,
+    id: product.product_id || product._id || product.id, // Doğru id'yi buraya koy!
   };
 
-  // 5. Sepetten ürün sil
+  setCartItems((prev) => {
+    const existing = prev.find((item) => item.id === normalizedProduct.id);
+    if (existing) {
+      return prev.map((item) =>
+        item.id === normalizedProduct.id
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
+      );
+    }
+    return [...prev, { ...normalizedProduct, quantity: 1 }];
+  });
+};
+
+
+  // 5. Sepetten ürün çıkar
   const removeFromCart = (id) => {
-    setCartItems((prev) => prev.filter((item) => item.id === id ? false : true));
+    setCartItems((prev) => prev.filter((item) => item.id !== id));
   };
 
-  // 6. Adet azalt (ve 0 olursa sil)
+  // 6. Ürün adedini azalt (0 olursa sil)
   const decreaseQuantity = (id) => {
     setCartItems((prev) =>
       prev
@@ -51,7 +54,7 @@ export const CartProvider = ({ children }) => {
     );
   };
 
-  // 7. Adet artır
+  // 7. Ürün adedini artır
   const increaseQuantity = (id) => {
     setCartItems((prev) =>
       prev.map((item) =>
@@ -60,10 +63,13 @@ export const CartProvider = ({ children }) => {
     );
   };
 
-  // 8. Tümünü temizle
+  // 8. Tüm sepeti temizle
   const clearCart = () => {
     setCartItems([]);
   };
+
+  // 9. Toplam ürün adedi
+  const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
     <CartContext.Provider
@@ -74,6 +80,7 @@ export const CartProvider = ({ children }) => {
         decreaseQuantity,
         increaseQuantity,
         clearCart,
+        totalItems,
       }}
     >
       {children}

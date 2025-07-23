@@ -6,6 +6,8 @@ const cors = require('cors');
 const Products = require('./routes/Products');
 const Home = require('./routes/Home');
 const Users = require('./routes/Users');
+const AdminProductList = require('./routes/admin/adminProductsList');
+const AdminHomeList = require('./routes/admin/adminHomeList');
 
 
 
@@ -21,10 +23,14 @@ mongoose.connect(MONGO_URI)
   });
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 app.use(cors());
 app.use('/', Products);
 app.use('/', Home);
 app.use('/', Users);
+app.use('/', AdminProductList);
+app.use('/', AdminHomeList);
 
 
 

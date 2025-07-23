@@ -1,71 +1,98 @@
+// src/components/product/ProductCard.js
+
 import React, { useState, useContext } from 'react';
 import { Card, Button, Toast, ToastContainer } from 'react-bootstrap';
-import { useTranslation } from 'react-i18next';
 import { FaShoppingCart } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { CartContext } from '../common/CartContext';
 
+// URL uyumlu kategori slug çevirisi
 const categorySlugMap = {
   electronics: { tr: 'elektronik', en: 'electronics' },
   fashion:     { tr: 'moda',       en: 'fashion' },
   books:       { tr: 'kitaplar',   en: 'books' },
   sports:      { tr: 'spor',       en: 'sports' },
-  home_office: { tr: 'ev_ofis',    en: 'home_office' }
+  home_office: { tr: 'ev-ofis',    en: 'home-office' }
 };
 
-const ProductCard = ({ product }) => {
-  const { t, i18n } = useTranslation('shop');
-  const currentLanguage = i18n.language;
+const ProductCard = ({ product, lang = 'en' }) => {
   const { addToCart } = useContext(CartContext);
   const [showToast, setShowToast] = useState(false);
 
   const handleAddToCart = () => {
+    console.log("Sepete eklenen ürün:", product);
     addToCart(product);
     setShowToast(true);
     setTimeout(() => setShowToast(false), 2000);
   };
 
-  const localized = product.translations?.[currentLanguage] || {};
-  const name = localized.name || product.name || 'Unnamed';
+  // Güvenli çeviri alma + fallback'li ad ve açıklama
+  const localized = product.translations?.[lang] || {};
+  const name = localized.name || product.name || 'İsimsiz Ürün';
   const description = localized.description || product.description || '';
 
+  // Fiyat formatlama
   const formattedPrice = new Intl.NumberFormat(
-    currentLanguage === 'tr' ? 'tr-TR' : 'en-US',
+    lang === 'tr' ? 'tr-TR' : 'en-US',
     {
       style: 'currency',
-      currency: currentLanguage === 'tr' ? 'TRY' : 'USD',
+      currency: lang === 'tr' ? 'TRY' : 'USD',
     }
   ).format(product.price || 0);
 
-  const localizedSlug = categorySlugMap[product.category_key]?.[currentLanguage] || product.category_key;
+  // URL oluşturma
+  const categorySlug = categorySlugMap[product.category_key]?.[lang] || product.category_key;
+  const productUrl = `/${lang}/${categorySlug}/${product.product_id}`;
 
   return (
     <>
       <Card className="h-100 shadow-sm d-flex flex-column">
         <Link
-          to={`/${currentLanguage}/${localizedSlug}/${product._id}`}
+          to={productUrl}
           className="text-decoration-none text-dark"
         >
-          <Card.Img
-            variant="top"
-            src={product.image}
-            alt={name}
-            style={{
-              objectFit: 'cover',
-              width: '100%',
-              aspectRatio: '4 / 3',
-            }}
-          />
+      <div
+                style={{
+                  width: "100%",
+                  height: "300px",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  backgroundColor: "#f8f9fa",
+                  overflow: "hidden",
+                }}
+              >
+                <Card.Img
+                  variant="top"
+                  src={product.image}
+                  alt={product.name}
+                  style={{
+                    maxWidth: "100%",
+                    maxHeight: "100%",
+                    objectFit: "contain",
+                  }}
+                />
+              </div>
 
           <Card.Body className="d-flex flex-column justify-content-between">
             <div>
-              <Card.Title className="mb-2 fs-6 fw-bold text-truncate" title={name}>
+              {product.category_title && (
+                <Card.Subtitle className="mb-2 text-muted small">
+                  {product.category_title}
+                </Card.Subtitle>
+              )}
+
+              <Card.Title
+                className="mb-2 fs-6 fw-bold text-truncate"
+                title={name}
+              >
                 {name}
               </Card.Title>
+
               <Card.Text
                 className="text-muted small"
                 style={{
-                  minHeight: '3.5em',
+                  minHeight: '3em',
                   overflow: 'hidden',
                   display: '-webkit-box',
                   WebkitLineClamp: 2,
@@ -79,21 +106,22 @@ const ProductCard = ({ product }) => {
         </Link>
 
         <div className="px-3 pb-3 mt-auto">
-          <p className="h6 text-primary fw-semibold my-2">{formattedPrice}</p>
-          <Button variant="danger" className="w-100" onClick={handleAddToCart}>
+          <p className="h6 text-danger fw-semibold my-2">{formattedPrice}</p>
+          <Button
+            variant="primary"
+            className="w-100"
+            onClick={handleAddToCart}
+          >
             <FaShoppingCart className="me-2" />
-            {t('add_to_card')}
+            {lang === 'tr' ? 'Sepete Ekle' : 'Add to Cart'}
           </Button>
         </div>
       </Card>
 
+      {/* Toast Bildirimi */}
       <ToastContainer
         className="position-fixed p-3"
-        style={{
-          top: '72px',
-          right: '1rem',
-          zIndex: 1056,
-        }}
+        style={{ top: '72px', right: '1rem', zIndex: 1056 }}
       >
         <Toast
           show={showToast}
@@ -104,7 +132,7 @@ const ProductCard = ({ product }) => {
           animation
         >
           <Toast.Body className="text-white small">
-            ✅ {currentLanguage === 'tr' ? 'Ürün sepete eklendi!' : 'Product added to cart!'}
+            ✅ {lang === 'tr' ? 'Ürün sepete eklendi!' : 'Product added to cart!'}
           </Toast.Body>
         </Toast>
       </ToastContainer>
