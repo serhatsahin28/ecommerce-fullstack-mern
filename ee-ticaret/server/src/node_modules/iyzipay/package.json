@@ -1,0 +1,43 @@
+{
+  "name": "iyzipay",
+  "version": "2.0.64",
+  "description": "iyzipay api node.js client",
+  "main": "lib/Iyzipay.js",
+  "scripts": {
+    "test": "mocha $(find test -name '*Test.js')",
+    "samples": "mocha $(find samples -name '*Samples.js')",
+    "cover": "nyc npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iyzico/iyzipay-node.git"
+  },
+  "keywords": [
+    "iyzico",
+    "iyzipay",
+    "iyzico.com",
+    "iyzipay node.js",
+    "iyzipay api",
+    "iyzipay api node.js client",
+    "iyzipay api node.js",
+    "payment processing"
+  ],
+  "author": "iyzico <entegrasyon@iyzico.com> (https://iyzico.com/)",
+  "contributors": [
+    "Huseyin Babal <huseyinbabal88@gmail.com>"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/iyzico/iyzipay-node/issues"
+  },
+  "homepage": "https://github.com/iyzico/iyzipay-node",
+  "dependencies": {
+    "postman-request": "^2.88.1-postman.40"
+  },
+  "devDependencies": {
+    "mocha": "^10.7.3",
+    "mocha-lcov-reporter": "^1.3.0",
+    "nyc": "^17.1.0",
+    "should": "^13.2.3"
+  }
+}
