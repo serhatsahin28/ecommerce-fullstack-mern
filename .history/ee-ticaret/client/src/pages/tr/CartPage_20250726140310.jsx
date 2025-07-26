@@ -27,11 +27,7 @@ const CartPageTR = () => {
     (sum, item) => sum + item.price * item.quantity,
     0
   );
-
-  localStorage.setItem(
-    'cartData',
-    JSON.stringify({ cartItems, total })
-  );
+      console.log('Gönderilen data:', { user, cartItems, price: total });
   const handlePaymentStart = async () => {
     const token = localStorage.getItem('token');
 
@@ -68,8 +64,8 @@ const CartPageTR = () => {
           Authorization: `Bearer ${token}`
         },
         body: JSON.stringify({ user, cartItems, price: total })
+
       });
-      console.log(cartItems);
 
       const result = await paymentRes.json();
 

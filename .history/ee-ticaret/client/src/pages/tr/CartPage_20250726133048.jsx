@@ -28,10 +28,6 @@ const CartPageTR = () => {
     0
   );
 
-  localStorage.setItem(
-    'cartData',
-    JSON.stringify({ cartItems, total })
-  );
   const handlePaymentStart = async () => {
     const token = localStorage.getItem('token');
 
@@ -60,16 +56,16 @@ const CartPageTR = () => {
         return;
       }
 
-
-      const paymentRes = await fetch('/pay', {
+      const paymentRes = await fetch('/api/payment/iyzico/checkout-form', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify({ user, cartItems, price: total })
+        // body: JSON.stringify({ user, cartItems, total })
+        body: JSON.stringify({ user, cartItems, total })
+
       });
-      console.log(cartItems);
 
       const result = await paymentRes.json();
 

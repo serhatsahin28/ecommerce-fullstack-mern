@@ -28,10 +28,7 @@ const CartPageTR = () => {
     0
   );
 
-  localStorage.setItem(
-    'cartData',
-    JSON.stringify({ cartItems, total })
-  );
+  
   const handlePaymentStart = async () => {
     const token = localStorage.getItem('token');
 

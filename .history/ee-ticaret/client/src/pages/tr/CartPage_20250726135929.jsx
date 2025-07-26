@@ -28,10 +28,6 @@ const CartPageTR = () => {
     0
   );
 
-  localStorage.setItem(
-    'cartData',
-    JSON.stringify({ cartItems, total })
-  );
   const handlePaymentStart = async () => {
     const token = localStorage.getItem('token');
 
@@ -59,17 +55,15 @@ const CartPageTR = () => {
         navigate('/tr/eksik-bilgi');
         return;
       }
-
-
       const paymentRes = await fetch('/pay', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify({ user, cartItems, price: total })
+        body: JSON.stringify({ user, cartItems, total: price })
+
       });
-      console.log(cartItems);
 
       const result = await paymentRes.json();
 

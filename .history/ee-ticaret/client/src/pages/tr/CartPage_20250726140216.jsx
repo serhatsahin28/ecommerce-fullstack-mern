@@ -28,10 +28,6 @@ const CartPageTR = () => {
     0
   );
 
-  localStorage.setItem(
-    'cartData',
-    JSON.stringify({ cartItems, total })
-  );
   const handlePaymentStart = async () => {
     const token = localStorage.getItem('token');
 
@@ -60,6 +56,7 @@ const CartPageTR = () => {
         return;
       }
 
+      console.log('Gönderilen data:', { user, cartItems, price: total });
 
       const paymentRes = await fetch('/pay', {
         method: 'POST',
@@ -68,8 +65,8 @@ const CartPageTR = () => {
           Authorization: `Bearer ${token}`
         },
         body: JSON.stringify({ user, cartItems, price: total })
+
       });
-      console.log(cartItems);
 
       const result = await paymentRes.json();
 

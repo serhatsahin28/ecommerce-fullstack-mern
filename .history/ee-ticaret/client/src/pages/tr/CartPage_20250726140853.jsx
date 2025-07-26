@@ -27,11 +27,6 @@ const CartPageTR = () => {
     (sum, item) => sum + item.price * item.quantity,
     0
   );
-
-  localStorage.setItem(
-    'cartData',
-    JSON.stringify({ cartItems, total })
-  );
   const handlePaymentStart = async () => {
     const token = localStorage.getItem('token');
 
