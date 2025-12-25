@@ -1,0 +1,138 @@
+/* ==========================================================
+// 1. GENEL YAPISAL STİLLER VE ARKA PLANLAR
+// ========================================================== */
+
+/* Ana Arka Plan: Yumuşak bir bej/gri tonu. Artık saf beyaz değil. */
+.bg-home {
+    background: #f7f7f7; /* Saf beyazdan uzaklaşan, gözü yormayan açık gri/bej */
+    min-height: 100vh;
+}
+
+/* Bölüm Başlıkları */
+.section-title {
+    letter-spacing: 0.05em;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 3px solid #e5e5e5; /* Yumuşak bir çizgi */
+    color: #444444; /* Koyu, sıcak gri metin */
+}
+
+/* ==========================================================
+// 2. RENK GEÇİŞLİ BÖLÜMLER (SICAK VE YUMUŞAK)
+// ========================================================== */
+
+/* Section Genel Geçiş Hızı ve Köşe Yuvarlaklığı */
+.featured-bg, .bestseller-bg {
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    border-radius: 1.5rem;
+    padding: 2.5rem !important;
+    border: none;
+}
+
+/* Öne Çıkanlar (Sıcak Toprak Tonları) */
+.featured-bg {
+    /* Hafif krem başlangıçtan yumuşak mercan bitişe */
+    background: linear-gradient(120deg, #fbfbfb 70%, #fff0e7 100%); 
+}
+.featured-bg:hover {
+    transform: translateY(-8px) scale(1.005);
+    /* Sıcak, toprak tonlu gölge ile derinlik katma */
+    box-shadow: 0 25px 50px rgba(226, 178, 140, 0.2); 
+}
+
+/* Çok Satanlar (Hafif ve Sakin Mavi/Mint Tonları) */
+.bestseller-bg {
+    /* Hafif krem başlangıçtan çok açık mint yeşiline */
+    background: linear-gradient(120deg, #fbfbfb 70%, #edf8f8 100%); 
+}
+.bestseller-bg:hover {
+    transform: translateY(-8px) scale(1.005);
+    /* Soğuk, sakin mavi tonlu gölge */
+    box-shadow: 0 25px 50px rgba(179, 219, 219, 0.25); 
+}
+
+/* ==========================================================
+// 3. VURGULAYICI ELEMENTLER VE HAREKET
+// ========================================================== */
+
+/* Özellikler Çubuğu (Features Bar) */
+.features-bar {
+    background: #ffffff; /* Kontrastı korumak için beyaz kalır */
+    border-radius: 2.5rem;
+    /* Gölgeyi daha belirgin ve yumuşak yapma */
+    box-shadow: 0 15px 40px 0 rgba(60,60,60,0.15); 
+    padding: 1.5rem 0;
+}
+
+/* Feature Item Hover Animasyonu (Sıcak Vurgu) */
+.feature-item:hover {
+    color: #e76f51; /* Terracotta (Kiremit Kırmızısı) Vurgu */
+    transform: scale(1.1);
+}
+
+/* Hero Content (Buzlu Cam) */
+.hero-content {
+    max-width: 650px;
+    backdrop-filter: blur(8px) brightness(1.2); 
+    border-radius: 2.5rem; 
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.05); /* Şeffaf arka plan */
+    transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25); /* Derinlik veren gölge */
+}
+.hero-content:hover {
+    transform: perspective(1000px) rotateX(1deg) translateY(-10px);
+}
+
+/* Tümünü Gör Butonu (Terracotta Vurgusu) */
+.btn-outline-danger {
+    color: #e76f51; 
+    border-color: #e76f51;
+    transition: all 0.3s ease;
+}
+.btn-outline-danger:hover {
+    transform: translateX(5px);
+    background-color: #e76f51; 
+    border-color: #e76f51;
+    color: white;
+    box-shadow: 0 5px 15px rgba(231, 111, 81, 0.3);
+}
+
+/* ==========================================================
+// 4. KATEGORİ VE LİSTE STİLLERİ
+// ========================================================== */
+
+.category-list-bg {
+    background: #ffffff; /* Ana arka plandan ayrım için beyaz kalır */
+    box-shadow: 0 8px 25px 0 rgba(60, 60, 60, 0.12); 
+    border: 1px solid #eeeeee;
+}
+
+/* ==========================================================
+// 5. MEDYA SORGULARI (Orijinal Koddan Alınmıştır)
+// ========================================================== */
+
+@media (max-width: 768px) {
+    .hero-content {
+        padding: 1.5rem !important;
+        max-width: 95vw;
+        border-radius: 1.5rem;
+    }
+    .hero-slide {
+        min-height: 380px;
+    }
+    .display-4, .display-5 {
+        font-size: 2.2rem !important;
+    }
+    .features-bar {
+        border-radius: 1.5rem;
+        padding: 1rem 0.5rem;
+    }
+    .featured-bg, .bestseller-bg {
+        padding: 1.5rem !important;
+        border-radius: 1rem;
+    }
+}

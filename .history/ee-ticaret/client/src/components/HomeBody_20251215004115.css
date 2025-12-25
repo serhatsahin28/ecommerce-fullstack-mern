@@ -1,0 +1,276 @@
+/* ======================================================
+   ROOT – GLOBAL MOTION AYARLARI
+====================================================== */
+
+:root {
+  --ease-smooth: cubic-bezier(.4,0,.2,1);
+  --ease-soft: cubic-bezier(.25,.8,.25,1);
+}
+
+/* ======================================================
+   PAGE
+====================================================== */
+
+.bg-home {
+  background: #fafbfc;
+  min-height: 100vh;
+  animation: pageFade 0.6s ease forwards;
+}
+
+@keyframes pageFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ======================================================
+   HERO
+====================================================== */
+
+.home-hero {
+  margin-bottom: 0;
+}
+
+.hero-slide {
+  min-height: 560px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-slide::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    rgba(255,255,255,0.06),
+    transparent 60%
+  );
+  animation: lightSweep 8s linear infinite;
+}
+
+@keyframes lightSweep {
+  0% { transform: translateX(-40%); }
+  100% { transform: translateX(40%); }
+}
+
+.hero-content {
+  max-width: 600px;
+  margin: auto;
+  backdrop-filter: blur(4px);
+  border-radius: 2rem;
+  animation: heroEnter 1s var(--ease-smooth) forwards;
+}
+
+@keyframes heroEnter {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ======================================================
+   SECTION TITLES – EDITORIAL MOTION
+====================================================== */
+
+.section-title {
+  letter-spacing: 0.04em;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  position: relative;
+}
+
+.section-title span {
+  animation: sparkle 3s ease infinite;
+}
+
+@keyframes sparkle {
+  0%,100% { transform: scale(1); opacity: .8; }
+  50% { transform: scale(1.15); opacity: 1; }
+}
+
+.section-title::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -8px;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #ff4d4f, transparent);
+  transition: width .6s var(--ease-soft);
+}
+
+section:hover .section-title::after {
+  width: 140px;
+}
+
+/* ======================================================
+   PRODUCT SECTIONS – FLOATING FEEL
+====================================================== */
+
+.featured-bg,
+.bestseller-bg,
+.category-list-bg {
+  transition: transform .4s var(--ease-soft),
+              box-shadow .4s var(--ease-soft);
+}
+
+.featured-bg:hover,
+.bestseller-bg:hover,
+.category-list-bg:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 25px 60px rgba(0,0,0,.10);
+}
+
+.featured-bg {
+  background: linear-gradient(120deg, #fff8ee 70%, #ffe5e5 100%);
+}
+
+.bestseller-bg {
+  background: linear-gradient(120deg, #f3f6fd 70%, #e5f6ff 100%);
+}
+
+/* ======================================================
+   CATEGORY LIST
+====================================================== */
+
+.category-list-bg {
+  background: #fff;
+  box-shadow: 0 2px 12px rgba(60,60,60,0.05);
+}
+
+/* ======================================================
+   CATEGORY ICONS – MICRO MOTION
+====================================================== */
+
+.category-icon {
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  filter: grayscale(.1) brightness(1.3);
+  transition: transform .35s var(--ease-soft),
+              filter .35s var(--ease-soft);
+}
+
+.category-icon:hover {
+  transform: translateY(-3px) scale(1.2);
+  filter: brightness(1.6)
+    drop-shadow(0 6px 12px rgba(255,77,79,.35));
+}
+
+/* Örnek ikonlar */
+.icon-electronics { background-image: url('/assets/icons/electronics.svg'); }
+.icon-fashion     { background-image: url('/assets/icons/fashion.svg'); }
+.icon-beauty      { background-image: url('/assets/icons/beauty.svg'); }
+
+/* ======================================================
+   PROMO BANNER – LIVING GRADIENT
+====================================================== */
+
+.promo-banner {
+  background: linear-gradient(
+    100deg,
+    #ffe5e5,
+    #fff8ee,
+    #ffe5e5
+  );
+  background-size: 300% 300%;
+  padding: 1.5rem 2rem;
+  animation: promoFlow 7s ease infinite;
+}
+
+@keyframes promoFlow {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ======================================================
+   FEATURES BAR – SOFT HOVER
+====================================================== */
+
+.features-bar {
+  background: #fff;
+  border-radius: 2rem;
+  box-shadow: 0 2px 10px rgba(60,60,60,0.06);
+  flex-wrap: wrap;
+}
+
+.feature-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .3rem;
+  font-weight: 500;
+  font-size: 1.07rem;
+  transition: transform .35s var(--ease-soft);
+}
+
+.feature-item:hover {
+  transform: translateY(-6px);
+}
+
+.feature-item span {
+  font-size: 2.5rem;
+  transition: transform .4s var(--ease-soft);
+}
+
+.feature-item:hover span {
+  transform: scale(1.2) rotate(-4deg);
+}
+
+/* ======================================================
+   SCROLL FEEL (PURE CSS ILLUSION)
+====================================================== */
+
+section {
+  animation: sectionFade .8s ease both;
+}
+
+@keyframes sectionFade {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ======================================================
+   RESPONSIVE
+====================================================== */
+
+@media (max-width: 768px) {
+  .hero-content {
+    padding: 1.2rem !important;
+    max-width: 95vw;
+  }
+
+  .hero-slide {
+    min-height: 330px;
+  }
+
+  .display-4,
+  .display-5 {
+    font-size: 2rem !important;
+  }
+
+  .featured-bg:hover,
+  .bestseller-bg:hover,
+  .category-list-bg:hover {
+    transform: none;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+  }
+}

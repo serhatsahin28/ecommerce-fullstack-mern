@@ -1,0 +1,166 @@
+/* ==========================================================
+// 1. GENEL YAPISAL STİLLER VE ARKA PLANLAR
+// ========================================================== */
+
+/* Ana Arka Plan */
+.bg-home {
+    background: #fafbfc; 
+    min-height: 100vh;
+}
+
+/* Bölüm Başlıkları */
+.section-title {
+    letter-spacing: 0.05em; /* Harf aralığı artırıldı */
+    font-weight: 700; 
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 3px solid #e9ecef;
+    color: #343a40; 
+}
+
+/* Section Arka Planları ve Hover Animasyonu */
+.featured-bg, .bestseller-bg {
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1); /* Yumuşak ve belirgin geçiş */
+    border-radius: 1.5rem; /* Köşe yuvarlaklığı artırıldı */
+    padding: 2.5rem !important; /* İç boşluk artırıldı */
+}
+
+/* Öne Çıkanlar (Turuncu/Kırmızı Ton) */
+.featured-bg {
+    background: linear-gradient(120deg, #fff8ee 70%, #ffe5e5 100%);
+    border: 1px solid #ffe9c4;
+}
+.featured-bg:hover {
+    transform: translateY(-8px) scale(1.005); /* Yere yakın kalkma efekti */
+    box-shadow: 0 20px 40px rgba(255, 165, 0, 0.2); /* Daha büyük, sıcak gölge */
+}
+
+/* Çok Satanlar (Mavi Ton) */
+.bestseller-bg {
+    background: linear-gradient(120deg, #f3f6fd 70%, #e5f6ff 100%);
+    border: 1px solid #dbe9ff;
+}
+.bestseller-bg:hover {
+    transform: translateY(-8px) scale(1.005);
+    box-shadow: 0 20px 40px rgba(66, 133, 244, 0.2); /* Daha büyük, soğuk gölge */
+}
+
+/* ==========================================================
+// 2. HERO SLAYT VE ÖZELLİKLER ÇUBUĞU STİLLERİ
+// ========================================================== */
+
+.hero-slide {
+    min-height: 560px;
+    position: relative; 
+    overflow: hidden;
+}
+
+/* Hero Content - Buzlu Cam Efekti */
+.hero-content {
+    max-width: 650px;
+    backdrop-filter: blur(8px) brightness(1.2); /* Blur artırıldı, daha şık */
+    border-radius: 2.5rem; /* Daha yuvarlak */
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.1); /* Çok hafif beyazlık */
+    transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+.hero-content:hover {
+    transform: perspective(1000px) rotateX(1deg) translateY(-10px); /* Hafif 3D kalkış */
+}
+
+/* Özellikler Çubuğu (Features Bar) */
+.features-bar {
+    background: #fff;
+    border-radius: 2.5rem; /* Daha yuvarlak */
+    box-shadow: 0 10px 30px 0 rgba(60,60,60,0.1); 
+    padding: 1.5rem 0;
+}
+
+.feature-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    font-weight: 500;
+    color: #555;
+    transition: transform 0.3s ease, color 0.3s ease;
+    cursor: pointer;
+}
+
+/* Feature Item Hover Animasyonu */
+.feature-item:hover {
+    color: #dc3545; /* Kırmızı vurgu */
+    transform: scale(1.1); /* Hafif sıçrama */
+}
+.feature-item span[style*="font-size: 2.5rem"] {
+    transition: transform 0.3s ease;
+}
+.feature-item:hover span[style*="font-size: 2.5rem"] {
+    transform: rotate(5deg);
+    opacity: 0.9;
+}
+
+/* ==========================================================
+// 3. KATEGORİ VE LİSTE STİLLERİ
+// ========================================================== */
+
+/* Kategori Bölüm Arka Planı */
+.category-list-bg {
+    background: #ffffff;
+    box-shadow: 0 4px 18px 0 rgba(60, 60, 60, 0.08); 
+    border: 1px solid #ececec;
+}
+
+/* Kategori İkonları */
+.category-icon {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    background-size: contain;
+    filter: grayscale(0.2) brightness(1.1);
+    transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+/* Kategori Başlıkları içindeki İkon Animasyonu */
+.category-list-bg:hover .category-icon { 
+    filter: grayscale(0) brightness(1.3); /* Bölüme bakınca renklenir */
+}
+
+/* Tümünü Gör Butonu */
+.btn-outline-danger {
+    transition: all 0.3s ease;
+}
+.btn-outline-danger:hover {
+    transform: translateX(5px);
+    box-shadow: 0 5px 15px rgba(220, 53, 69, 0.2);
+}
+
+
+/* ==========================================================
+// 4. RESPONSIVE DÜZENLEMELER
+// ========================================================== */
+
+@media (max-width: 768px) {
+    .hero-content {
+        padding: 1.5rem !important;
+        max-width: 95vw;
+        border-radius: 1.5rem;
+    }
+    .hero-slide {
+        min-height: 380px;
+    }
+    .display-4, .display-5 {
+        font-size: 2.2rem !important;
+    }
+    .features-bar {
+        border-radius: 1.5rem;
+        padding: 1rem 0.5rem;
+    }
+    .featured-bg, .bestseller-bg {
+        padding: 1.5rem !important;
+        border-radius: 1rem;
+    }
+}

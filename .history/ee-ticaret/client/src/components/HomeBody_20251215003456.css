@@ -1,0 +1,257 @@
+/* --- TEMEL AYARLAR & DEĞİŞKENLER --- */
+:root {
+  --primary-transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); /* Apple tarzı yumuşak geçiş */
+  --hover-lift: translateY(-5px);
+  --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.08);
+  --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.12);
+}
+
+.bg-home {
+  background: #fafbfc;
+  min-height: 100vh;
+  /* Tüm sayfanın yumuşak açılması için */
+  animation: fadeInPage 0.8s ease-out; 
+}
+
+/* --- ANIMASYON TANIMLARI (KEYFRAMES) --- */
+
+/* Sayfa ilk açılışta yukarı doğru süzülerek gelmesi için */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Sayfa opaklık animasyonu */
+@keyframes fadeInPage {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Gradient arka planların parlaması için (Shimmer Effect) */
+@keyframes shimmerGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* İkonların hafifçe yüzmesi (Floating) */
+@keyframes floatIcon {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+  100% { transform: translateY(0px); }
+}
+
+/* --- HERO SECTION --- */
+.home-hero {
+  margin-bottom: 0;
+  overflow: hidden; /* Taşmaları gizle */
+}
+
+.hero-slide {
+  min-height: 560px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  /* Arka plan zoom efekti için hazırlık (React tarafında style ile geliyor ama burayı da destekleyelim) */
+  transition: transform 0.5s ease; 
+}
+
+.hero-content {
+  max-width: 600px;
+  margin: auto;
+  backdrop-filter: blur(8px); /* Blur miktarını artırdık */
+  -webkit-backdrop-filter: blur(8px); /* Safari desteği */
+  background: rgba(255, 255, 255, 0.1); /* Hafif beyaz katman */
+  border: 1px solid rgba(255, 255, 255, 0.2); /* İnce cam kenarlık */
+  border-radius: 2rem;
+  padding: 2.5rem !important; /* Biraz daha geniş iç boşluk */
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15); /* Glassmorphism gölgesi */
+  
+  /* İçerik animasyonu */
+  animation: fadeInUp 1s ease-out forwards;
+  opacity: 0; /* Animasyon başlayana kadar gizli */
+  animation-delay: 0.3s; /* Resim yüklendikten az sonra gelsin */
+  animation-fill-mode: forwards; /* Animasyon bitince orada kalsın */
+}
+
+/* --- BAŞLIKLAR --- */
+.section-title {
+  letter-spacing: 0.04em;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  position: relative;
+  transition: var(--primary-transition);
+}
+
+/* Başlık ikonları için hover efekti */
+.section-title span:first-child {
+  transition: transform 0.3s ease;
+}
+.section-title:hover span:first-child {
+  transform: scale(1.2) rotate(10deg);
+}
+
+/* --- KUTULAR VE ARKA PLANLAR (Öne Çıkanlar & Çok Satanlar) --- */
+.featured-bg, 
+.bestseller-bg {
+  border-radius: 1.5rem; /* Köşeleri biraz daha yumuşattık */
+  background-size: 200% 200%; /* Gradient animasyonu için boyutu artır */
+  transition: var(--primary-transition);
+  border: 1px solid transparent;
+}
+
+.featured-bg {
+  background: linear-gradient(120deg, #fff8ee 0%, #ffe5e5 50%, #fff8ee 100%);
+  animation: shimmerGradient 10s ease infinite; /* Sürekli hafif hareket */
+}
+
+.bestseller-bg {
+  background: linear-gradient(120deg, #f3f6fd 0%, #e5f6ff 50%, #f3f6fd 100%);
+  animation: shimmerGradient 12s ease infinite;
+}
+
+/* Kutuların üzerine gelince hafif kalksın */
+.featured-bg:hover, 
+.bestseller-bg:hover,
+.category-list-bg:hover {
+  transform: var(--hover-lift);
+  box-shadow: var(--shadow-soft);
+  border-color: rgba(0,0,0,0.05);
+}
+
+/* --- KATEGORİ LİSTESİ --- */
+.category-list-bg {
+  background: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 2px 12px 0 rgba(60, 60, 60, 0.05);
+  transition: var(--primary-transition);
+}
+
+/* Kategori İkonları */
+.category-icon {
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  filter: grayscale(0.1) brightness(1.3);
+  transition: transform 0.3s ease;
+}
+
+/* --- ICONS (SVG Mapping) --- */
+.icon-electronics { background-image: url('/assets/icons/electronics.svg'); }
+.icon-fashion { background-image: url('/assets/icons/fashion.svg'); }
+.icon-beauty { background-image: url('/assets/icons/beauty.svg'); }
+/* Diğer ikonlar buraya */
+
+/* --- PROMO BANNER --- */
+.promo-banner {
+  background: linear-gradient(100deg, #ffe5e5 80%, #fff8ee 100%);
+  padding: 3rem 2rem; /* Yüksekliği artırıp daha ferah yapalım */
+  border-radius: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: var(--primary-transition);
+  box-shadow: 0 5px 15px rgba(255, 100, 100, 0.1);
+}
+
+.promo-banner:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 30px rgba(255, 100, 100, 0.15);
+}
+
+/* Banner içindeki butonun üzerine gelince büyümesi */
+.promo-banner .btn {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.promo-banner .btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
+}
+
+/* --- TRUST BAR (AVANTAJLAR) --- */
+.features-bar {
+  background: #fff;
+  border-radius: 2rem;
+  box-shadow: 0 5px 20px 0 rgba(60,60,60,0.06); /* Gölgeyi biraz artırdık */
+  flex-wrap: wrap;
+  padding: 2rem !important; /* İç boşluk ekledik */
+  transition: var(--primary-transition);
+}
+
+.features-bar:hover {
+  box-shadow: var(--shadow-hover);
+}
+
+.feature-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  font-size: 1.0rem;
+  color: #444;
+  transition: transform 0.3s ease;
+  cursor: default;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.feature-item:hover {
+  background: #f8f9fa; /* Hover olunca hafif gri arka plan */
+  transform: translateY(-5px);
+}
+
+/* İkon veya Emoji */
+.feature-item span:first-child {
+  font-size: 2.5rem;
+  display: inline-block;
+  /* İkonlar sürekli hafifçe yüzsün */
+  animation: floatIcon 3s ease-in-out infinite;
+}
+
+/* Her ikonun yüzme hareketini biraz kaydıralım (hepsi aynı anda inip kalkmasın) */
+.feature-item:nth-child(1) span:first-child { animation-delay: 0s; }
+.feature-item:nth-child(2) span:first-child { animation-delay: 0.5s; }
+.feature-item:nth-child(3) span:first-child { animation-delay: 1s; }
+.feature-item:nth-child(4) span:first-child { animation-delay: 1.5s; }
+
+/* --- ISTATISTIKLER --- */
+.stat-item {
+  transition: transform 0.3s ease;
+}
+.stat-item:hover {
+  transform: scale(1.1);
+}
+.stat-item .fw-bold {
+  background: -webkit-linear-gradient(#dc3545, #ff6b6b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 768px) {
+  .hero-content {
+    padding: 1.5rem !important;
+    max-width: 90vw;
+    backdrop-filter: blur(5px); /* Mobilde performansı korumak için blur azaltılır */
+  }
+  .hero-slide {
+    min-height: 400px;
+  }
+  .display-4 {
+    font-size: 2.2rem !important;
+  }
+  .features-bar {
+    gap: 2rem !important;
+  }
+}

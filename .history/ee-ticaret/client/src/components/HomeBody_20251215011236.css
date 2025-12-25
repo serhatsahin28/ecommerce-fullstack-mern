@@ -1,0 +1,105 @@
+/* ==========================================================
+// 1. GENEL YAPISAL STİLLER VE ARKA PLANLAR (YUMUŞAK)
+// ========================================================== */
+
+/* Ana Arka Plan: Yumuşak beyaz ve çok açık gri */
+.bg-home {
+    background: #fdfdfd; 
+    min-height: 100vh;
+}
+
+/* Bölüm Başlıkları: Daha az agresif bir alt çizgi */
+.section-title {
+    letter-spacing: 0.05em;
+    font-weight: 700; 
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 3px solid #f0f0f0; /* Açık gri çizgi */
+    color: #4a4e69; /* Orta Koyu Mavi Gri */
+}
+
+/* ==========================================================
+// 2. RENK GEÇİŞLİ BÖLÜMLER (FERAH)
+// ========================================================== */
+
+/* Section Arka Planları ve Hover Animasyonu */
+.featured-bg, .bestseller-bg {
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1); 
+    border-radius: 1.5rem; 
+    padding: 2.5rem !important;
+    border: none; /* Kenarlık kaldırıldı */
+}
+
+/* Öne Çıkanlar (Yumuşak Şeftali/Bej Ton) */
+.featured-bg {
+    /* Başlangıçta daha soğuk bej, bitişte hafif şeftali */
+    background: linear-gradient(120deg, #fcfcfc 70%, #fcf7f2 100%); 
+}
+.featured-bg:hover {
+    transform: translateY(-8px) scale(1.005); 
+    /* Gölge de yumuşak ve geniş yayılan bir sarımsı ton */
+    box-shadow: 0 20px 40px rgba(250, 192, 140, 0.15); 
+}
+
+/* Çok Satanlar (Çok Açık Buz Mavisi Ton) */
+.bestseller-bg {
+    /* Beyazdan çok hafif buz mavisine geçiş */
+    background: linear-gradient(120deg, #ffffff 70%, #f4f8fc 100%); 
+}
+.bestseller-bg:hover {
+    transform: translateY(-8px) scale(1.005);
+    /* Gölge de yumuşak ve geniş yayılan bir mavi ton */
+    box-shadow: 0 20px 40px rgba(174, 214, 241, 0.2); 
+}
+
+/* ==========================================================
+// 3. HERO SLAYT VE ÖZELLİKLER ÇUBUĞU (VURGU YUMUŞATILDI)
+// ========================================================== */
+
+/* Hero Content: Opaklık azaltıldı */
+.hero-content {
+    max-width: 650px;
+    backdrop-filter: blur(8px) brightness(1.2); 
+    border-radius: 2.5rem; 
+    border: 1px solid rgba(255, 255, 255, 0.4); /* Biraz daha belirgin */
+    background: rgba(255, 255, 255, 0.02); /* Çok şeffaf, neredeyse yok */
+    transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Gölge yumuşatıldı */
+}
+
+/* Feature Item Hover Animasyonu */
+.feature-item:hover {
+    color: #e76f51; /* Daha sıcak bir vurgu tonu */
+    transform: scale(1.1); 
+}
+
+/* ==========================================================
+// 4. KATEGORİ VE LİSTE STİLLERİ
+// ========================================================== */
+
+/* Kategori Bölüm Arka Planı */
+.category-list-bg {
+    background: #ffffff;
+    box-shadow: 0 4px 18px 0 rgba(60, 60, 60, 0.05); /* Gölge yumuşatıldı */
+    border: 1px solid #f5f5f5; /* Çok ince, açık kenarlık */
+}
+
+/* Tümünü Gör Butonu (YUMUŞAK KIRMIZI) */
+.btn-outline-danger {
+    color: #e76f51; /* Vurgu rengi */
+    border-color: #e76f51;
+    transition: all 0.3s ease;
+}
+.btn-outline-danger:hover {
+    transform: translateX(5px);
+    /* Buton hover rengi daha derin, toprak tonlu kırmızı */
+    background-color: #e76f51; 
+    border-color: #e76f51;
+    color: white;
+    box-shadow: 0 5px 15px rgba(231, 111, 81, 0.3);
+}
+
+/* Diğer sabit CSS kodları (icon-electronics, media queries vb.) aynı kalabilir. */
+/* Daha önce paylaştığım tüm diğer yapısal ve animasyonel CSS kodları buraya dahil edilmelidir. */

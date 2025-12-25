@@ -1,0 +1,84 @@
+/* ==========================================================
+// 1. GENEL YAPISAL STİLLER VE ARKA PLANLAR (SICAK VE DERİN)
+// ========================================================== */
+
+/* Ana Arka Plan: Saf beyazdan uzaklaşmak için çok açık gri/bej */
+.bg-home {
+    background: #f5f5f5; /* Hafif, yumuşak gri taban */
+    min-height: 100vh;
+}
+
+/* Bölüm Başlıkları: Daha belirgin bir alt çizgi */
+.section-title {
+    /* Aynı kalabilir, ancak renk biraz koyulaştırılabilir */
+    color: #333333; 
+    border-bottom: 3px solid #e0e0e0; /* Daha kalın ve belirgin çizgi */
+}
+
+/* ==========================================================
+// 2. RENK GEÇİŞLİ BÖLÜMLER (DAHA ZENGİN GRADIENT)
+// ========================================================== */
+
+/* Öne Çıkanlar (Yumuşak Şeftali/Bej Ton - Başlangıcı koyulaştırıldı) */
+.featured-bg {
+    /* Beyaz başlangıç yerine hafif krem başlangıç */
+    background: linear-gradient(120deg, #f8f8f8 70%, #fcf7f2 100%); 
+}
+.featured-bg:hover {
+    transform: translateY(-8px) scale(1.005); 
+    /* Gölge biraz daha koyu ve belirgin */
+    box-shadow: 0 25px 50px rgba(250, 192, 140, 0.2); 
+}
+
+/* Çok Satanlar (Çok Açık Buz Mavisi Ton - Başlangıcı koyulaştırıldı) */
+.bestseller-bg {
+    /* Beyaz başlangıç yerine hafif krem başlangıç */
+    background: linear-gradient(120deg, #f8f8f8 70%, #f4f8fc 100%); 
+}
+.bestseller-bg:hover {
+    transform: translateY(-8px) scale(1.005);
+    /* Gölge biraz daha koyu ve belirgin */
+    box-shadow: 0 25px 50px rgba(174, 214, 241, 0.25); 
+}
+
+/* ==========================================================
+// 3. KATEGORİ VE LİSTE STİLLERİ
+// ========================================================== */
+
+/* Kategori Bölüm Arka Planı: Elementlerin ana arka plandan ayrılması için beyaz kalır */
+.category-list-bg {
+    background: #ffffff; /* Ana arka plandan ayrılması için kontrastı korur */
+    /* Gölge artırılarak derinlik ve ayrım sağlanır */
+    box-shadow: 0 8px 25px 0 rgba(60, 60, 60, 0.12); 
+    border: 1px solid #eeeeee; /* Daha belirgin kenarlık */
+}
+
+/* Özellikler Çubuğu (Features Bar) */
+.features-bar {
+    background: #ffffff; /* Üstteki kontrastı korumak için beyaz kalır */
+    border-radius: 2.5rem; 
+    /* Gölge artırılarak elementin havada süzülme hissi güçlendirilir */
+    box-shadow: 0 15px 40px 0 rgba(60,60,60,0.15); 
+    padding: 1.5rem 0;
+}
+
+/* ==========================================================
+// 4. HERO SLAYT VE BANNER
+// ========================================================== */
+
+/* Hero Overlay: Metni daha belirgin hale getirmek için koyuluk artırıldı */
+.hero-slide::before {
+    background: rgba(0, 0, 0, 0.55); /* Daha koyu overlay */
+}
+
+/* Hero Content Gölgesi: Daha belirgin bir gölge ekleyerek ayrım sağlanır */
+.hero-content {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Promosyon Banner */
+.promo-banner {
+    /* Hafif bir gölge ile ana arka plandan ayrım sağlar */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05); 
+    border: 1px solid #f0e6e6; /* Yumuşak kenarlık */
+}

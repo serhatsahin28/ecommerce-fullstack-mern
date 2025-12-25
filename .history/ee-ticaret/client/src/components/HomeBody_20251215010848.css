@@ -1,0 +1,199 @@
+/* ==========================================================
+// 1. GENEL YAPISAL STİLLER
+// ========================================================== */
+
+/* Ana Arka Plan */
+.bg-home {
+    background: #fafbfc; /* Açık Gri/Hafif Beyaz */
+    min-height: 100vh;
+}
+
+/* Bölüm Başlıkları ve Genel Tipografi */
+.section-title {
+    letter-spacing: 0.04em;
+    font-weight: 700; /* Daha kalın başlık */
+    display: flex;
+    align-items: center;
+    gap: 0.75em;
+    padding-bottom: 0.75rem;
+    border-bottom: 3px solid #e9ecef; /* Alt çizgi eklenerek ayrım sağlandı */
+    color: #343a40; /* Koyu gri metin */
+}
+
+/* ==========================================================
+// 2. HERO SLAYT VE BANNER STİLLERİ
+// ========================================================== */
+
+.home-hero {
+    margin-bottom: 0;
+}
+
+.hero-slide {
+    min-height: 560px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative; 
+    overflow: hidden;
+}
+
+/* Hero Overlay: Metni daha okunaklı yapar */
+.hero-slide::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    /* Hafif şeffaf koyu overlay */
+    background: rgba(0, 0, 0, 0.45); 
+    z-index: 1;
+}
+
+.hero-content {
+    max-width: 650px;
+    margin: auto;
+    /* Şık, buzlu cam efekti */
+    backdrop-filter: blur(5px) brightness(1.1);
+    border-radius: 2rem;
+    position: relative;
+    z-index: 2;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); /* Yumuşak geçiş */
+}
+
+/* Hero Content Hover Animasyonu */
+.hero-content:hover {
+    transform: translateY(-8px); 
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Promosyon Banner */
+.promo-banner {
+    background: linear-gradient(100deg, #ffe5e5 80%, #fff8ee 100%);
+    padding: 1.5rem 2rem;
+    border: 1px solid #ffdddd;
+}
+
+/* ==========================================================
+// 3. ÖZELLİKLER ÇUBUĞU (FEATURES BAR)
+// ========================================================== */
+
+.features-bar {
+    background: #fff;
+    border-radius: 2rem;
+    /* Üstteki section'ın üzerine çıkmak için container dışına pozisyonlanırsa */
+    /* position: relative; margin-top: -3rem; */
+    box-shadow: 0 5px 20px 0 rgba(60,60,60,0.15); 
+    flex-wrap: wrap;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-weight: 600;
+    font-size: 1rem;
+    color: #555;
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+/* Feature Item Hover Animasyonu */
+.feature-item:hover {
+    color: #d9534f; /* Danger rengiyle uyumlu */
+    transform: translateY(-3px);
+}
+.feature-item span[style*="font-size: 2.5rem"] { /* Ikonu temsil eden span */
+    transition: transform 0.3s ease;
+}
+.feature-item:hover span[style*="font-size: 2.5rem"] {
+    transform: rotate(-10deg) scale(1.1); /* Hafif dönme ve büyüme */
+}
+
+
+/* ==========================================================
+// 4. BÖLÜM ARKA PLANLARI (Gradients)
+// ========================================================== */
+
+.featured-bg {
+    background: linear-gradient(120deg, #fff8ee 70%, #ffe5e5 100%);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    border: 1px solid #ffe9c4;
+}
+.featured-bg:hover {
+    transform: translateY(-5px) scale(1.005);
+    box-shadow: 0 15px 30px rgba(255, 165, 0, 0.1); 
+}
+
+.bestseller-bg {
+    background: linear-gradient(120deg, #f3f6fd 70%, #e5f6ff 100%);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    border: 1px solid #dbe9ff;
+}
+.bestseller-bg:hover {
+    transform: translateY(-5px) scale(1.005);
+    box-shadow: 0 15px 30px rgba(66, 133, 244, 0.1); 
+}
+
+/* ==========================================================
+// 5. KATEGORİ LİSTESİ STİLLERİ
+// ========================================================== */
+
+/* Bireysel Kategori Bölümü Arka Planı */
+.category-list-bg {
+    background: #fff;
+    box-shadow: 0 2px 15px 0 rgba(60, 60, 60, 0.08); /* Biraz daha belirgin gölge */
+    border: 1px solid #eee;
+}
+
+/* Kategori İkonları */
+.category-icon {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    filter: grayscale(0.2) brightness(1.1); /* Hafif solukluk */
+    transition: filter 0.3s ease;
+}
+
+/* Örnek kategori ikonları (Sizin sağladığınız sınıflar) */
+.icon-electronics { background-image: url('/assets/icons/electronics.svg'); }
+.icon-fashion { background-image: url('/assets/icons/fashion.svg'); }
+.icon-beauty { background-image: url('/assets/icons/beauty.svg'); }
+
+/* ==========================================================
+// 6. RESPONSIVE DÜZENLEMELER (Sizin kodunuza göre)
+// ========================================================== */
+
+@media (max-width: 992px) {
+    .features-bar {
+        border-radius: 1.5rem;
+        gap: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-content {
+        padding: 1.5rem !important;
+        max-width: 95vw;
+        border-radius: 1.5rem;
+    }
+    .hero-slide {
+        min-height: 380px;
+    }
+    .display-4, .display-5 {
+        font-size: 2.2rem !important;
+    }
+    .feature-item {
+        font-size: 0.85rem;
+        gap: 0.5rem;
+    }
+    .features-bar {
+        box-shadow: 0 5px 15px rgba(60,60,60,0.08);
+        padding: 1.5rem 1rem;
+    }
+}
