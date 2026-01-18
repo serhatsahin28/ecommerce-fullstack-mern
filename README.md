@@ -1,154 +1,147 @@
-🛒 MERN Stack Full-Stack E-Commerce Application
+# 🛒 MERN Stack Full-Stack E-Commerce Application
 
-A modern, responsive, and mobile-friendly e-commerce web application. Users can browse products, add them to the cart, and securely complete payments using iyzico integration. Full management is provided via the admin panel. Features include guest checkout, multi-language support (TR/EN), stock tracking, order cancellation, and email notifications.
+A modern, responsive, and mobile-friendly **e-commerce web application** built with the MERN stack. Users can browse products, add items to their cart, and complete secure payments using **iyzico**. The admin panel provides full control over products, orders, and users. Features include guest checkout, multi-language support (TR/EN), stock tracking, order cancellation, and email notifications.
 
-🚀 Features
-👤 User / Guest Side
+**Project Status:** Completed and running in test environment  
+**Deployment:** Coming soon (Vercel / Render)
 
-Responsive & mobile-friendly design (Bootstrap + React)
+---
 
-Product listing, detail pages, search & filtering
+## 🚀 Features
 
-Shopping cart system (local + backend sync)
+### 👤 User / Guest
+- Responsive and mobile-friendly UI (Bootstrap + React)
+- Product listing, detail pages, search, and filtering
+- Shopping cart system (local + backend sync)
+- Guest checkout and order tracking
+- JWT-based authentication (register, login, session)
+- User profile management
+- Multi-language support: Turkish & English (i18next)
+- iyzico payment integration (Checkout Form)
+- Card storage via iyzico tokenization
+- Order cancellation (user & guest)
+- Real-time stock display and automatic stock reduction
 
-Guest checkout and order tracking
+### 🛠️ Admin Panel
+- Add, update, and delete products
+- View and manage orders
+- List users
+- Manage homepage content and featured products
 
-JWT-based user registration, login & session management
+### 📩 Notifications & Security
+- Email notifications via Nodemailer:
+  - Order created
+  - Order canceled
+  - Guest order tracking link
+- Security:
+  - Password hashing with bcrypt
+  - JWT authentication
+  - Secrets managed with environment variables
 
-User profile editing
+---
 
-Multi-language support: Turkish & English (i18next)
+## 🧰 Tech Stack
 
-iyzico payment integration (Checkout Form)
+### Frontend (client)
+- React 19, Vite
+- React Router DOM
+- i18next, react-i18next, i18next-browser-languagedetector
+- Bootstrap 5, React-Bootstrap
+- React Icons, Lucide React, React Slick
+- React Toastify
+- jwt-decode
 
-Card information saving (iyzico tokenization)
+### Backend (server)
+- Node.js, Express
+- MongoDB, Mongoose
+- JWT (jsonwebtoken)
+- bcryptjs
+- iyzico (iyzipay)
+- Nodemailer
+- dotenv, uuid
 
-Order cancellation (user & guest)
+---
 
-Real-time stock display and stock reduction
+## 🧑‍💻 Local Setup
 
-🛠️ Admin Panel
+### 🔧 Requirements
+- Node.js 18+ (LTS recommended)
+- MongoDB (local or MongoDB Atlas)
+- iyzico test account → https://dev.iyzico.com
 
-Add, delete, update products
+---
 
-View and manage orders
-
-List users
-
-Manage homepage content and featured products
-
-📩 Other Features
-
-Email notifications with Nodemailer:
-
-When an order is created
-
-When an order is canceled
-
-Guest order tracking link email
-Security:
-
-Password hashing with bcrypt
-
-JWT authentication
-
-Secrets managed via .env
-🧰 Technologies Used
-🎨 Frontend (client folder)
-
-React 19
-
-Vite
-
-React Router DOM
-
-i18next, react-i18next, i18next-browser-languagedetector
-
-Bootstrap 5, React-Bootstrap
-
-React Icons, Lucide React, React Slick
-
-React Toastify
-
-jwt-decode
-⚙️ Backend (server folder)
-
-Node.js + Express
-
-MongoDB + Mongoose
-
-JWT (jsonwebtoken)
-
-bcryptjs
-
-iyzico (iyzipay)
-
-Nodemailer
-
-dotenv, uuid
-Setup (Run Locally)
-🔧 Requirements
-
-Node.js 18+ (LTS recommended)
-
-MongoDB (local installation or MongoDB Atlas)
-
-iyzico test account
-👉 https://dev.iyzico.com
-
-1. Clone the Repository
+### 📦 Clone the Repository
+```bash
 git clone https://github.com/serhatsahin28/ecommerce-fullstack-mern.git
 cd ecommerce-fullstack-mern/ee-ticaret
-🖥️ 2. Backend Setup & Run
+```
+
+---
+
+### 🖥️ Backend Setup
+```bash
 cd server
 npm install
+```
 
-
-Create .env file in server folder:
+Create a `.env` file in the `server` folder:
+```env
 PORT=5000
 MONGO_URI=mongodb://localhost:27017/ecommerce
-JWT_SECRET=your_very_strong_and_long_secret_key
+JWT_SECRET=your_strong_secret_key
 IYZICO_API_KEY=your_iyzico_test_api_key
 IYZICO_SECRET_KEY=your_iyzico_test_secret_key
 IYZICO_URI=https://sandbox-api.iyzico.com
 EMAIL_USER=your@gmail.com
-EMAIL_PASS=your_app_specific_password
+EMAIL_PASS=your_app_password
+```
 
-📌 For Gmail, you must use an App Password.
-
-
-Run Backend:
+Run backend:
+```bash
 npm run dev
-If the dev script does not exist, add this to package.json:
+```
 
-"scripts": {
-  "dev": "nodemon index.js"
-}
-Backend API:
+Backend API:  
 👉 http://localhost:5000
-🌐 3. Frontend Setup & Run
+
+---
+
+### 🌐 Frontend Setup
+```bash
 cd ../client
 npm install
+```
 
-
-Set API URL (client/.env.local):
+Create `client/.env.local`:
+```env
 VITE_API_URL=http://localhost:5000
+```
 
-Run Frontend:
+Run frontend:
+```bash
 npm run dev
+```
 
-App will open at:
+App runs at:  
 👉 http://localhost:5173
 
+---
 
-▶️ Run Order Summary
+## ▶️ Run Order
+1. Start MongoDB (`mongod`)
+2. Run backend
+3. Run frontend
 
-Start MongoDB (mongod)
+---
 
-Run backend
+## 💳 iyzico Test Cards
+https://dev.iyzico.com/tr/test-kartlari
 
-Run frontend
+---
 
-💳 iyzico Test Cards
+## 📌 Notes
+- Built with a scalable, modular, and production-ready architecture.
+- All sensitive data is managed securely via environment variables.
+- Recommended deployment:
 
-👉 https://dev.iyzico.com/tr/test-kartlari
