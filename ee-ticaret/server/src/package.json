@@ -20,7 +20,8 @@
     "mongoose": "^8.15.1",
     "multer": "^2.1.1",
     "nodemailer": "^7.0.5",
-    "uuid": "^11.1.0"
+    "uuid": "^11.1.0",
+    "moment": "^2.29.4"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"
