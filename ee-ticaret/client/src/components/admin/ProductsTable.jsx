@@ -3,6 +3,7 @@ import React from 'react';
 import { Table, Button, Image } from 'react-bootstrap';
 
 const ProductsTable = ({ products, categories, onEditClick, onDeleteClick }) => {
+  //console.log("ALL PRODUCTS:", products);
   return (
     <Table bordered hover responsive>
       <thead className="table-dark">
@@ -28,11 +29,15 @@ const ProductsTable = ({ products, categories, onEditClick, onDeleteClick }) => 
   <tr key={product._id || index}>
 
         <td style={{ width: '100px' }}>
-          <Image
-            src={product.image}
-            thumbnail
-            alt={product.translations?.en?.name || "Ürün resmi"}
-          />
+        <Image
+  src={
+    product.hasVariants && product.variants?.length > 0
+      ? product.variants[0].images?.[0] || product.image
+      : product.image
+  }
+  thumbnail
+  alt={product.translations?.en?.name || "Ürün resmi"}
+/>
         </td>
         <td>{product.translations?.tr?.name || "-"}</td>
         <td>{product.translations?.en?.name || "-"}</td>

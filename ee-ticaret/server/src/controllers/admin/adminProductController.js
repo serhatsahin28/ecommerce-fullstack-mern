@@ -15,183 +15,247 @@ const getProductsList = async (req, res) => {
 };
 
 
-
-
-//veri ekleme
 const addProduct = async (req, res) => {
   try {
     let productData = req.body;
-    console.log("productData:", JSON.stringify(productData, null, 2));
-    console.log("req.files:", req.files); // Dosyaları kontrol edin
+    const files = req.files || [];
+    let finalVariants = [];
 
-    // translations string geldiyse objeye çevir
     if (typeof productData.translations === 'string') {
-      try {
-        productData.translations = JSON.parse(productData.translations);
-      } catch (e) {
-        return res.status(400).json({ message: "Geçersiz translations JSON formatı." });
+      productData.translations = JSON.parse(productData.translations);
+    }
+
+    const variantType = productData.variantType;
+
+    if (variantType === 'size') {
+      finalVariants = typeof productData.variants === 'string'
+        ? JSON.parse(productData.variants)
+        : [];
+
+    } else if (variantType === 'color') {
+
+      const rawVariants = typeof productData.variants === 'string'
+        ? JSON.parse(productData.variants)
+        : [];
+
+      // Benzersiz renkleri çıkar
+      const uniqueColors = [...new Set(rawVariants.map(v => v.color_name))];
+
+      rawVariants.forEach((variant) => {
+        // Bu rengin index'ini bul (resim fieldname için)
+        const colorIdx = uniqueColors.indexOf(variant.color_name);
+
+        // Bu renge ait resimleri bul
+        const groupImages = [];
+        for (let i = 0; i < 4; i++) {
+          const fieldName = `color_${colorIdx}_img_${i}`;
+          const foundFile = files.find(f => f.fieldname === fieldName);
+          if (foundFile) {
+            groupImages.push(`/images/${foundFile.filename}`);
+          }
+        }
+
+        finalVariants.push({
+          variant_id: `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+          sku: variant.sku || '',
+          size: variant.size || '',
+          stock: Number(variant.stock) || 0,
+          color_name: variant.color_name || '',
+          color_code: variant.color_code || '',
+          images: groupImages,
+          price: Number(productData.price) || 0
+        });
+      });
+    }
+
+    const finalData = {
+      category_key: productData.category_key,
+      variantType: variantType,
+      price: Number(productData.price) || 0,
+      translations: productData.translations,
+      hasVariants: variantType !== 'none',
+      variants: finalVariants
+    };
+
+    const mainImgFile = files.find(f => f.fieldname === 'mainImage');
+    if (mainImgFile) {
+      finalData.image = `/images/${mainImgFile.filename}`;
+    }
+
+    if (variantType !== 'color') {
+      const extraImagesArray = [];
+      files.forEach(f => {
+        if (f.fieldname.startsWith('extraImage_')) {
+          extraImagesArray.push(`/images/${f.filename}`);
+        }
+      });
+      finalData.extraImages = extraImagesArray;
+
+      if (variantType === 'none') {
+        finalData.stock = Number(productData.stock) || 0;
+        finalData.sku = productData.sku;
       }
     }
 
-    // BURASI DEĞİŞTİ - upload.fields() için doğru kontrol
-    let allImages = [];
-
-    // Ana resim kontrolü (mainImage field'ından)
-    if (req.files && req.files.mainImage && req.files.mainImage.length > 0) {
-      const mainImagePath = `/images/${req.files.mainImage[0].filename}`;
-      allImages.push(mainImagePath);
-      productData.image = mainImagePath; // Ana resimi image alanına ata
-      console.log("Ana resim eklendi:", mainImagePath);
-    }
-
-    // Diğer resimler kontrolü (images field'ından)
-    if (req.files && req.files.images && req.files.images.length > 0) {
-      const additionalImages = req.files.images.map(f => `/images/${f.filename}`);
-      allImages = allImages.concat(additionalImages);
-      console.log("Ek resimler eklendi:", additionalImages);
-    }
-
-    // Tüm resimleri images array'ine ata
-    if (allImages.length > 0) {
-      productData.images = allImages;
-      console.log("Toplam resimler:", allImages);
-    }
-
-    // imageFile ve newImageFiles gibi geçici alanları temizle
-    delete productData.imageFile;
-    delete productData.newImageFiles;
-
-    console.log("Final productData:", JSON.stringify(productData, null, 2));
-
-    // Yeni ürün oluştur
-    const newProduct = new products(productData);
+    const newProduct = new products(finalData);
     const savedProduct = await newProduct.save();
-    console.log("newProduct newProduct ::" + newProduct);
 
     res.status(201).json({
-      message: "Ürün başarıyla eklendi",
+      message: "Ürün başarıyla kaydedildi.",
       product: savedProduct
     });
 
   } catch (err) {
-    console.error("addProduct error:", err);
-    res.status(500).json({
-      message: "Sunucu hatası",
-      error: err.message
-    });
+    console.error("Backend Kayıt Hatası:", err);
+    res.status(500).json({ message: "Sunucu hatası", error: err.message });
   }
 };
-
-
-
 
 
 // Id'si belirtilen ürünün güncellenmesi
 const updateProduct = async (req, res) => {
-
-
   try {
-    const productId = req.params.id;
-    let updateData = req.body;
-    let translations = updateData.translations;
-    console.log("Gelen veri: " + req.body.images);
+    const productId = req.params.id; // URL'den gelen ID
+    const data = req.body;
+    const files = req.files || [];
 
-    // translations nesne ise, doğrudan kullan, string ise parse et
-    if (typeof translations === 'string') {
-      try {
-        translations = JSON.parse(translations);
-      } catch (e) {
-        console.error("Translations JSON parse error:", e);
-        return res.status(400).json({ message: "Geçersiz translations JSON formatı." });
-      }
-    }
-
-    updateData.translations = translations;
-
-    // Mevcut ürünü al
+    // 1. Ürünü Veritabanında Bul
     const existingProduct = await products.findById(productId);
     if (!existingProduct) {
-      return res.status(404).json({ message: "Ürün bulunamadı" });
+      return res.status(404).json({ message: "Güncellenecek ürün bulunamadı." });
     }
 
-    // Yüklenen dosyaları kontrol et
-    if (req.files && req.files.length > 0) {
-      console.log("Yüklenen dosyalar:", req.files.map(f => f.filename));
+    // 2. JSON Verilerini Parse Et (Hata önleyici bloklar ile)
+    let translations = {};
+    let colorGroups = [];
+    let extraImagesFromFront = [];
 
-      // İlk dosya ana resim mi yoksa çoklu resim mi?
-      // Eğer sadece 1 dosya varsa ve ana resim güncelleniyorsa
-      if (req.files.length === 1 && updateData.imageFile) {
-        updateData.image = `/images/${req.files[0].filename}`;
-      } else {
-        // Çoklu resim yükleme
-        const newImagePaths = req.files.map(file => `/images/${file.filename}`);
-
-        // Mevcut resimlerle yeni resimleri birleştir
-        const existingImages = existingProduct.images || [];
-        updateData.images = [...existingImages, ...newImagePaths];
+    try {
+      translations = typeof data.translations === 'string' ? JSON.parse(data.translations) : data.translations;
+      if (data.colorGroups) {
+        colorGroups = typeof data.colorGroups === 'string' ? JSON.parse(data.colorGroups) : data.colorGroups;
       }
+      if (data.extraImages) {
+        extraImagesFromFront = typeof data.extraImages === 'string' ? JSON.parse(data.extraImages) : data.extraImages;
+      }
+    } catch (e) {
+      return res.status(400).json({ message: "Veri formatı hatalı (JSON Parse Error)" });
     }
 
-    // Eğer images string olarak geliyorsa array'e çevir
-    if (updateData.images && typeof updateData.images === 'string') {
-      updateData.images = updateData.images.split(',').map(img => img.trim());
+    let finalVariants = [];
+    let finalMainImage = existingProduct.image;
+    let finalExtraImages = [];
+
+    // 3. Ana Kapak Resmini Güncelle (Yeni dosya geldiyse)
+    const mainImgFile = files.find(f => f.fieldname === 'mainImage');
+    if (mainImgFile) {
+      finalMainImage = `/images/${mainImgFile.filename}`;
     }
 
-    // imageFile ve newImageFiles alanlarını temizle (veritabanına kaydedilmemeli)
-    delete updateData.imageFile;
-    delete updateData.newImageFiles;
+    // 4. Varyant / Renk Gruplarını İşle
+    const isVariantMode = data.variantType !== 'none';
 
- // 1️⃣ Ürün koleksiyonunu her zaman güncelle
-const updatedProduct = await products.findByIdAndUpdate(
-  productId,
-  { $set: updateData },
-  { new: true, runValidators: true }
-);
+    if (isVariantMode) {
+      // Backend - updateProduct içindeki döngü
+      colorGroups.forEach((group, gIdx) => {
+        let groupImages = [...(group.images || [])];
 
-// 2️⃣ Home mantığı
-if (Number(updateData.stock) === 0) {
-  // 🔴 Stok 0 ise home'dan TAMAMEN sil
-  await home.updateMany(
-    {},
-    {
-      $pull: {
-        "categories.$[].products": {
-          product_id: productId
+        files.forEach(file => {
+          if (file.fieldname.startsWith(`color_${gIdx}_img_`)) {
+            groupImages.push(`/images/${file.filename}`);
+          }
+        });
+
+        if (group.sizes && Array.isArray(group.sizes)) {
+          group.sizes.forEach(sizeItem => {
+            finalVariants.push({
+              variant_id: sizeItem.variant_id || `v_${Date.now()}_${Math.random()}`,
+              sku: sizeItem.sku || "",
+              size: sizeItem.size || "",
+              stock: Number(sizeItem.stock) || 0,
+              price: Number(sizeItem.price) || 0,
+              color_code: group.color_code,
+              // DÜZELTME BURADA: 
+              // group.group_name yerine frontend'den gelen color_name objesini kullan
+              color_name: group.color_name,
+              images: groupImages
+            });
+          });
         }
-      }
+      });
+
+      finalExtraImages = []; // Varyant modundaysak ana ekstra galeriyi temizle
+    } else {
+      // VARYANTSIZ MOD (Ekstra Galerisi İşleme)
+      finalExtraImages = [...extraImagesFromFront]; // Değişmeyen eski resimler
+      files.forEach(file => {
+        if (file.fieldname.startsWith('extraImage_')) {
+          finalExtraImages.push(`/images/${file.filename}`);
+        }
+      });
+      finalVariants = []; // Düz üründe varyantları sil
     }
-  );
-} else {
-  // 🟢 Stok varsa home içindeki veriyi güncelle
-  await home.updateOne(
-    { "categories.products.product_id": productId },
-    {
-      $set: {
-        "categories.$[].products.$[p].stock": updateData.stock,
-        "categories.$[].products.$[p].price": updateData.price,
-        "categories.$[].products.$[p].image": updateData.image
-      }
-    },
-    {
-      arrayFilters: [{ "p.product_id": productId }]
+
+    // 5. Stok Hesabı
+    // Varyant varsa hepsinin toplamı, yoksa manuel girilen değer
+    const totalStock = isVariantMode
+      ? finalVariants.reduce((sum, v) => sum + v.stock, 0)
+      : Number(data.stock) || 0;
+
+    // 6. Güncelleme Objesini Oluştur
+    const updateObj = {
+      category_key: data.category_key,
+      variantType: data.variantType,
+      hasVariants: isVariantMode,
+      price: Number(data.price) || 0,
+      stock: totalStock,
+      sku: !isVariantMode ? (data.sku || "") : "",
+      image: finalMainImage,
+      extraImages: finalExtraImages,
+      variants: finalVariants,
+      translations: translations
+    };
+
+    // 7. Veritabanını Güncelle
+    const updatedProduct = await products.findByIdAndUpdate(
+      productId,
+      { $set: updateObj },
+      { new: true }
+    );
+
+    // 8. Anasayfa Koleksiyonu Senkronizasyonu
+    // Not: 'home' modelinizin şemasına göre 'product_id' kontrolü yapıyoruz.
+    try {
+      await home.updateMany(
+        { "categories.products.product_id": productId },
+        {
+          $set: {
+            "categories.$[].products.$[p].stock": totalStock,
+            "categories.$[].products.$[p].price": updateObj.price,
+            "categories.$[].products.$[p].image": updateObj.image,
+            "categories.$[].products.$[p].name": translations.tr.name
+          }
+        },
+        {
+          arrayFilters: [{ "p.product_id": productId }],
+          multi: true
+        }
+      );
+    } catch (syncError) {
+      console.error("Home sync failed:", syncError.message);
+      // Anasayfa senkronu başarısız olsa bile ürün güncellendiği için 200 dönebiliriz.
     }
-  );
-}
 
-
-
-
-    res.status(200).json({
-      message: "Ürün başarıyla güncellendi",
-      product: updatedProduct,
-      homeUpdate: updatedProduct
-    });
+    // Başarılı yanıt gönder
+    res.status(200).json({ success: true, product: updatedProduct });
 
   } catch (err) {
-    console.error("Update error:", err);
-    res.status(500).json({ message: "Sunucu hatası" });
+    console.error("Update Controller Error:", err);
+    res.status(500).json({ message: "Sunucu hatası: " + err.message });
   }
 };
+
+
 
 
 // Id'si belirtilen ürünün güncellenmesi

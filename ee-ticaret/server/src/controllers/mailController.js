@@ -1,7 +1,10 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const Order = require('../models/orders');
+const User = require('../models/users');
+
 const { sendEmail } = require('../utils/sendEmail');
+const { publishToQueue } = require("../utils/rabbitMQ");
 
 const sendOrderLink = async (req, res) => {
     try {
@@ -11,6 +14,14 @@ const sendOrderLink = async (req, res) => {
             return res.status(400).json({ success: false, message: 'Lütfen bir e-posta adresi girin.' });
         }
 
+        const isRegisteredUser = await User.findOne({ email: email });
+
+        if (isRegisteredUser) {
+            return res.status(400).json({
+                success: false,
+                message: 'Bu e-posta adresiyle kayıtlı bir hesabınız bulunmaktadır. Lütfen giriş yaparak siparişlerinizi görüntüleyin.'
+            });
+        }
         // 1. Bu maile ait sipariş var mı?
         const existingOrders = await Order.find({ email });
 
@@ -47,7 +58,7 @@ const sendOrderLink = async (req, res) => {
               <hr>
               <p>If you did not request this email, please ignore it.</p>
             `;
-        } else if(language === 'tr') {
+        } else if (language === 'tr') {
             subject = 'Siparişlerinizi Görüntüleyin';
             htmlMessage = `
               <h1>Siparişlerim</h1>
@@ -63,21 +74,17 @@ const sendOrderLink = async (req, res) => {
             `;
         }
 
-        // 4. Mail gönder
-        await sendEmail({
+
+
+
+
+        // 5. Yanıt döndür
+        await publishToQueue("send_order_link_mail", {
             to: email,
-            subject: subject,
+            subject,
             html: htmlMessage,
         });
 
-        // 5. Yanıt döndür
-        res.status(200).json({
-            success: true,
-            message: language === 'en' 
-              ? 'Your one-time link is ready! Please check your email.' 
-              : 'Tek seferlik bağlantınız hazır! E-postanızı kontrol edin.',
-            token: token,
-        });
 
     } catch (error) {
         console.error('Mail sorgulama hatası:', error);

@@ -42,12 +42,6 @@ export default function ProductsTr() {
 
   const normalizedSlug = normalizeSlug(category);
   const categoryKey = categorySlugToKey[normalizedSlug];
-  // console.log("categoryKey", category);
-
-  if (!categoryKey) {
-    console.log(categoryKey);
-    return <Navigate to={`/${currentLang}/404`} replace />;
-  }
 
   const [allProducts, setAllProducts] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -55,6 +49,8 @@ export default function ProductsTr() {
   const [isLoading, setIsLoading] = useState(true);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
+
+  const baseUrl = "http://localhost:5000";
 
   useEffect(() => {
     setIsLoading(true);
@@ -80,36 +76,70 @@ export default function ProductsTr() {
       });
   }, [currentLang]);
 
-  const handleAddToCart = (product) => {
-    addToCart(product);
-    setToastMessage(`${product.name} sepete eklendi!`);
-    setShowToast(true);
-    setTimeout(() => setShowToast(false), 2000);
-  };
-
   const filteredProducts = useMemo(() => {
-    //buradaki p.category_key ingilizce geliyor categorykey ile eşleşmeyince hata veriyor 
+    // Kategoriye göre filtrele
     let result = [...allProducts].filter(p => p.category_key === categoryKey);
-    const query = searchQuery.toLowerCase();
 
+    // --- PROFESYONEL VARYANT AYRIMI BURADA ---
+    let processed = result.map(p => {
+      let dPrice = p.price;
+      let dStock = p.stock || 0;
+      let dImage = p.image; // Varsayılan: Ürün ana resmi
+
+      if (p.hasVariants && p.variants?.length > 0) {
+        // En yüksek stoklu varyantı bul
+        const bestVariant = [...p.variants].sort((a, b) => b.stock - a.stock)[0];
+        
+        dPrice = bestVariant.price;
+        dStock = bestVariant.stock;
+        
+        // Varyantın kendi resmi varsa dImage o olur, yoksa p.image kalır
+        if (bestVariant.images && bestVariant.images.length > 0) {
+          dImage = bestVariant.images[0];
+        }
+      }
+
+      return {
+        ...p,
+        displayPrice: dPrice,
+        displayStock: dStock,
+        displayImage: dImage
+      };
+    });
+
+    const query = searchQuery.toLowerCase();
     if (query) {
-      result = result.filter(p =>
+      processed = processed.filter(p =>
         p.name.toLowerCase().includes(query) ||
         p.description.toLowerCase().includes(query)
       );
     }
 
     switch (sortBy) {
-      case 'price_asc': result.sort((a, b) => a.price - b.price); break;
-      case 'price_desc': result.sort((a, b) => b.price - a.price); break;
-      case 'name_asc': result.sort((a, b) => a.name.localeCompare(b.name)); break;
-      case 'name_desc': result.sort((a, b) => b.name.localeCompare(a.name)); break;
-      case 'rating_desc': result.sort((a, b) => (b.rating || 0) - (a.rating || 0)); break;
+      case 'price_asc': processed.sort((a, b) => a.displayPrice - b.displayPrice); break;
+      case 'price_desc': processed.sort((a, b) => b.displayPrice - a.displayPrice); break;
+      case 'name_asc': processed.sort((a, b) => a.name.localeCompare(b.name)); break;
+      case 'name_desc': processed.sort((a, b) => b.name.localeCompare(a.name)); break;
+      case 'rating_desc': processed.sort((a, b) => (b.rating || 0) - (a.rating || 0)); break;
       default: break;
     }
 
-    return result;
+    return processed;
   }, [allProducts, categoryKey, searchQuery, sortBy]);
+
+  const handleAddToCart = (product) => {
+    // Sepete seçilen görünür varyant bilgileriyle ekle
+    addToCart({
+      ...product,
+      price: product.displayPrice,
+      image: product.displayImage
+    });
+    setToastMessage(`${product.name} sepete eklendi!`);
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 2000);
+  };
+
+  if (!categoryKey) return <Navigate to={`/${currentLang}/404`} replace />;
 
   if (isLoading) {
     return (
@@ -153,33 +183,18 @@ export default function ProductsTr() {
             </Form.Select>
           </InputGroup>
         </Form>
+
         {filteredProducts.length > 0 ? (
           <Row xs={1} sm={2} md={3} lg={4} className="g-4">
             {filteredProducts.map(product => (
               <Col key={product._id}>
-                {console.log("deneme: " + product.stock)}
-
                 <Card className="h-100 shadow-sm d-flex flex-column">
-                  <div
-                    style={{
-                      height: "300px",
-                      width: "100%",
-                      backgroundColor: "#f8f9fa",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      overflow: "hidden",
-                    }}
-                  >
+                  <div style={{ height: "300px", width: "100%", backgroundColor: "#f8f9fa", display: "flex", justifyContent: "center", alignItems: "center", overflow: "hidden" }}>
                     <Card.Img
                       variant="top"
-                      src={product.image}
+                      src={product.displayImage}
                       alt={product.name}
-                      style={{
-                        maxWidth: "100%",
-                        maxHeight: "100%",
-                        objectFit: "contain",
-                      }}
+                      style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }}
                     />
                   </div>
                   <Card.Body className="d-flex flex-column">
@@ -189,27 +204,18 @@ export default function ProductsTr() {
                       </Link>
                     </Card.Title>
 
-
-
                     <div className="mt-auto">
-                      <div className="fw-bold text-danger mb-2">{product.price} ₺</div>
+                      <div className="fw-bold text-danger mb-1">{product.displayPrice} ₺</div>
+                      <div className="small text-muted mb-2">Stok: {product.displayStock}</div>
 
-                      {
-                        product.stock !== 0 ? (
-                          <Button
-                            variant="danger"
-                            size="sm"
-                            onClick={() => handleAddToCart(product)}
-                          >
-                            <FaShoppingCart className="me-2" /> Sepete Ekle
-                          </Button>
-                        ):(
-                      <div className="text-secondary fw-bold">Stokta Bitti</div>
-                      )
-                      }
-
+                      {product.displayStock !== 0 ? (
+                        <Button variant="danger" size="sm" onClick={() => handleAddToCart(product)}>
+                          <FaShoppingCart className="me-2" /> Sepete Ekle
+                        </Button>
+                      ) : (
+                        <div className="text-secondary fw-bold">Stokta Bitti</div>
+                      )}
                     </div>
-
                   </Card.Body>
                 </Card>
               </Col>
@@ -226,20 +232,16 @@ export default function ProductsTr() {
         )}
       </Container>
 
-      <ToastContainer
-        position="top-end"
-        className="p-3 position-fixed"
-        style={{ top: '70px', right: '1rem', zIndex: 1055 }}
-      >
+      <ToastContainer position="top-end" className="p-3 position-fixed" style={{ top: '70px', right: '1rem', zIndex: 1055 }}>
         <Toast show={showToast} onClose={() => setShowToast(false)} bg="success">
           <Toast.Header closeButton={false}>
-            <strong className="me-auto">✔</strong>
+            <strong className="me-auto text-white">✔</strong>
           </Toast.Header>
           <Toast.Body className="text-white small">
             ✅ {toastMessage || 'Ürün sepete eklendi!'}
           </Toast.Body>
         </Toast>
       </ToastContainer>
-    </div >
+    </div>
   );
 }

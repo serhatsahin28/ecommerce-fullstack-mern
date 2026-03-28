@@ -1,413 +1,395 @@
-import React from 'react';
-import { Modal,Col,Card,Row, Form, Button, Alert, Image, InputGroup, Spinner } from 'react-bootstrap';
+import React, { useEffect, useState, useRef } from 'react';
+import { Modal, Col, Card, Row, Form, Button, Alert, Image, Spinner, Badge, Table, Tabs, Tab } from 'react-bootstrap';
+import { FaSave, FaTrash, FaPlus, FaBoxes, FaInfoCircle, FaCamera, FaListUl, FaExclamationTriangle } from 'react-icons/fa';
 
 const EditProductModal = ({
-  show,
-  onHide,
-  editProduct,
-  setEditProduct,
-  updating,
-  updateError,
-  onUpdate,
-  onNotification,
-  products
+    show,
+    onHide,
+    editProduct,
+    setEditProduct,
+    updating,
+    updateError,
+    onUpdate
 }) => {
+    const [activeTab, setActiveTab] = useState('general');
+    const [validationError, setValidationError] = useState(null);
+    const fileInputRef = useRef(null);
+    const mainImageInputRef = useRef(null);
+    const extraImageInputRef = useRef(null);
+    const [currentGroupIdx, setCurrentGroupIdx] = useState(null);
 
-  const handleInputChange = (field, value, lang = null, index = null) => {
-    if (!editProduct) return;
+    // --- AKILLI RENK VERİTABANI ---
+    const colorDatabase = [
+        { tr: "kırmızı", en: "red", hex: "#FF0000" },
+        { tr: "mavi", en: "blue", hex: "#0000FF" },
+        { tr: "yeşil", en: "green", hex: "#008000" },
+        { tr: "siyah", en: "black", hex: "#000000" },
+        { tr: "beyaz", en: "white", hex: "#FFFFFF" },
+        { tr: "sarı", en: "yellow", hex: "#FFFF00" },
+        { tr: "mor", en: "purple", hex: "#800080" },
+        { tr: "turuncu", en: "orange", hex: "#FFA500" },
+        { tr: "pembe", en: "pink", hex: "#FFC0CB" },
+        { tr: "gri", en: "gray", hex: "#808080" },
+        { tr: "lacivert", en: "darkblue", hex: "#000080" },
+        { tr: "kahverengi", en: "brown", hex: "#A52A2A" }
+    ];
 
-    if (lang && index !== null) {
-      const featuresCopy = [...editProduct.translations[lang].features];
-      featuresCopy[index] = value;
-      setEditProduct(prev => ({
-        ...prev,
-        translations: {
-          ...prev.translations,
-          [lang]: {
-            ...prev.translations[lang],
-            features: featuresCopy
-          }
+    // Veritabanından gelen veriyi Frontend'e uygun gruplanmış hale getir
+    useEffect(() => {
+        if (show && editProduct && !editProduct.colorGroups) {
+            const variants = editProduct.variants || [];
+            const groups = {};
+
+            variants.forEach(v => {
+                const groupKey = typeof v.color_name === 'object'
+                    ? (v.color_name.tr || v.color_name.en || 'Standart Seçenekler')
+                    : (v.color_name || 'Standart Seçenekler');
+                
+                if (!groups[groupKey]) {
+                    groups[groupKey] = {
+                        group_name: groupKey,
+                        group_name_en: typeof v.color_name === 'object' ? v.color_name.en : '',
+                        color_code: v.color_code || '#000000',
+                        images: v.images || [],
+                        sizes: []
+                    };
+                }
+                groups[groupKey].sizes.push({
+                    variant_id: v.variant_id || v._id,
+                    size: v.size || '',
+                    stock: v.stock || 0,
+                    sku: v.sku || '',
+                    price: v.price || 0
+                });
+            });
+
+            setEditProduct(prev => ({
+                ...prev,
+                colorGroups: Object.values(groups),
+                variantType: prev?.variantType || 'none',
+                extraImages: prev?.extraImages?.map(img => (typeof img === 'string' ? { preview: img, file: null } : img)) || [],
+                translations: {
+                    tr: { name: prev?.translations?.tr?.name || '', description: prev?.translations?.tr?.description || '', features: prev?.translations?.tr?.features || [] },
+                    en: { name: prev?.translations?.en?.name || '', description: prev?.translations?.en?.description || '', features: prev?.translations?.en?.features || [] }
+                }
+            }));
         }
-      }));
-    } else if (lang) {
-      setEditProduct(prev => ({
-        ...prev,
-        translations: {
-          ...prev.translations,
-          [lang]: {
-            ...prev.translations[lang],
-            [field]: value
-          }
-        }
-      }));
-    } else if (field === 'image') {
-      if (value && value[0]) {
-        const file = value[0];
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          setEditProduct(prev => ({ ...prev, image: reader.result, imageFile: file }));
-        };
-        reader.readAsDataURL(file);
-      }
-    } else if (field === 'images') {
-      const files = Array.from(value);
-      const newFilePaths = files.map(file => URL.createObjectURL(file));
+    }, [show, editProduct?._id, setEditProduct]);
 
-      setEditProduct(prev => ({
-        ...prev,
-        images: prev.images ? [...prev.images, ...newFilePaths] : newFilePaths,
-        newImageFiles: files
-      }));
-    } else {
-      if (field === 'price' || field === 'rating') {
-        const numValue = value === '' ? 0 : parseFloat(value);
-        const finalValue = isNaN(numValue) ? 0 : numValue;
-        setEditProduct(prev => ({ ...prev, [field]: finalValue }));
-      } else {
-        setEditProduct(prev => ({ ...prev, [field]: value }));
-      }
-    }
-  };
-
-  const handleRemoveFeature = (index) => {
-    setEditProduct(prev => {
-      const trFeatures = [...prev.translations.tr.features];
-      const enFeatures = [...prev.translations.en.features];
-      trFeatures.splice(index, 1);
-      enFeatures.splice(index, 1);
-      return {
-        ...prev,
-        translations: {
-          ...prev.translations,
-          tr: { ...prev.translations.tr, features: trFeatures },
-          en: { ...prev.translations.en, features: enFeatures }
-        }
-      };
-    });
-  };
-
-  const handleAddFeature = () => {
-    setEditProduct(prev => ({
-      ...prev,
-      translations: {
-        ...prev.translations,
-        tr: { ...prev.translations.tr, features: [...prev.translations.tr.features, ''] },
-        en: { ...prev.translations.en, features: [...prev.translations.en.features, ''] }
-      }
-    }));
-  };
-
-  const handleRemoveImage = async (idx) => {
-    if (!editProduct) return;
-
-    const newImages = [...editProduct.images];
-    newImages.splice(idx, 1);
-    setEditProduct(prev => ({ ...prev, images: newImages }));
-
-    try {
-      const formData = new FormData();
-      formData.append('images', JSON.stringify(newImages));
-      if (editProduct.newImageFiles) {
-        editProduct.newImageFiles.forEach(file => {
-          formData.append('image', file);
-        });
-      }
-
-      const response = await fetch(`http://localhost:5000/admin/updateProduct/${editProduct._id}`, {
-        method: 'PUT',
-        body: formData,
-      });
-
-      if (!response.ok) throw new Error('Güncelleme başarısız');
-    } catch (error) {
-      console.error('Resim güncelleme hatası:', error);
-    }
-  };
-
-  const handleUpdate = async () => {
-    if (!editProduct) return;
-
-    const original = products.find(p => p._id === editProduct._id);
-    if (!original) {
-      onNotification('Orijinal ürün bulunamadı.', 'danger');
-      return;
-    }
-
-    const tr = editProduct.translations.tr;
-    const en = editProduct.translations.en;
-
-    const isStringArrayEqual = (arr1, arr2) => {
-      if (!arr1 && !arr2) return true;
-      if (!arr1 || !arr2) return false;
-      if (arr1.length !== arr2.length) return false;
-      for (let i = 0; i < arr1.length; i++) {
-        if ((arr1[i] || '').trim() !== (arr2[i] || '').trim()) return false;
-      }
-      return true;
+    const getOptionLabel = () => {
+        return editProduct?.category_key === 'electronics' ? 'Hafıza / Model' : 'Beden / Boyut';
     };
 
-    const trNameChanged = tr.name.trim() !== (original.translations.tr.name || '').trim();
-    const trDescChanged = tr.description.trim() !== (original.translations.tr.description || '').trim();
-    const trFeaturesChanged = !isStringArrayEqual(tr.features, original.translations.tr.features);
+    // --- AKILLI RENK INPUT MANTIĞI ---
+    const handleSmartColorChange = (gIdx, val) => {
+        const up = [...editProduct.colorGroups];
+        const lowerVal = val.toLowerCase().trim();
 
-    const anyTrChanged = trNameChanged || trDescChanged || trFeaturesChanged;
+        // Veritabanında TR veya EN karşılığını ara
+        const match = colorDatabase.find(c => c.tr === lowerVal || c.en === lowerVal);
 
-    if (anyTrChanged) {
-      if (!en.name || en.name.trim() === '') {
-        onNotification('İngilizce içerik boş bırakılamaz! Lütfen İngilizce ürün adını doldurun.');
-        return;
-      }
-      if (!en.description || en.description.trim() === '') {
-        onNotification('İngilizce açıklama boş bırakılamaz! Lütfen İngilizce açıklamayı doldurun.');
-        return;
-      }
-      if (!en.features || en.features.length !== tr.features.length) {
-        onNotification('İngilizce özellikler Türkçe özelliklerle aynı sayıda olmalıdır.');
-        return;
-      }
-      for (let i = 0; i < tr.features.length; i++) {
-        if (!en.features[i] || en.features[i].trim() === '') {
-          onNotification(`İngilizce özellikler boş bırakılamaz! Lütfen ${i + 1}. özelliği doldurun.`);
-          return;
+        up[gIdx].group_name = val; // Ekranda kullanıcının yazdığı kalsın
+
+        if (match) {
+            up[gIdx].detected_tr = match.tr;
+            up[gIdx].detected_en = match.en;
+            up[gIdx].color_code = match.hex;
+        } else {
+            up[gIdx].detected_tr = val;
+            up[gIdx].detected_en = val;
         }
-      }
-      if (
-        en.name.trim() === (original.translations.en.name || '').trim() &&
-        en.description.trim() === (original.translations.en.description || '').trim() &&
-        isStringArrayEqual(en.features, original.translations.en.features)
-      ) {
-        onNotification('Türkçe içerikte değişiklik var, ancak İngilizce içerik güncellenmemiş. Lütfen İngilizce içerikte de değişiklik yapın.');
-        return;
-      }
-    }
 
-    onUpdate(editProduct);
-  };
-   return (
-    <Modal show={show} onHide={onHide} size="xl" backdrop="static" keyboard={false} centered>
-      <Modal.Header closeButton className="bg-primary text-white">
-        <Modal.Title className="fs-4 fw-bold text-dark">Ürün Düzenle</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        {updateError && <Alert variant="danger" className="shadow-sm">{updateError}</Alert>}
-        {editProduct && (
-          <Form>
-            {/* Görseller */}
-            <Row className="mb-4">
-              <Col md={6}>
-                <Card className="shadow-sm border-0">
-                  <Card.Header className="bg-light fw-bold text-dark">Ana Resim</Card.Header>
-                  <Card.Body className="d-flex flex-column align-items-center">
-                    <Image
-                      src={editProduct.image}
-                      rounded
-                      thumbnail
-                      style={{ maxHeight: '180px', objectFit: 'contain' }}
-                      className="mb-3"
-                      alt="Ana resim"
-                    />
-                    <Form.Control
-                      type="file"
-                      accept="image/*"
-                      onChange={e => handleInputChange('image', e.target.files)}
-                      aria-label="Ürün ana resmi yükle"
-                    />
-                  </Card.Body>
-                </Card>
-              </Col>
-              <Col md={6}>
-                <Card className="shadow-sm border-0">
-                  <Card.Header className="bg-light fw-bold text-dark">Diğer Resimler</Card.Header>
-                  <Card.Body>
-                    <div className="d-flex flex-wrap gap-3 mb-3">
-                      {editProduct.images?.map((img, idx) => (
-                        <div key={idx} className="position-relative" style={{ width: 110, height: 110 }}>
-                          <Image
-                            src={img.startsWith('/images/') ? img : img}
-                            thumbnail
-                            style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '0.25rem' }}
-                            alt={`Diğer resim ${idx + 1}`}
-                          />
-                          <Button
-                            variant="danger"
-                            size="sm"
-                            className="position-absolute top-0 end-0 rounded-circle p-1"
-                            style={{ zIndex: 10 }}
-                            onClick={() => handleRemoveImage(idx)}
-                            aria-label={`Resim ${idx + 1} kaldır`}
-                          >
-                            &times;
-                          </Button>
+        setEditProduct({ ...editProduct, colorGroups: up });
+    };
+
+    const addNewVariantGroup = () => {
+        const isColor = editProduct.variantType === 'color';
+        const newG = {
+            group_name: isColor ? 'Yeni Renk' : 'Seçenek Grubu',
+            color_code: isColor ? '#000000' : null,
+            images: [],
+            sizes: [{ variant_id: `v_${Date.now()}`, size: '', stock: 0, sku: '', price: 0 }]
+        };
+        setEditProduct({
+            ...editProduct,
+            colorGroups: [...(editProduct.colorGroups || []), newG]
+        });
+    };
+
+    const handleMainImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setEditProduct({ ...editProduct, image: URL.createObjectURL(file), newMainImage: file });
+        }
+        e.target.value = null;
+    };
+
+    const triggerVariantUpload = (groupIdx) => {
+        setCurrentGroupIdx(groupIdx);
+        fileInputRef.current?.click();
+    };
+
+    const handleVariantImageUpload = (e) => {
+        const files = Array.from(e.target.files);
+        if (files.length === 0 || currentGroupIdx === null) return;
+        const updatedGroups = [...editProduct.colorGroups];
+        files.forEach(file => {
+            updatedGroups[currentGroupIdx].images.push({ file, preview: URL.createObjectURL(file) });
+        });
+        setEditProduct({ ...editProduct, colorGroups: updatedGroups });
+        e.target.value = null;
+    };
+
+    const handleFinalSave = async () => {
+        setValidationError(null);
+        if (!editProduct.translations.tr.name?.trim()) return setValidationError("Ürün adı zorunludur!");
+
+        const formData = new FormData();
+        const productId = editProduct._id;
+
+        formData.append('category_key', editProduct.category_key);
+        formData.append('price', editProduct.price || 0);
+        formData.append('variantType', editProduct.variantType || 'none');
+        formData.append('translations', JSON.stringify(editProduct.translations));
+
+        if (editProduct.newMainImage) formData.append('mainImage', editProduct.newMainImage);
+
+        if (editProduct.variantType !== 'none') {
+            const processed = editProduct.colorGroups.map((group, gIdx) => {
+                const oldUrls = [];
+                group.images.forEach((img, iIdx) => {
+                    if (img.file) formData.append(`color_${gIdx}_img_${iIdx}`, img.file);
+                    else {
+                        const url = typeof img === 'string' ? img : img.preview;
+                        if (url && !url.startsWith('blob:')) oldUrls.push(url);
+                    }
+                });
+
+                return {
+                    ...group,
+                    images: oldUrls,
+                    // BURASI KRİTİK: İster Yellow yaz, ister Sarı. Veritabanına TR ve EN objesi gider.
+                    color_name: {
+                        tr: group.detected_tr || group.group_name || '',
+                        en: group.detected_en || group.group_name_en || group.group_name || ''
+                    }
+                };
+            });
+            formData.append('colorGroups', JSON.stringify(processed));
+        } else {
+            formData.append('stock', editProduct.stock || 0);
+            formData.append('sku', editProduct.sku || "");
+            const extras = [];
+            editProduct.extraImages.forEach((img, idx) => {
+                if (img.file) formData.append(`extraImage_${idx}`, img.file);
+                else {
+                    const url = typeof img === 'string' ? img : img.preview;
+                    if (url && !url.startsWith('blob:')) extras.push(url);
+                }
+            });
+            formData.append('extraImages', JSON.stringify(extras));
+        }
+
+        onUpdate(productId, formData);
+    };
+
+    if (!editProduct || !editProduct.colorGroups) return null;
+
+    return (
+        <Modal show={show} onHide={onHide} size="xl" backdrop="static" centered scrollable>
+            <input type="file" multiple ref={fileInputRef} hidden onChange={handleVariantImageUpload} />
+            <input type="file" ref={mainImageInputRef} hidden onChange={handleMainImageChange} />
+            <input type="file" multiple ref={extraImageInputRef} hidden onChange={(e) => {
+                const files = Array.from(e.target.files);
+                const newImgs = files.map(file => ({ file, preview: URL.createObjectURL(file) }));
+                setEditProduct({ ...editProduct, extraImages: [...editProduct.extraImages, ...newImgs] });
+            }} />
+
+            <Modal.Header closeButton className="bg-white border-bottom shadow-sm text-primary">
+                <Modal.Title className="fs-5 fw-bold"><FaBoxes className="me-2" /> Ürün Özellik Düzenleyici</Modal.Title>
+            </Modal.Header>
+
+            <Modal.Body className="bg-light p-0">
+                {(updateError || validationError) && (
+                    <Alert variant="danger" className="m-3 border-0 shadow-sm"><FaExclamationTriangle className="me-2" /> {updateError || validationError}</Alert>
+                )}
+
+                <Tabs activeKey={activeTab} onSelect={(k) => setActiveTab(k)} className="px-3 pt-2 bg-white sticky-top shadow-sm">
+                    {/* --- TAB 1: GENEL BİLGİLER --- */}
+                    <Tab eventKey="general" title={<span><FaInfoCircle className="me-1" /> Genel Bilgiler</span>} className="p-4">
+                        <Row className="g-4">
+                            <Col lg={editProduct.variantType !== 'none' ? 8 : 7}>
+                                <Card className="border-0 shadow-sm p-4 h-100">
+                                    <h6 className="fw-bold mb-3 border-bottom pb-2 text-primary">Kimlik & Fiyatlandırma</h6>
+                                    <Row className="g-3">
+                                        <Col md={12}>
+                                            <Form.Label className="small fw-bold">Ürün Adı (TR)</Form.Label>
+                                            <Form.Control value={editProduct.translations.tr.name} onChange={e => setEditProduct({ ...editProduct, translations: { ...editProduct.translations, tr: { ...editProduct.translations.tr, name: e.target.value } } })} />
+                                        </Col>
+                                        <Col md={6}>
+                                            <Form.Label className="small fw-bold">Kategori Anahtarı</Form.Label>
+                                            <Form.Control value={editProduct.category_key} onChange={e => setEditProduct({ ...editProduct, category_key: e.target.value })} />
+                                        </Col>
+                                        <Col md={3}><Form.Label className="small fw-bold">Baz Fiyat ($)</Form.Label><Form.Control type="number" value={editProduct.price} onChange={e => setEditProduct({ ...editProduct, price: e.target.value })} /></Col>
+                                        {editProduct.variantType === 'none' && (
+                                            <Col md={3}><Form.Label className="small fw-bold">Stok</Form.Label><Form.Control type="number" value={editProduct.stock} onChange={e => setEditProduct({ ...editProduct, stock: e.target.value })} /></Col>
+                                        )}
+                                        <Col md={12}><Form.Label className="small fw-bold">Açıklama (TR)</Form.Label><Form.Control as="textarea" rows={4} value={editProduct.translations.tr.description} onChange={e => setEditProduct({ ...editProduct, translations: { ...editProduct.translations, tr: { ...editProduct.translations.tr, description: e.target.value } } })} /></Col>
+                                    </Row>
+                                </Card>
+                            </Col>
+
+                            <Col lg={editProduct.variantType !== 'none' ? 4 : 5}>
+                                <Card className="border-0 shadow-sm p-4 text-center h-100">
+                                    <h6 className="fw-bold mb-3 border-bottom pb-2">Ana Görsel</h6>
+                                    <div className="mb-4">
+                                        <Image src={editProduct.image} fluid rounded className="border mb-3 shadow-sm bg-light" style={{ maxHeight: '220px', objectFit: 'contain' }} />
+                                        <Button variant="outline-primary" size="sm" className="w-100 fw-bold" onClick={() => mainImageInputRef.current.click()}><FaCamera className="me-1" /> Kapak Değiştir</Button>
+                                    </div>
+
+                                    {editProduct.variantType === 'none' && (
+                                        <div className="text-start border-top pt-3">
+                                            <div className="d-flex justify-content-between mb-2 align-items-center"><span className="small fw-bold text-muted">GALERİ GÖRSELLERİ</span><Button variant="link" size="sm" onClick={() => extraImageInputRef.current.click()}><FaPlus /> Ekle</Button></div>
+                                            <div className="d-flex flex-wrap gap-2 p-2 bg-light rounded shadow-inner" style={{ minHeight: '80px' }}>
+                                                {editProduct.extraImages?.map((img, idx) => (
+                                                    <div key={idx} className="position-relative bg-white p-1 rounded border shadow-sm">
+                                                        <Image src={img.preview || img} width={60} height={60} style={{ objectFit: 'cover' }} rounded />
+                                                        <Badge bg="danger" className="position-absolute top-0 end-0 cursor-pointer" onClick={() => { const cp = { ...editProduct }; cp.extraImages.splice(idx, 1); setEditProduct(cp); }}>×</Badge>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+                                </Card>
+                            </Col>
+                        </Row>
+                    </Tab>
+
+                    {/* --- TAB 2: VARYANTLAR --- */}
+                    <Tab eventKey="variants" title={<span><FaBoxes className="me-1" /> Varyantlar</span>} className="p-4">
+                        <div className="d-flex justify-content-between align-items-center mb-4 bg-white p-3 rounded shadow-sm">
+                            <div className="d-flex align-items-center gap-3">
+                                <div>
+                                    <span className="small fw-bold text-muted d-block mb-1 text-uppercase" style={{ fontSize: '10px' }}>Satış Yapısı</span>
+                                    <Form.Select size="sm" className="fw-bold text-primary" value={editProduct.variantType} onChange={(e) => setEditProduct({ ...editProduct, variantType: e.target.value })}>
+                                        <option value="none">Varyantsız (Tek Tip Ürün)</option>
+                                        <option value="size">Sadece Seçenekler (Hafıza / Beden)</option>
+                                        <option value="color">Renk + Seçenekler</option>
+                                    </Form.Select>
+                                </div>
+                            </div>
+                            {editProduct.variantType !== 'none' && (
+                                <Button variant="success" size="sm" onClick={addNewVariantGroup}>
+                                    <FaPlus className="me-1" /> {editProduct.variantType === 'color' ? 'Yeni Renk Ekle' : 'Seçenek Grubu Ekle'}
+                                </Button>
+                            )}
                         </div>
-                      ))}
-                    </div>
-                    <Form.Control
-                      type="file"
-                      accept="image/*"
-                      multiple
-                      onChange={e => handleInputChange('images', e.target.files)}
-                      aria-label="Diğer ürün resimleri yükle"
-                    />
-                  </Card.Body>
-                </Card>
-              </Col>
-            </Row>
 
-            {/* Kategori ve Fiyat */}
-            <Row className="mb-4">
-              <Col md={6}>
-                <Form.Group>
-                  <Form.Label className="fw-bold text-dark">Kategori</Form.Label>
-                  <Form.Select
-                    value={editProduct.category_key || ''}
-                    onChange={e => handleInputChange('category_key', e.target.value)}
-                  >
-                    <option value="">Kategori seçin</option>
-                    <option value="fashion">Fashion</option>
-                    <option value="books">Books</option>
-                    <option value="electronics">Electronics</option>
-                    <option value="home_office">Home & Office</option>
-                  </Form.Select>
-                </Form.Group>
-              </Col>
-              <Col md={3}>
-                <Form.Group>
-                  <Form.Label className="fw-bold text-dark">Fiyat ($)</Form.Label>
-                  <Form.Control
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    value={editProduct.price || ''}
-                    onChange={e => handleInputChange('price', e.target.value)}
-                    placeholder="0.00"
-                  />
-                </Form.Group>
-              </Col>
-              <Col md={3}>
-                <Form.Group>
-                  <Form.Label className="fw-bold text-dark">Puan (0-5)</Form.Label>
-                  <Form.Control
-                    type="number"
-                    min="0"
-                    max="5"
-                    step="0.1"
-                    value={editProduct.rating || ''}
-                    onChange={e => handleInputChange('rating', e.target.value)}
-                    placeholder="0 - 5"
-                  />
-                </Form.Group>
-              </Col>
+                        {editProduct.variantType !== 'none' && editProduct.colorGroups.map((group, gIdx) => (
+                            <Card key={gIdx} className="border-0 shadow-sm mb-5 overflow-hidden border-start border-primary border-4">
+                                <Card.Header className="bg-white py-3 d-flex justify-content-between align-items-center">
+                                    <div className="d-flex align-items-center gap-4">
+                                        {editProduct.variantType === 'color' ? (
+                                            <div className="d-flex gap-2 align-items-center">
+                                                <Form.Control 
+                                                    size="sm" 
+                                                    className="fw-bold" 
+                                                    style={{ width: '200px' }} 
+                                                    placeholder="Renk (TR veya EN yaz)" 
+                                                    value={group.group_name} 
+                                                    onChange={(e) => handleSmartColorChange(gIdx, e.target.value)} 
+                                                />
+                                                <Form.Control 
+                                                    type="color" 
+                                                    size="sm" 
+                                                    style={{ width: '50px' }} 
+                                                    value={group.color_code} 
+                                                    onChange={(e) => {
+                                                        const up = [...editProduct.colorGroups]; up[gIdx].color_code = e.target.value; setEditProduct({ ...editProduct, colorGroups: up });
+                                                    }} 
+                                                />
+                                                {group.detected_tr && group.detected_tr !== group.group_name && (
+                                                    <Badge bg="light" text="dark" className="border shadow-sm">
+                                                        Yakalandı: {group.detected_tr} / {group.detected_en}
+                                                    </Badge>
+                                                )}
+                                            </div>
+                                        ) : <h6 className="mb-0 fw-bold">Varyant Grup #{gIdx + 1}</h6>}
+                                    </div>
+                                    <Button variant="outline-danger" size="sm" onClick={() => { const up = editProduct.colorGroups.filter((_, i) => i !== gIdx); setEditProduct({ ...editProduct, colorGroups: up }); }}><FaTrash /></Button>
+                                </Card.Header>
+                                <Card.Body>
+                                    <Row className="g-3">
+                                        {editProduct.variantType === 'color' && (
+                                            <Col lg={4} className="border-end text-center">
+                                                <div className="d-flex justify-content-between mb-2">
+                                                    <span className="small fw-bold uppercase text-muted">GRUP RESİMLERİ</span>
+                                                    <Button variant="link" size="sm" className="p-0 text-decoration-none" onClick={() => triggerVariantUpload(gIdx)}>+ Foto Ekle</Button>
+                                                </div>
+                                                <div className="d-flex flex-wrap gap-2 border p-3 bg-light rounded shadow-inner" style={{ minHeight: '120px' }}>
+                                                    {group.images.map((img, iIdx) => (
+                                                        <div key={iIdx} className="position-relative bg-white p-1 border rounded shadow-sm">
+                                                            <Image src={img.preview || img} width={65} height={65} style={{ objectFit: 'cover' }} rounded />
+                                                            <Badge bg="danger" className="position-absolute top-0 end-0 cursor-pointer shadow-sm" style={{ marginTop: '-10px', marginRight: '-10px' }} onClick={() => { const up = [...editProduct.colorGroups]; up[gIdx].images.splice(iIdx, 1); setEditProduct({ ...editProduct, colorGroups: up }); }}>×</Badge>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </Col>
+                                        )}
+                                        <Col lg={editProduct.variantType === 'color' ? 8 : 12}>
+                                            <Table hover size="sm" className="align-middle text-center">
+                                                <thead className="small text-muted bg-light border-bottom text-uppercase">
+                                                    <tr><th>{getOptionLabel()}</th><th width="120">STOK</th><th>SKU</th><th width="120">FİYAT FARKI</th><th width="40"></th></tr>
+                                                </thead>
+                                                <tbody>
+                                                    {group.sizes.map((s, sIdx) => (
+                                                        <tr key={sIdx} className="bg-white">
+                                                            <td><Form.Control size="sm" className="border-0 shadow-none text-center" value={s.size} placeholder="S, XL, 256GB..." onChange={e => { const up = [...editProduct.colorGroups]; up[gIdx].sizes[sIdx].size = e.target.value; setEditProduct({ ...editProduct, colorGroups: up }); }} /></td>
+                                                            <td><Form.Control size="sm" type="number" className="border-0 shadow-none bg-light text-center" value={s.stock} onChange={e => { const up = [...editProduct.colorGroups]; up[gIdx].sizes[sIdx].stock = e.target.value; setEditProduct({ ...editProduct, colorGroups: up }); }} /></td>
+                                                            <td><Form.Control size="sm" className="border-0 shadow-none text-center text-muted x-small" value={s.sku} placeholder="Barkod" onChange={e => { const up = [...editProduct.colorGroups]; up[gIdx].sizes[sIdx].sku = e.target.value; setEditProduct({ ...editProduct, colorGroups: up }); }} /></td>
+                                                            <td><Form.Control size="sm" type="number" className="border-0 shadow-none text-success fw-bold text-center" value={s.price} onChange={e => { const up = [...editProduct.colorGroups]; up[gIdx].sizes[sIdx].price = e.target.value; setEditProduct({ ...editProduct, colorGroups: up }); }} /></td>
+                                                            <td className="text-danger cursor-pointer opacity-75" onClick={() => { const up = [...editProduct.colorGroups]; up[gIdx].sizes.splice(sIdx, 1); setEditProduct({ ...editProduct, colorGroups: up }); }}>×</td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </Table>
+                                            <Button variant="link" className="w-100 mt-2 text-decoration-none bg-light rounded border py-1 x-small fw-bold" onClick={() => {
+                                                const up = [...editProduct.colorGroups]; up[gIdx].sizes.push({ variant_id: `v_${Date.now()}`, size: '', stock: 0, sku: '', price: 0 }); setEditProduct({ ...editProduct, colorGroups: up });
+                                            }}>+ Seçenek Satırı Ekle</Button>
+                                        </Col>
+                                    </Row>
+                                </Card.Body>
+                            </Card>
+                        ))}
+                    </Tab>
 
-                <Col md={4}>
-                <Form.Group>
-                  <Form.Label className="fw-bold text-dark">Stok</Form.Label>
-                  <Form.Control
-                    type="number"
-                    value={editProduct.stock || ''}
-                    onChange={e => handleInputChange('stock', e.target.value)}
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
+                    {/* --- TAB 3: ÖZELLİKLER --- */}
+                    <Tab eventKey="features" title={<span><FaListUl className="me-1" /> Özellikler</span>} className="p-4">
+                        <Card className="border-0 shadow-sm p-4">
+                            <div className="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+                                <h6 className="fw-bold mb-0">Özellik Listesi (TR & EN Senkron)</h6>
+                                <Button variant="primary" size="sm" onClick={() => { const cp = { ...editProduct }; cp.translations.tr.features.push(''); cp.translations.en.features.push(''); setEditProduct(cp); }}>+ Yeni Satır</Button>
+                            </div>
+                            {editProduct.translations.tr.features.map((feat, idx) => (
+                                <Row key={idx} className="mb-2 g-2 pb-2 border-bottom border-light">
+                                    <Col md={5}><Form.Label className="x-small text-muted mb-0 fw-bold">TR</Form.Label><Form.Control size="sm" value={feat} placeholder="Malzeme, Watt..." onChange={e => { const cp = { ...editProduct }; cp.translations.tr.features[idx] = e.target.value; setEditProduct(cp); }} /></Col>
+                                    <Col md={6}><Form.Label className="x-small text-muted mb-0 fw-bold">EN</Form.Label><Form.Control size="sm" value={editProduct.translations.en.features[idx] || ''} placeholder="English equivalent..." onChange={e => { const cp = { ...editProduct }; cp.translations.en.features[idx] = e.target.value; setEditProduct(cp); }} /></Col>
+                                    <Col md={1} className="d-flex align-items-end"><Button variant="outline-danger" size="sm" className="w-100" onClick={() => { const cp = { ...editProduct }; cp.translations.tr.features.splice(idx, 1); cp.translations.en.features.splice(idx, 1); setEditProduct(cp); }}>×</Button></Col>
+                                </Row>
+                            ))}
+                        </Card>
+                    </Tab>
+                </Tabs>
+            </Modal.Body>
 
-            {/* İçerikler (Türkçe & İngilizce) */}
-            <Row className="mb-4">
-              <Col md={6}>
-                <h5 className="mb-3 border-bottom pb-2 fw-bold text-dark">Türkçe İçerik</h5>
-                <Form.Group className="mb-3">
-                  <Form.Label className="fw-bold text-dark">Ürün Adı</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={editProduct.translations.tr.name}
-                    onChange={e => handleInputChange('name', e.target.value, 'tr')}
-                    placeholder="Ürün adı girin"
-                  />
-                </Form.Group>
-                <Form.Group className="mb-3">
-                  <Form.Label className="fw-bold text-dark">Açıklama</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={4}
-                    value={editProduct.translations.tr.description}
-                    onChange={e => handleInputChange('description', e.target.value, 'tr')}
-                    placeholder="Ürün açıklaması girin"
-                  />
-                </Form.Group>
-                <Form.Label className="fw-bold text-dark">Özellikler</Form.Label>
-                {editProduct.translations.tr.features.map((feat, idx) => (
-                  <InputGroup className="mb-2" key={`tr-feature-${idx}`}>
-                    <Form.Control
-                      type="text"
-                      value={feat}
-                      onChange={e => handleInputChange('features', e.target.value, 'tr', idx)}
-                      placeholder={`Özellik #${idx + 1}`}
-                    />
-                    <Button variant="outline-danger" onClick={() => handleRemoveFeature(idx)} aria-label="Özellik kaldır">
-                      &minus;
-                    </Button>
-                  </InputGroup>
-                ))}
-                <Button variant="outline-primary" size="sm" onClick={handleAddFeature} className="mt-2">
-                  + Özellik Ekle
+            <Modal.Footer className="bg-white border-top">
+                <Button variant="link" className="text-secondary fw-bold text-decoration-none" onClick={onHide}>Kapat</Button>
+                <Button variant="primary" className="px-5 fw-bold shadow rounded-pill" onClick={handleFinalSave} disabled={updating}>
+                    {updating ? <Spinner size="sm" className="me-2" /> : <FaSave className="me-2" />} Değişiklikleri Tamamla
                 </Button>
-              </Col>
-
-              <Col md={6}>
-                <h5 className="mb-3 border-bottom pb-2 fw-bold text-dark">English Content</h5>
-                <Form.Group className="mb-3">
-                  <Form.Label className="fw-bold text-dark">Product Name</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={editProduct.translations.en.name}
-                    onChange={e => handleInputChange('name', e.target.value, 'en')}
-                    placeholder="Enter product name"
-                  />
-                </Form.Group>
-                <Form.Group className="mb-3">
-                  <Form.Label className="fw-bold text-dark">Description</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={4}
-                    value={editProduct.translations.en.description}
-                    onChange={e => handleInputChange('description', e.target.value, 'en')}
-                    placeholder="Enter product description"
-                  />
-                </Form.Group>
-                <Form.Label className="fw-bold text-dark">Features</Form.Label>
-                {editProduct.translations.en.features.map((feat, idx) => (
-                  <InputGroup className="mb-2" key={`en-feature-${idx}`}>
-                    <Form.Control
-                      type="text"
-                      value={feat}
-                      onChange={e => handleInputChange('features', e.target.value, 'en', idx)}
-                      placeholder={`Feature #${idx + 1}`}
-                    />
-                  </InputGroup>
-                ))}
-              </Col>
-            </Row>
-          </Form>
-        )}
-      </Modal.Body>
-      <Modal.Footer className="d-flex justify-content-between">
-        <Button variant="outline-secondary" onClick={onHide} disabled={updating}>
-          İptal
-        </Button>
-        <Button variant="primary" onClick={handleUpdate} disabled={updating} className="d-flex align-items-center gap-2">
-          {updating && <Spinner animation="border" size="sm" />}
-          Güncelle
-        </Button>
-      </Modal.Footer>
-    </Modal>
-  );
+            </Modal.Footer>
+        </Modal>
+    );
 };
 
 export default EditProductModal;
-
-
-
-
-
-
-
-

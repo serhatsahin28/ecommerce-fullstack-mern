@@ -2,7 +2,7 @@ const Order = require('../models/orders');
 const Product = require('../models/products');
 const Basket = require('../models/basket');
 const Home = require('../models/home');
-
+const { publishToQueue } = require("../utils/rabbitMQ"); // Yolun doğru olduğundan emin ol
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
@@ -77,7 +77,7 @@ const createOrder = async (req, res) => {
         method: payment?.method || 'iyzico',
         status: payment?.status || 'success',
         // Frontend'den gelen yeni isimleri alıyoruz
-        transactionId: payment?.transactionId || '', 
+        transactionId: payment?.transactionId || '',
         referenceId: payment?.referenceId || '',
         date: payment?.date || new Date()
       },
@@ -132,6 +132,25 @@ const createOrder = async (req, res) => {
     if (userId) {
       await Basket.findOneAndDelete({ userId });
     }
+
+
+    await publishToQueue("order_confirmation_notification", {
+      orderCode: savedOrder.orderCode,
+      email: savedOrder.email,
+      firstName: savedOrder.firstName,
+      totalAmount: savedOrder.totalAmount,
+      cart: savedOrder.cart.map(item => ({
+        name: item.name,
+        quantity: item.quantity,
+        price: item.price,
+        image: item.image
+      })),
+
+      type: "ORDER_CONFIRMATION"
+    });
+
+    // --- 6. Başarılı Yanıt ---
+
 
     // --- 6. Başarılı Yanıt ---
     res.status(201).json({

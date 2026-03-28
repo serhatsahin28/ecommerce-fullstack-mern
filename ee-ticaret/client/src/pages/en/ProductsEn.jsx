@@ -8,7 +8,6 @@ import { FaSearch, FaListUl, FaShoppingCart } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import { CartContext } from '../../components/common/CartContext';
 
-// slug'ı normalize et
 const normalizeSlug = (slug) =>
   slug?.toLowerCase()
     .replace(/&/g, 'and')
@@ -16,27 +15,16 @@ const normalizeSlug = (slug) =>
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '');
 
-// slug-to-key eşlemesi
 const categorySlugToKey = {
-  'electronics': 'electronics',
-  'fashion': 'fashion',
-  'books': 'books',
-  'sports': 'sports',
-  'home_office': 'home_office',
-  'elektronik': 'electronics',
-  'moda': 'fashion',
-  'kitaplar': 'books',
-  'spor': 'sports',
-  'ev_ofis': 'home_office',
+  'electronics': 'electronics', 'fashion': 'fashion', 'books': 'books',
+  'sports': 'sports', 'home_office': 'home_office',
+  'elektronik': 'electronics', 'moda': 'fashion', 'kitaplar': 'books',
+  'spor': 'sports', 'ev_ofis': 'home_office',
 };
 
-// sadece İngilizce karşılıkları kullanılacak
 const categoryNames = {
-  electronics: 'Electronics',
-  fashion: 'Fashion',
-  books: 'Books',
-  sports: 'Sports',
-  home_office: 'Home & Office'
+  electronics: 'Electronics', fashion: 'Fashion', books: 'Books',
+  sports: 'Sports', home_office: 'Home & Office'
 };
 
 export default function ProductsEn() {
@@ -45,19 +33,16 @@ export default function ProductsEn() {
   const currentLang = i18n.language || 'en';
   const { addToCart } = useContext(CartContext);
 
-  const normalizedSlug = normalizeSlug(category);
-  const categoryKey = categorySlugToKey[normalizedSlug];
-
-  if (!categoryKey) {
-    return <Navigate to={`/${currentLang}/404`} replace />;
-  }
-
   const [allProducts, setAllProducts] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('default');
   const [isLoading, setIsLoading] = useState(true);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
+
+  const baseUrl = "http://localhost:5000";
+  const normalizedSlug = normalizeSlug(category);
+  const categoryKey = categorySlugToKey[normalizedSlug];
 
   useEffect(() => {
     setIsLoading(true);
@@ -70,64 +55,82 @@ export default function ProductsEn() {
             ...item,
             name: t.name || item.name,
             description: t.description || item.description,
-            features: t.features || [],
-            reviews: t.reviews || [],
           };
         });
         setAllProducts(translated);
         setIsLoading(false);
       })
       .catch(err => {
-        console.error('Veri alınırken hata oluştu:', err);
+        console.error('Veri hatası:', err);
         setIsLoading(false);
       });
   }, [currentLang]);
 
+  const filteredProducts = useMemo(() => {
+    let result = [...allProducts].filter(p => p.category_key === categoryKey);
+
+    return result.map(p => {
+      // --- AYRIM BURADA BAŞLIYOR ---
+      let dPrice, dStock, dImage;
+
+      if (!p.hasVariants || !p.variants || p.variants.length === 0) {
+        // DURUM A: VARYANT YOKSA
+        dPrice = p.price;
+        dStock = p.stock || 0;
+        dImage = p.image; // Doğrudan ürünün ana resmi
+      } else {
+        // DURUM B: VARYANT VARSA
+        // Stoğu en yüksek varyantı buluyoruz
+        const bestVariant = [...p.variants].sort((a, b) => b.stock - a.stock)[0];
+        dPrice = bestVariant.price;
+        dStock = bestVariant.stock;
+        // Varyantın resmi varsa onu, yoksa ana resmi alıyoruz
+        dImage = (bestVariant.images && bestVariant.images.length > 0) 
+                 ? bestVariant.images[0] 
+                 : p.image;
+      }
+      // --- AYRIM BURADA BİTTİ ---
+
+      return {
+        ...p,
+        displayPrice: dPrice,
+        displayStock: dStock,
+        displayImage: dImage
+      };
+    });
+  }, [allProducts, categoryKey]);
+
+  // Arama ve Sıralama (Ayrı bir adım olarak daha temiz)
+  const finalProducts = useMemo(() => {
+    let list = [...filteredProducts];
+    const query = searchQuery.toLowerCase();
+    if (query) {
+      list = list.filter(p => p.name.toLowerCase().includes(query));
+    }
+    if (sortBy === 'price_asc') list.sort((a, b) => a.displayPrice - b.displayPrice);
+    if (sortBy === 'price_desc') list.sort((a, b) => b.displayPrice - a.displayPrice);
+    return list;
+  }, [filteredProducts, searchQuery, sortBy]);
+
   const handleAddToCart = (product) => {
-    addToCart(product);
+    addToCart({
+      ...product,
+      price: product.displayPrice,
+      image: product.displayImage
+    });
     setToastMessage(`${product.name} added to cart!`);
     setShowToast(true);
     setTimeout(() => setShowToast(false), 2000);
   };
 
-  const filteredProducts = useMemo(() => {
-    let result = [...allProducts].filter(p => p.category_key === categoryKey);
-    const query = searchQuery.toLowerCase();
-
-    if (query) {
-      result = result.filter(p =>
-        p.name.toLowerCase().includes(query) ||
-        p.description.toLowerCase().includes(query)
-      );
-    }
-
-    switch (sortBy) {
-      case 'price_asc': result.sort((a, b) => a.price - b.price); break;
-      case 'price_desc': result.sort((a, b) => b.price - a.price); break;
-      case 'name_asc': result.sort((a, b) => a.name.localeCompare(b.name)); break;
-      case 'name_desc': result.sort((a, b) => b.name.localeCompare(a.name)); break;
-      case 'rating_desc': result.sort((a, b) => (b.rating || 0) - (a.rating || 0)); break;
-      default: break;
-    }
-
-    return result;
-  }, [allProducts, categoryKey, searchQuery, sortBy]);
-
-  if (isLoading) {
-    return (
-      <Container className="d-flex justify-content-center align-items-center" style={{ minHeight: '70vh' }}>
-        <Spinner animation="border" variant="primary" />
-      </Container>
-    );
-  }
+  if (!categoryKey) return <Navigate to={`/${currentLang}/404`} replace />;
+  if (isLoading) return <Container className="py-5 text-center"><Spinner animation="border" variant="primary" /></Container>;
 
   return (
     <div className="bg-light min-vh-100">
       <Container className="py-5">
         <header className="text-center mb-4">
-          <h1 className="display-5 fw-bold text-primary">
-            {categoryNames[categoryKey]} Products
-          </h1>
+          <h1 className="display-5 fw-bold text-primary">{categoryNames[categoryKey]} Products</h1>
           <p className="text-muted">Explore top-rated items in this category</p>
         </header>
 
@@ -149,38 +152,22 @@ export default function ProductsEn() {
               <option value="default">Default</option>
               <option value="price_asc">Price (Ascending)</option>
               <option value="price_desc">Price (Descending)</option>
-              <option value="name_asc">Name (A-Z)</option>
-              <option value="name_desc">Name (Z-A)</option>
-              <option value="rating_desc">Highest Rating</option>
             </Form.Select>
           </InputGroup>
         </Form>
 
-        {filteredProducts.length > 0 ? (
+        {finalProducts.length > 0 ? (
           <Row xs={1} sm={2} md={3} lg={4} className="g-4">
-            {filteredProducts.map(product => (
+            {finalProducts.map(product => (
               <Col key={product._id}>
                 <Card className="h-100 shadow-sm d-flex flex-column">
-                  <div
-                    style={{
-                      height: "300px",
-                      width: "100%",
-                      backgroundColor: "#f8f9fa",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      overflow: "hidden",
-                    }}
-                  >
+                  {/* TASARIM KORUNDU */}
+                  <div style={{ height: "300px", width: "100%", backgroundColor: "#f8f9fa", display: "flex", justifyContent: "center", alignItems: "center", overflow: "hidden" }}>
                     <Card.Img
                       variant="top"
-                      src={product.image}
+                      src={product.displayImage}
                       alt={product.name}
-                      style={{
-                        maxWidth: "100%",
-                        maxHeight: "100%",
-                        objectFit: "contain",
-                      }}
+                      style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }}
                     />
                   </div>
                   <Card.Body className="d-flex flex-column">
@@ -189,19 +176,19 @@ export default function ProductsEn() {
                         {product.name}
                       </Link>
                     </Card.Title>
-
-
                     <div className="mt-auto">
-                      <div className="fw-bold text-primary mb-2">${product.price}</div>
-                      {product.stock !== 0 ? (
+                      <div className="fw-bold text-primary mb-1">${product.displayPrice}</div>
+                      
+                      {/* AYRIM: Stok metni buradan gelir */}
+                      <div className="small text-muted mb-2">Stock: {product.displayStock}</div>
+                      
+                      {product.displayStock !== 0 ? (
                         <Button variant="danger" size="sm" onClick={() => handleAddToCart(product)}>
                           <FaShoppingCart className="me-2" /> Add to Cart
                         </Button>
                       ) : (
                         <div className="text-secondary fw-bold">Out of stock</div>
-
-                      )
-                      }
+                      )}
                     </div>
                   </Card.Body>
                 </Card>
@@ -213,21 +200,13 @@ export default function ProductsEn() {
             <Card.Body>
               <FaListUl size={40} className="mb-3 text-primary opacity-50" />
               <Card.Title>No products found</Card.Title>
-              <Card.Text>No products match your search criteria.</Card.Text>
             </Card.Body>
           </Card>
         )}
       </Container>
 
-      <ToastContainer
-        position="top-end"
-        className="p-3 position-fixed"
-        style={{ top: '70px', right: '1rem', zIndex: 1055 }}
-      >
+      <ToastContainer position="top-end" className="p-3 position-fixed" style={{ top: '70px', right: '1rem', zIndex: 1055 }}>
         <Toast show={showToast} onClose={() => setShowToast(false)} bg="success">
-          <Toast.Header closeButton={false}>
-            <strong className="me-auto">✔</strong>
-          </Toast.Header>
           <Toast.Body className="text-white small">
             ✅ {toastMessage || 'Product added to cart!'}
           </Toast.Body>

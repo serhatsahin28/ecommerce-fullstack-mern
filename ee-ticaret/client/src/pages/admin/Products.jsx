@@ -5,10 +5,10 @@ import axios from 'axios';
 import ProductsHeader from '../../components/admin/ProductsHeader';
 import ProductsTable from '../../components/admin/ProductsTable';
 import EditProductModal from '../../components/admin/EditProductModal';
-import DeleteProductModal from '../../components/admin/DeleteProductModal'; 
+import DeleteProductModal from '../../components/admin/DeleteProductModal';
 import NotificationAlert from '../../components/admin/notificationAlert';
 import AddProductModal from '../../components/admin/AddProductModal';
-
+import { Toast, ToastContainer } from 'react-bootstrap';
 const categories = [
   { key: 'electronics', label: 'Electronics' },
   { key: 'fashion', label: 'Fashion' },
@@ -33,11 +33,13 @@ const AdminProducts = () => {
   const [productToDelete, setProductToDelete] = useState(null);
   const [deleting, setDeleting] = useState(false);
 
+
   // Add Product Modal states
   const [showAddModal, setShowAddModal] = useState(false);
 
   const [notification, setNotification] = useState(null);
-
+  const [showToast, setShowToast] = useState(false);
+  const [toastData, setToastData] = useState({ message: '', bg: 'success' });
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
@@ -89,7 +91,10 @@ const AdminProducts = () => {
     setProductToDelete(product);
     setShowDeleteModal(true);
   };
-
+  const notify = (msg, type = 'success') => {
+    setToastData({ message: msg, bg: type });
+    setShowToast(true);
+  };
   const handleDeleteClose = () => {
     setShowDeleteModal(false);
     setProductToDelete(null);
@@ -110,65 +115,63 @@ const AdminProducts = () => {
     setShowAddModal(false);
   };
 
-  const handleUpdate = async (updatedProduct) => {
+  // Products.jsx içindeki fonksiyon
+  const handleUpdate = async (id, formData) => {
     try {
       setUpdating(true);
-
-      const formData = new FormData();
-
-      // Diğer ürün bilgilerini FormData'ya ekle
-      for (const key in updatedProduct) {
-        if (key !== 'imageFile' && key !== 'newImageFiles') {
-          if (key === 'translations') {
-            formData.append(key, JSON.stringify(updatedProduct[key]));
-          } else {
-            formData.append(key, updatedProduct[key]);
-          }
-        }
-      }
-
-      // Ana resim dosyası varsa ekle
-      if (updatedProduct.imageFile) {
-        formData.append('image', updatedProduct.imageFile);
-      }
-
-      // Yeni çoklu resimler varsa ekle
-      if (updatedProduct.newImageFiles && updatedProduct.newImageFiles.length > 0) {
-        updatedProduct.newImageFiles.forEach(file => {
-          formData.append('image', file);
-        });
-      }
-
-      // Tek bir API çağrısı (PUT)
-      await axios.put(
-        `http://localhost:5000/admin/updateProduct/${updatedProduct._id}`,
+      const response = await axios.put(
+        `http://localhost:5000/admin/updateProduct/${id}`,
         formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        }
+        { headers: { 'Content-Type': 'multipart/form-data' } }
       );
 
-      // UI güncelleme
-      setProducts(prev => prev.map(p => p._id === updatedProduct._id ? updatedProduct : p));
-      handleEditClose();
+      if (response.data.success) {
+        // Başarılı bildirimi
+        notify("Ürün başarıyla güncellendi!", "success");
 
-      setNotification({ message: 'Ürün başarıyla güncellendi!', type: 'success' });
-      setTimeout(() => setNotification(null), 4000);
+        // State güncelleme (Listeyi yenilemeden)
+        setProducts(prev => prev.map(p => p._id === id ? response.data.product : p));
 
+        // Modalı kapat
+        setShowEditModal(false);
+      }
     } catch (err) {
-      setUpdateError('Ürün güncellenirken bir hata oluştu.');
       console.error("Update Error:", err);
+      // Başarısız bildirimi
+      notify("Hata: Ürün güncellenemedi!", "danger");
     } finally {
       setUpdating(false);
     }
   };
 
   const handleConfirmDelete = async () => {
-    alert('Silme işlemi şimdilik devre dışı.');
-    handleDeleteClose();
+    if (!productToDelete) return;
+
+    try {
+      setDeleting(true); // Yükleme durumunu başlat
+
+      // Backend'e silme isteği gönder
+      await axios.delete(`http://localhost:5000/admin/productsDelete/${productToDelete._id}`);
+      // UI'dan silinen ürünü kaldır
+      setProducts(prev => prev.filter(p => p._id !== productToDelete._id));
+
+      // Modal'ı kapat
+      handleDeleteClose();
+
+      // Bildirim göster
+      setNotification({ message: 'Ürün başarıyla silindi!', type: 'success' });
+      setTimeout(() => setNotification(null), 4000);
+
+    } catch (err) {
+      console.error("Delete Error:", err);
+      setNotification({ message: 'Ürün silinirken bir hata oluştu.', type: 'danger' });
+      setTimeout(() => setNotification(null), 4000);
+    } finally {
+      setDeleting(false); // Yükleme durumunu bitir
+    }
   };
+
+
 
   const showNotification = (message, type = 'warning') => {
     setNotification({ message, type });
@@ -224,6 +227,24 @@ const AdminProducts = () => {
         onNotification={showNotification}
         onProductAdded={handleProductAdded}
       />
+
+      <ToastContainer position="top-end" className="p-3" style={{ zIndex: 9999 }}>
+        <Toast
+          onClose={() => setShowToast(false)}
+          show={showToast}
+          delay={3000}
+          autohide
+          bg={toastData.bg}
+        >
+          <Toast.Header closeButton={false} className="text-white" style={{ background: 'rgba(0,0,0,0.1)' }}>
+            <strong className="me-auto">Sistem Bildirimi</strong>
+            <small>şimdi</small>
+          </Toast.Header>
+          <Toast.Body className="text-white fw-bold">
+            {toastData.message}
+          </Toast.Body>
+        </Toast>
+      </ToastContainer>
     </div>
   );
 };

@@ -144,19 +144,36 @@ const deleteAddressController = async (req, res) => {
   try {
     const userId = req.user.id;
     const { addressId } = req.params;
-    const user = await users.findById(userId);
+    // console.log("userId" + userId);
+    // console.log("req.params" req.params);
 
-    if (!user) return res.status(404).json({ message: 'Kullanıcı bulunamadı.' });
+    // Veritabanına şunu diyoruz: 
+    // "Bu kullanıcıyı bul ve adresler listesinden şu ID'ye sahip olanı ÇIKAR (PULL)"
+    const updatedUser = await users.findByIdAndUpdate(
+      userId,
+      {
+        $pull: { adresler: { _id: addressId } }
+      },
+      {
+        new: true, // Silinmiş halini bize geri ver
+        runValidators: false // ÖNEMLİ: Eski bozuk verileri kontrol etme, sadece silme yap!
+      }
+    );
 
-    user.adresler.pull({ _id: addressId });
+    if (!updatedUser) {
+      return res.status(404).json({ success: false, message: 'Kullanıcı bulunamadı.' });
+    }
 
-    const savedUser = await user.save();
-    if (!savedUser) return res.status(500).json({ message: 'Adres silinemedi.' });
+    // Silme sonrası veritabanındaki güncel durumu dönüyoruz
+    // res.status(200).json({ 
+    //   success: true, 
+    //   message: 'Adres başarıyla silindi.',
+    //   adresler: updatedUser.adresler 
+    // });
 
-    res.status(200).json({ message: 'Adres başarıyla silindi.' });
   } catch (err) {
-    console.error('Adres silme hatası:', err);
-    res.status(500).json({ message: 'Sunucu hatası' });
+    console.error('Silme hatası:', err);
+    res.status(500).json({ success: false, message: 'Sunucu hatası' });
   }
 };
 
@@ -261,7 +278,7 @@ const deletePaymentMethod = async (req, res) => {
       return pid === String(paymentId);
     });
 
-    console.log("paymentMethod",paymentMethod);
+    console.log("paymentMethod", paymentMethod);
     if (!paymentMethod || !paymentMethod.kart_token || !paymentMethod.card_user_key) {
       return res.status(400).json({ message: 'Silmek için geçerli kart token ve user key bulunamadı.' });
     }
