@@ -38,7 +38,7 @@ const CartPageTR = () => {
     }
 
     try {
-      const res = await fetch('http://${import.meta.env.VITE_API_URL}/profile', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/profile`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (!res.ok) throw new Error('Kullanıcı verisi alınamadı');

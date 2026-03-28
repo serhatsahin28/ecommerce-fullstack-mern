@@ -31,7 +31,7 @@ const OrdersPageEn = () => {
       const token = localStorage.getItem('token');
       if (!token) throw new Error('You need to log in');
 
-      const res = await fetch('http://${import.meta.env.VITE_API_URL}/view/orders', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/view/orders`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
       });
@@ -68,7 +68,7 @@ const OrdersPageEn = () => {
 
   const confirmCancel = async () => {
     try {
-      await fetch("http://${import.meta.env.VITE_API_URL}/admin/OrdersCancelRequest", {
+      await fetch(`http://${import.meta.env.VITE_API_URL}/admin/OrdersCancelRequest`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ order_code: orderToCancel, cancelReason })

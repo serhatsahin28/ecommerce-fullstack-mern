@@ -44,7 +44,7 @@ const ProfileEN = () => {
           setError('Please login first.');
           return;
         }
-        const response = await axios.get('http://${import.meta.env.VITE_API_URL}/profile', {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/profile`, {
           headers: { Authorization: `Bearer ${token}` }
         });
 
@@ -90,7 +90,7 @@ const ProfileEN = () => {
         updateData.password = user.password;
       }
 
-      await axios.put('http://${import.meta.env.VITE_API_URL}/profile/update', updateData, {
+      await axios.put(`${import.meta.env.VITE_API_URL}/profile/update`, updateData, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -107,7 +107,7 @@ const ProfileEN = () => {
     clearMessages();
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post('http://${import.meta.env.VITE_API_URL}/address/add', newAddress, {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/address/add`, newAddress, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -191,7 +191,7 @@ const ProfileEN = () => {
     clearMessages();
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post('http://${import.meta.env.VITE_API_URL}/payment/add', newPayment, {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/payment/add`, newPayment, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setUser(prev => ({

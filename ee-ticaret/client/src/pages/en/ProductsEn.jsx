@@ -40,13 +40,13 @@ export default function ProductsEn() {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
 
-  const baseUrl = "http://${import.meta.env.VITE_API_URL}";
+  const baseUrl = `http://${import.meta.env.VITE_API_URL}`;
   const normalizedSlug = normalizeSlug(category);
   const categoryKey = categorySlugToKey[normalizedSlug];
 
   useEffect(() => {
     setIsLoading(true);
-    fetch('http://${import.meta.env.VITE_API_URL}/products')
+    fetch(`${import.meta.env.VITE_API_URL}/products`)
       .then(res => res.json())
       .then(data => {
         const translated = data.map(item => {

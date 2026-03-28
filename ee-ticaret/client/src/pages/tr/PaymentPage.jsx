@@ -36,7 +36,7 @@ const PaymentPage = () => {
     const fetchSavedCards = async () => {
       if (!token) return;
       try {
-        const response = await axios.get('http://${import.meta.env.VITE_API_URL}/profile', {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/profile`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         // Expect that backend stores iyzico token fields on user profile, e.g. ucsToken/cardToken/token
@@ -57,7 +57,7 @@ const PaymentPage = () => {
       if (token) {
         (async () => {
           try {
-            const response = await axios.get('http://${import.meta.env.VITE_API_URL}/profile', {
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/profile`, {
               headers: { Authorization: `Bearer ${token}` }
             });
             setGuestInfo({
@@ -176,7 +176,7 @@ const PaymentPage = () => {
       };
 
 
-      const orderResponse = await axios.post('http://${import.meta.env.VITE_API_URL}/orders', orderData);
+      const orderResponse = await axios.post(`${import.meta.env.VITE_API_URL}/orders`, orderData);
 
       if (orderResponse.data.success) {
         setOrderCode(orderResponse.data.orderCode);
@@ -266,7 +266,7 @@ const PaymentPage = () => {
 
       const token = localStorage.getItem('token'); // veya cookie vs.
       const paymentResponse = await axios.post(
-        'http://${import.meta.env.VITE_API_URL}/pay',
+        `${import.meta.env.VITE_API_URL}/pay`,
         paymentData,
         {
           headers: {

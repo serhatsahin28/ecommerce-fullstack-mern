@@ -44,7 +44,7 @@ const ProfileTR = () => {
           setError('Lütfen giriş yapınız.');
           return;
         }
-        const yanit = await axios.get('http://${import.meta.env.VITE_API_URL}/profile', {
+        const yanit = await axios.get(`${import.meta.env.VITE_API_URL}/profile`, {
           headers: { Authorization: `Bearer ${token}` }
         });
 
@@ -90,7 +90,7 @@ const ProfileTR = () => {
         guncellenecekVeri.password = kullanici.sifre;
       }
 
-      await axios.put('http://${import.meta.env.VITE_API_URL}/profile/update', guncellenecekVeri, {
+      await axios.put(`${import.meta.env.VITE_API_URL}/profile/update`, guncellenecekVeri, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -107,7 +107,7 @@ const ProfileTR = () => {
     clearMessages();
     try {
       const token = localStorage.getItem('token');
-      const yanit = await axios.post('http://${import.meta.env.VITE_API_URL}/address/add', newAddress, {
+      const yanit = await axios.post(`${import.meta.env.VITE_API_URL}/address/add`, newAddress, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -192,7 +192,7 @@ const ProfileTR = () => {
   //   clearMessages();
   //   try {
   //     const token = localStorage.getItem('token');
-  //     const response = await axios.post('http://${import.meta.env.VITE_API_URL}/payment/add', newPayment, {
+  //     const response = await axios.post(`${import.meta.env.VITE_API_URL}/payment/add', newPayment, {
   //       headers: { Authorization: `Bearer ${token}` }
   //     });
   //     setKullanici(prev => ({
@@ -210,7 +210,7 @@ const ProfileTR = () => {
     clearMessages();
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post('http://${import.meta.env.VITE_API_URL}/payment/add', newPayment, {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/payment/add`, newPayment, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setKullanici(prev => ({

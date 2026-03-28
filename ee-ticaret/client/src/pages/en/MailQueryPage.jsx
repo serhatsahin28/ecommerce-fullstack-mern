@@ -15,7 +15,7 @@ const MailQueryPageEN = () => {
 
         try {
             const response = await axios.post(
-                'http://${import.meta.env.VITE_API_URL}/mail/send-order-link', 
+                `${import.meta.env.VITE_API_URL}/mail/send-order-link`, 
                 { email, lang: 'en' }
             );
 

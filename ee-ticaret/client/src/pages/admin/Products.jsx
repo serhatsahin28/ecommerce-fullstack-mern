@@ -45,7 +45,7 @@ const AdminProducts = () => {
       setLoading(true);
       setError(null);
       try {
-        const { data } = await axios.get('http://${import.meta.env.VITE_API_URL}/admin/productsList');
+        const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/admin/productsList`);
         setProducts(data);
         setFilteredProducts(data);
       } catch (err) {

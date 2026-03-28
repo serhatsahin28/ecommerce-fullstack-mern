@@ -19,7 +19,7 @@ const MailQueryPage = () => {
 
         try {
             console.log("currentLang",currentLang);
-            const response = await axios.post('http://${import.meta.env.VITE_API_URL}/mail/send-order-link', { email, lang: currentLang });
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/mail/send-order-link`, { email, lang: currentLang });
 
             if (response.data.success) {
                 setVariant('success');

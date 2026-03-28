@@ -27,7 +27,7 @@ export default function HomeBody() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetch('http://${import.meta.env.VITE_API_URL}/admin/homeList')
+    fetch(`${import.meta.env.VITE_API_URL}/admin/homeList')
       .then(res => {
         if (!res.ok) throw new Error('Network response was not ok');
         return res.json();
