@@ -54,16 +54,7 @@
     filter: grayscale(0.1) brightness(1.3);
   }
   
-  /* Örnek kategori ikonları */
-  .icon-electronics {
-    background-image: url('/assets/icons/electronics.svg');
-  }
-  .icon-fashion {
-    background-image: url('/assets/icons/fashion.svg');
-  }
-  .icon-beauty {
-    background-image: url('/assets/icons/beauty.svg');
-  }
+
   /* ... diğer kategori ikonları */
   
   @media (max-width: 768px) {
