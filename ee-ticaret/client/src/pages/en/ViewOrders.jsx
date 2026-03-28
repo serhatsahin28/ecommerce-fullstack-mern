@@ -70,7 +70,7 @@ const ViewOrdersPageEn = () => {
   const handleCancelOrder = (orderId) => {
     if (window.confirm('Are you sure you want to cancel this order?')) {
       // Send cancel request to API
-      axios.put(`http://localhost:5000/cancel-order/${orderId}`, { token })
+      axios.put(`http://${import.meta.env.VITE_API_URL}/cancel-order/${orderId}`, { token })
         .then(response => {
           if (response.data.success) {
             // Update order status
@@ -123,7 +123,7 @@ const ViewOrdersPageEn = () => {
         }
 
         // Fetch orders from API
-        const response = await axios.get(`http://localhost:5000/view-orders?token=${token}`);
+        const response = await axios.get(`http://${import.meta.env.VITE_API_URL}/view-orders?token=${token}`);
 
         if (response.data.success) {
           // Sort orders by date (newest first)

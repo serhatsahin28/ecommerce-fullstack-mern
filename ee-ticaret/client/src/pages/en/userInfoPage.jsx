@@ -30,7 +30,7 @@ const UserInfoPageEn = () => {
       }
 
       try {
-        const res = await fetch('http://localhost:5000/profile', {
+        const res = await fetch('http://${import.meta.env.VITE_API_URL}/profile', {
           headers: { Authorization: `Bearer ${token}` }
         });
         
@@ -100,7 +100,7 @@ const UserInfoPageEn = () => {
     }
 
     try {
-      const res = await fetch('http://localhost:5000/address/add', {
+      const res = await fetch('http://${import.meta.env.VITE_API_URL}/address/add', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

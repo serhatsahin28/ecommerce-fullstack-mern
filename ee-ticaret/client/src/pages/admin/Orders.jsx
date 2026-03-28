@@ -30,7 +30,7 @@ const AdminOrdersPage = () => {
         try {
             setLoading(true);
             const token = localStorage.getItem('token');
-            const res = await fetch('http://localhost:5000/admin/ordersAll', {
+            const res = await fetch('http://${import.meta.env.VITE_API_URL}/admin/ordersAll', {
                 headers: token ? { Authorization: `Bearer ${token}` } : {}
             });
             if (!res.ok) throw new Error('Siparişler yüklenemedi');
@@ -49,7 +49,7 @@ const AdminOrdersPage = () => {
         setUpdating(true);
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch('http://localhost:5000/admin/OrdersStatusUpdate', {
+            const res = await fetch('http://${import.meta.env.VITE_API_URL}/admin/OrdersStatusUpdate', {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
                 body: JSON.stringify({ order_id: orderId, status: targetStatus })
@@ -69,7 +69,7 @@ const AdminOrdersPage = () => {
 
     const approveCancelOrder = async (orderCode) => {
         try {
-            await axios.post("http://localhost:5000/admin/OrdersCancelApprove", {
+            await axios.post("http://${import.meta.env.VITE_API_URL}/admin/OrdersCancelApprove", {
                 order_code: orderCode
             });
 

@@ -44,7 +44,7 @@ const ProfileEN = () => {
           setError('Please login first.');
           return;
         }
-        const response = await axios.get('http://localhost:5000/profile', {
+        const response = await axios.get('http://${import.meta.env.VITE_API_URL}/profile', {
           headers: { Authorization: `Bearer ${token}` }
         });
 
@@ -90,7 +90,7 @@ const ProfileEN = () => {
         updateData.password = user.password;
       }
 
-      await axios.put('http://localhost:5000/profile/update', updateData, {
+      await axios.put('http://${import.meta.env.VITE_API_URL}/profile/update', updateData, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -107,7 +107,7 @@ const ProfileEN = () => {
     clearMessages();
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post('http://localhost:5000/address/add', newAddress, {
+      const response = await axios.post('http://${import.meta.env.VITE_API_URL}/address/add', newAddress, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -140,7 +140,7 @@ const ProfileEN = () => {
       const token = localStorage.getItem('token');
       const addressId = selectedAddress.id || selectedAddress._id;
       const response = await axios.put(
-        `http://localhost:5000/address/update/${addressId}`,
+        `http://${import.meta.env.VITE_API_URL}/address/update/${addressId}`,
         newAddress,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -173,7 +173,7 @@ const ProfileEN = () => {
     try {
       const token = localStorage.getItem('token');
       const addressId = addressToDelete.id || addressToDelete._id;
-      await axios.delete(`http://localhost:5000/address/delete/${addressId}`, {
+      await axios.delete(`http://${import.meta.env.VITE_API_URL}/address/delete/${addressId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setUser(prev => ({
@@ -191,7 +191,7 @@ const ProfileEN = () => {
     clearMessages();
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post('http://localhost:5000/payment/add', newPayment, {
+      const response = await axios.post('http://${import.meta.env.VITE_API_URL}/payment/add', newPayment, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setUser(prev => ({
@@ -223,7 +223,7 @@ const ProfileEN = () => {
         throw new Error('Payment method ID not found');
       }
 
-      await axios.delete(`http://localhost:5000/payment/delete/${paymentId}`, {
+      await axios.delete(`http://${import.meta.env.VITE_API_URL}/payment/delete/${paymentId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 

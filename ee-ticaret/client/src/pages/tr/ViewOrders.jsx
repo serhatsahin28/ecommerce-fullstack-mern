@@ -70,7 +70,7 @@ const ViewOrdersPage = () => {
   const handleCancelOrder = (orderId) => {
     if (window.confirm('Bu siparişi iptal etmek istediğinize emin misiniz?')) {
       // API'ye iptal isteği gönderme
-      axios.put(`http://localhost:5000/cancel-order/${orderId}`, { token })
+      axios.put(`http://${import.meta.env.VITE_API_URL}/cancel-order/${orderId}`, { token })
         .then(response => {
           if (response.data.success) {
             // Sipariş durumunu güncelle
@@ -123,7 +123,7 @@ const ViewOrdersPage = () => {
         }
 
         // API'den sipariş verilerini çekme
-        const response = await axios.get(`http://localhost:5000/view-orders?token=${token}`);
+        const response = await axios.get(`http://${import.meta.env.VITE_API_URL}/view-orders?token=${token}`);
 
         if (response.data.success) {
           // Siparişleri tarihe göre sırala (en yeni üstte)

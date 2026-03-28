@@ -27,7 +27,7 @@ const OrdersPage = () => {
       const token = localStorage.getItem('token');
       if (!token) throw new Error('Oturum açmanız gerekiyor');
 
-      const res = await fetch('http://localhost:5000/view/orders', {
+      const res = await fetch('http://${import.meta.env.VITE_API_URL}/view/orders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
       });
@@ -61,7 +61,7 @@ const OrdersPage = () => {
 
   const confirmCancel = async () => {
     try {
-      await fetch("http://localhost:5000/admin/OrdersCancelRequest", {
+      await fetch("http://${import.meta.env.VITE_API_URL}/admin/OrdersCancelRequest", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ order_code: orderToCancel, cancelReason })

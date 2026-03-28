@@ -53,7 +53,7 @@ export default function ProductDetail() {
   useEffect(() => {
     if (!expectedCategoryKey) { setNotFound(true); return; }
 
-    fetch(`http://localhost:5000/admin/productsList`)
+    fetch(`http://${import.meta.env.VITE_API_URL}/admin/productsList`)
       .then(res => res.json())
       .then(data => {
         const found = data.find(p => {

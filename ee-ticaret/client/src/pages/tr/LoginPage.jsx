@@ -45,7 +45,7 @@ const LoginPageTr = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:5000/login', { email, password });
+      const response = await axios.post('http://${import.meta.env.VITE_API_URL}/login', { email, password });
 
       setSuccess(true);
       setTimeout(() => {

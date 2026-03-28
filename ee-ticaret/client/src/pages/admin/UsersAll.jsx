@@ -19,7 +19,7 @@ const UsersPage = () => {
       setLoading(true);
       setError(null);
       const token = localStorage.getItem('token'); // opsiyonel: auth varsa
-      const res = await fetch('http://localhost:5000/admin/userAll', {
+      const res = await fetch('http://${import.meta.env.VITE_API_URL}/admin/userAll', {
         headers: token ? { Authorization: `Bearer ${token}` } : {}
       });
 

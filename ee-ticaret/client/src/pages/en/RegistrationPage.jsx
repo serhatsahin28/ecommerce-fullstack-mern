@@ -159,7 +159,7 @@ const RegistrationPage = () => {
         console.log('📤 Registration Data:', registrationData);
 
         try {
-            const response = await axios.post('http://localhost:5000/register', registrationData);
+            const response = await axios.post('http://${import.meta.env.VITE_API_URL}/register', registrationData);
             console.log('📥 Registration Response:', response.data);
 
             if (response.data.success) {

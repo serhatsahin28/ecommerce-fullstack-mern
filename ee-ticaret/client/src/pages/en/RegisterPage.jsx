@@ -39,7 +39,7 @@ const RegisterPageEn = () => {
 
     try {
       setLoading(true);
-      const response = await axios.post('http://localhost:5000/register', {
+      const response = await axios.post('http://${import.meta.env.VITE_API_URL}/register', {
         email,
         password,
         ad,

@@ -44,7 +44,7 @@ const ProfileTR = () => {
           setError('Lütfen giriş yapınız.');
           return;
         }
-        const yanit = await axios.get('http://localhost:5000/profile', {
+        const yanit = await axios.get('http://${import.meta.env.VITE_API_URL}/profile', {
           headers: { Authorization: `Bearer ${token}` }
         });
 
@@ -90,7 +90,7 @@ const ProfileTR = () => {
         guncellenecekVeri.password = kullanici.sifre;
       }
 
-      await axios.put('http://localhost:5000/profile/update', guncellenecekVeri, {
+      await axios.put('http://${import.meta.env.VITE_API_URL}/profile/update', guncellenecekVeri, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -107,7 +107,7 @@ const ProfileTR = () => {
     clearMessages();
     try {
       const token = localStorage.getItem('token');
-      const yanit = await axios.post('http://localhost:5000/address/add', newAddress, {
+      const yanit = await axios.post('http://${import.meta.env.VITE_API_URL}/address/add', newAddress, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -141,7 +141,7 @@ const ProfileTR = () => {
       // Adres ID'si artık `selectedAddress.id` veya `selectedAddress._id`'den güvenle alınabilir
       const addressId = selectedAddress.id || selectedAddress._id;
       const response = await axios.put(
-        `http://localhost:5000/address/update/${addressId}`,
+        `http://${import.meta.env.VITE_API_URL}/address/update/${addressId}`,
         newAddress,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -174,7 +174,7 @@ const ProfileTR = () => {
     try {
       const token = localStorage.getItem('token');
       const addressId = addressToDelete.id || addressToDelete._id;
-      await axios.delete(`http://localhost:5000/address/delete/${addressId}`, {
+      await axios.delete(`http://${import.meta.env.VITE_API_URL}/address/delete/${addressId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setKullanici(prev => ({
@@ -192,7 +192,7 @@ const ProfileTR = () => {
   //   clearMessages();
   //   try {
   //     const token = localStorage.getItem('token');
-  //     const response = await axios.post('http://localhost:5000/payment/add', newPayment, {
+  //     const response = await axios.post('http://${import.meta.env.VITE_API_URL}/payment/add', newPayment, {
   //       headers: { Authorization: `Bearer ${token}` }
   //     });
   //     setKullanici(prev => ({
@@ -210,7 +210,7 @@ const ProfileTR = () => {
     clearMessages();
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post('http://localhost:5000/payment/add', newPayment, {
+      const response = await axios.post('http://${import.meta.env.VITE_API_URL}/payment/add', newPayment, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setKullanici(prev => ({
@@ -243,7 +243,7 @@ const ProfileTR = () => {
         throw new Error('Ödeme yöntemi kimliği bulunamadı');
       }
       // console.log(paymentId);
-      await axios.delete(`http://localhost:5000/payment/delete/${paymentId}`, {
+      await axios.delete(`http://${import.meta.env.VITE_API_URL}/payment/delete/${paymentId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 

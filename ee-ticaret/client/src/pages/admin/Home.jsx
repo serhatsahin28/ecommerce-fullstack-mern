@@ -7,7 +7,7 @@ import { FaPlus, FaTrash, FaSave, FaSearch, FaTimes, FaImage, FaEdit } from 'rea
 import { v4 as uuidv4 } from 'uuid';
 
 // Sunucu adresi - resim yollarını tamamlamak için
-const SERVER_URL = 'http://localhost:5000';
+const SERVER_URL = 'http://${import.meta.env.VITE_API_URL}';
 
 // Resim yolunu tamamlama yardımcı fonksiyonu
 const getFullImagePath = (path) => {
@@ -73,7 +73,7 @@ const AdminHome = () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await fetch('http://localhost:5000/admin/homeList');
+      const response = await fetch('http://${import.meta.env.VITE_API_URL}/admin/homeList');
       if (!response.ok) throw new Error('Sunucu verileri alınamadı.');
       const result = await response.json();
 
@@ -113,7 +113,7 @@ const AdminHome = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:5000/admin/home/${homePageData._id}`, {
+      const response = await fetch(`http://${import.meta.env.VITE_API_URL}/admin/home/${homePageData._id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(dataToSend),
