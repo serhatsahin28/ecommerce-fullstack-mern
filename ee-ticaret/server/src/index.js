@@ -18,6 +18,8 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI;
 
+
+
 mongoose.connect(MONGO_URI)
   .then(() => console.log('✅ MongoDB connected'))
   .catch(err => {
@@ -33,6 +35,18 @@ app.use(cors({
   origin: 'http://localhost:5173',
   credentials: true
 }));
+
+// Tüm yakalanmamış hataları logla
+process.on('uncaughtException', (err) => {
+  console.error('🚨 Uncaught Exception:', err);
+  process.exit(1); // süreci durdur, Render bunu status 1 olarak görecek
+});
+
+// Promise reddedilmelerini logla
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('🚨 Unhandled Rejection at:', promise, 'reason:', reason);
+  process.exit(1);
+});
 
 app.use('/', Products);
 app.use('/', Home);
