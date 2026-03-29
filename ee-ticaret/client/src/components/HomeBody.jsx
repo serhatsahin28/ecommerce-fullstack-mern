@@ -33,6 +33,7 @@ export default function HomeBody() {
         return res.json();
       })
       .then(data => {
+        console.log("Gelen data:", data); // bunu ekle
         if (data && data.homeData && data.homeData.length > 0) {
           setHomeContent(data.homeData[0]);
         } else {
@@ -42,6 +43,7 @@ export default function HomeBody() {
       })
       .catch(err => {
         console.error("Anasayfa verisi alınamadı:", err);
+        console.error("VITE_API_URL:", import.meta.env.VITE_API_URL); // bunu ekle
         setHomeContent(null);
         setIsLoading(false);
       });
