@@ -134,7 +134,7 @@
 
 //       console.log('📤 Sipariş verisi gönderiliyor:', orderData);
 
-//       const orderResponse = await axios.post('http://localhost:5000/orders', orderData);
+//       const orderResponse = await axios.post(`${import.meta.env.VITE_API_URL}/orders', orderData);
       
 //       if (orderResponse.data.success) {
 //         console.log('✅ Sipariş başarıyla kaydedildi:', orderResponse.data);
@@ -235,7 +235,7 @@
 
 //     try {
 //       // 1. Önce ödemeyi işle
-//       const paymentResponse = await axios.post('http://localhost:5000/pay', paymentData);
+//       const paymentResponse = await axios.post(`${import.meta.env.VITE_API_URL}/pay', paymentData);
 
 //       console.log('📥 Frontend - Ödeme API Response:', paymentResponse.data);
 
@@ -625,7 +625,7 @@ const PaymentPage = () => {
 
       console.log('📤 Sipariş verisi gönderiliyor:', orderData);
 
-      const orderResponse = await axios.post('http://localhost:5000/orders', orderData);
+      const orderResponse = await axios.post(`${import.meta.env.VITE_API_URL}/orders', orderData);
       
       if (orderResponse.data.success) {
         console.log('✅ Sipariş başarıyla kaydedildi:', orderResponse.data);
@@ -726,7 +726,7 @@ const PaymentPage = () => {
 
     try {
       // 1. Önce ödemeyi işle
-      const paymentResponse = await axios.post('http://localhost:5000/pay', paymentData);
+      const paymentResponse = await axios.post(`${import.meta.env.VITE_API_URL}/pay', paymentData);
 
       console.log('📥 Frontend - Ödeme API Response:', paymentResponse.data);
 

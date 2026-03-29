@@ -125,7 +125,7 @@ const PaymentPage = () => {
     };
 
     try {
-      const paymentResponse = await axios.post('http://localhost:5000/pay', paymentData);
+      const paymentResponse = await axios.post(`${import.meta.env.VITE_API_URL}/pay', paymentData);
       if (paymentResponse.data.success) {
         setPaymentId(paymentResponse.data.paymentId);
         setCard({ cardHolderName: '', cardNumber: '', expireMonth: '', expireYear: '', cvc: '' });

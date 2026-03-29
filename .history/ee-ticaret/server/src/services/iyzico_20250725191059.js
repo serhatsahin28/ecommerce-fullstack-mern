@@ -3,7 +3,7 @@ const iyzipay = require('iyzipay');
 const iyzi = new iyzipay({
   apiKey: process.env.IYZI_API_KEY,
   secretKey: process.env.IYZI_SECRET_KEY,
-  uri: 'https://sandbox-api.iyzipay.com'
+  uri: 'sandbox-api.iyzipay.com'
 });
 
 exports.createCheckoutForm = (data) => {
@@ -16,7 +16,7 @@ exports.createCheckoutForm = (data) => {
       currency: 'TRY',
       basketId: 'B67832',
       paymentGroup: 'PRODUCT',
-      callbackUrl: 'https://seninsite.com/api/payment/callback',
+      callbackUrl: 'seninsite.com/api/payment/callback',
       buyer: {
         id: 'BY123',
         name: data.ad,

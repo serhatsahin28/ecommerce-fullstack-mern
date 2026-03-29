@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL:'http://localhost:5000/login',
+    baseURL:`${import.meta.env.VITE_API_URL}/login',
     headers: {
         Authorization: `Bearer ${localStorage.getItem('token') || ''}`
     }

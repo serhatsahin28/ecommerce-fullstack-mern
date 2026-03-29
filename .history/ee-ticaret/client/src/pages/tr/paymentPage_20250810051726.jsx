@@ -31,7 +31,7 @@ const PaymentPage = () => {
     const fetchSavedCards = async () => {
       if (!token) return;
       try {
-        const response = await axios.get('http://localhost:5000/profile', {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/profile', {
           headers: { Authorization: `Bearer ${token}` }
         });
         // Mask kart numaralarını
@@ -56,7 +56,7 @@ const PaymentPage = () => {
       if (token) {
         (async () => {
           try {
-            const response = await axios.get('http://localhost:5000/profile', {
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/profile', {
               headers: { Authorization: `Bearer ${token}` }
             });
             setGuestInfo({
@@ -165,8 +165,8 @@ const PaymentPage = () => {
 
     try {
       const endpoint = selectedSavedCard 
-        ? 'http://localhost:5000/pay-with-saved-card' 
-        : 'http://localhost:5000/pay';
+        ? `${import.meta.env.VITE_API_URL}/pay-with-saved-card' 
+        : `${import.meta.env.VITE_API_URL}/pay';
       
       const paymentResponse = await axios.post(endpoint, paymentData);
 

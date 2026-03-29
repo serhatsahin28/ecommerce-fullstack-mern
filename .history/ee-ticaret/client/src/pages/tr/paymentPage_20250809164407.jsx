@@ -30,7 +30,7 @@ const PaymentPage = () => {
       // Kayıtlı Kartları Çek
       if (token) {
         try {
-          const response = await axios.get('http://localhost:5000/profile', {
+          const response = await axios.get(`${import.meta.env.VITE_API_URL}/profile', {
             headers: { Authorization: `Bearer ${token}` }
           });
           // Not: DB'den gelen kart verilerinde `_id`, `kart_ismi`, `kart_numarasi`, `son_kullanma` ve `kart_tipi` alanlarının olduğundan emin olun.
@@ -111,7 +111,7 @@ const PaymentPage = () => {
         orderData.userId = payload.userId;
       }
 
-      const orderResponse = await axios.post('http://localhost:5000/orders', orderData);
+      const orderResponse = await axios.post(`${import.meta.env.VITE_API_URL}/orders', orderData);
       if (orderResponse.data.success) {
         setOrderCode(orderResponse.data.orderCode);
       }
@@ -166,7 +166,7 @@ const PaymentPage = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post('http://localhost:5000/pay', paymentData, {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/pay', paymentData, {
         headers: {
           "Content-Type": "application/json",
           // Sadece kayıtlı kart kullanılıyorsa yetkilendirme başlığını ekle

@@ -33,12 +33,12 @@
 
 //   const normalizedSlug = normalize(rawCategory);
 //   const expectedCategoryKey = slugToCategoryKey[normalizedSlug];
-//   const baseUrl = "http://localhost:5000";
+//   const baseUrl = "http://${import.meta.env.VITE_API_URL}";
 
 //   useEffect(() => {
 //     if (!expectedCategoryKey) { setNotFound(true); return; }
 
-//     fetch(`http://localhost:5000/admin/productsList`)
+//     fetch(`http://${import.meta.env.VITE_API_URL}/admin/productsList`)
 //       .then(res => res.json())
 //       .then(data => {
 //         const found = data.find(p => {
@@ -113,7 +113,7 @@
 //                 src={currentGallery[0]}
 //                 style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }}
 //                 fluid alt={tData.name}
-//                 onError={(e) => { e.target.src = "https://via.placeholder.com/450?text=Resim+Bulunamadi"; }}
+//                 onError={(e) => { e.target.src = "via.placeholder.com/450?text=Resim+Bulunamadi"; }}
 //               />
 //             </div>
 //             {/* KÜÇÜK RESİMLER (THUMBNAILS) */}
@@ -249,12 +249,12 @@ export default function ProductDetail() {
 
   const normalizedSlug = normalize(rawCategory);
   const expectedCategoryKey = slugToCategoryKey[normalizedSlug];
-  const baseUrl = "http://localhost:5000";
+  const baseUrl = "http://${import.meta.env.VITE_API_URL}";
 
   useEffect(() => {
     if (!expectedCategoryKey) { setNotFound(true); return; }
 
-    fetch(`http://localhost:5000/admin/productsList`)
+    fetch(`http://${import.meta.env.VITE_API_URL}/admin/productsList`)
       .then(res => res.json())
       .then(data => {
         const found = data.find(p => {
@@ -329,7 +329,7 @@ export default function ProductDetail() {
                 src={currentGallery[0]}
                 style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }}
                 fluid alt={tData.name}
-                onError={(e) => { e.target.src = "https://via.placeholder.com/450?text=Resim+Bulunamadi"; }}
+                onError={(e) => { e.target.src = "via.placeholder.com/450?text=Resim+Bulunamadi"; }}
               />
             </div>
             {/* KÜÇÜK RESİMLER (THUMBNAILS) */}

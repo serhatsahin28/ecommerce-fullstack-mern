@@ -141,7 +141,7 @@ const PaymentPage = () => {
                     const quantity = item.quantity || item.adet || 1;
                     return (
                       <div key={item.id || index} className="summary-item">
-                        <img src={item.image || `https://via.placeholder.com/60?text=${(item.name || 'Ürün').charAt(0)}`} alt={item.name} className="summary-item-image" />
+                        <img src={item.image || `via.placeholder.com/60?text=${(item.name || 'Ürün').charAt(0)}`} alt={item.name} className="summary-item-image" />
                         <div className="summary-item-details">
                           <div className="summary-item-name">{item.name || item.title || 'Ürün'}</div>
                           <div className="summary-item-quantity">Adet: {quantity}</div>

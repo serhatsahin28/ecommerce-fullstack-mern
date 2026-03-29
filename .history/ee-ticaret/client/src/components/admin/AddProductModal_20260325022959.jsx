@@ -121,7 +121,7 @@ const colorDictionary = [
                 formData.append('colorGroups', JSON.stringify(cleanGroups));
             }
 
-            const res = await fetch('http://localhost:5000/admin/addProduct', {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/admin/addProduct', {
                 method: 'POST',
                 body: formData
             });

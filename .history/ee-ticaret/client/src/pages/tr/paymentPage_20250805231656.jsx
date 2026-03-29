@@ -122,7 +122,7 @@ const PaymentPage = () => {
     // API çağrısı simülasyonu
     try {
       await new Promise(resolve => setTimeout(resolve, 2000)); // 2 saniye bekle
-      // const response = await axios.post('http://localhost:5000/pay', paymentPayload);
+      // const response = await axios.post(`${import.meta.env.VITE_API_URL}/pay', paymentPayload);
       // Simülasyon sonucu:
       const fakeResponse = { data: { success: true, paymentId: `pi_${Date.now()}` } };
       const fakeOrderResult = { data: { success: true, orderCode: `ORD-${Date.now()}` } };

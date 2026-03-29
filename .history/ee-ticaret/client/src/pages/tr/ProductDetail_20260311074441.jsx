@@ -38,7 +38,7 @@ export default function ProductDetailTr() {
       return;
     }
 
-    fetch('http://localhost:5000/products')
+    fetch(`${import.meta.env.VITE_API_URL}/products')
       .then(res => res.json())
       .then(data => {
         const found = data.find(p => (p._id?.$oid || p._id) === id);

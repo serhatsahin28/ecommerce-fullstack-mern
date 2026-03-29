@@ -47,7 +47,7 @@ const PaymentPage = () => {
         // Kullanıcı bilgilerini API'den çek
         const fetchUserInfo = async () => {
           try {
-            const response = await axios.get('http://localhost:5000/profile', {
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/profile', {
               headers: { Authorization: `Bearer ${token}` }
             });
             
@@ -162,7 +162,7 @@ const PaymentPage = () => {
         }
       };
 
-      const orderResponse = await axios.post('http://localhost:5000/orders', orderData);
+      const orderResponse = await axios.post(`${import.meta.env.VITE_API_URL}/orders', orderData);
       
       if (orderResponse.data.success) {
         setOrderCode(orderResponse.data.orderCode);
@@ -249,7 +249,7 @@ const PaymentPage = () => {
     };
 
     try {
-      const paymentResponse = await axios.post('http://localhost:5000/pay', paymentData);
+      const paymentResponse = await axios.post(`${import.meta.env.VITE_API_URL}/pay', paymentData);
 
       if (paymentResponse.data.success) {
         const orderResult = await saveOrderToDatabase(paymentResponse.data);
@@ -518,13 +518,13 @@ const PaymentPage = () => {
             <h5 className="text-muted mb-3">Güvenli Ödeme</h5>
             <div className="d-flex justify-content-center gap-4 mt-3">
               <div className="bg-white p-2 rounded shadow-sm">
-                <img src="https://img.icons8.com/color/48/000000/visa.png" alt="Visa" width="48" />
+                <img src="img.icons8.com/color/48/000000/visa.png" alt="Visa" width="48" />
               </div>
               <div className="bg-white p-2 rounded shadow-sm">
-                <img src="https://img.icons8.com/color/48/000000/mastercard.png" alt="Mastercard" width="48" />
+                <img src="img.icons8.com/color/48/000000/mastercard.png" alt="Mastercard" width="48" />
               </div>
               <div className="bg-white p-2 rounded shadow-sm">
-                <img src="https://img.icons8.com/color/48/000000/amex.png" alt="Amex" width="48" />
+                <img src="img.icons8.com/color/48/000000/amex.png" alt="Amex" width="48" />
               </div>
             </div>
             <p className="text-muted mt-3 small">

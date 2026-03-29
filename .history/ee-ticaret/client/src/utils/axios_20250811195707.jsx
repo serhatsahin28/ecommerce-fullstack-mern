@@ -1,5 +1,5 @@
 const api = axios.create({
-  baseURL: 'http://localhost:5000', // API'nin kökü
+  baseURL: `${import.meta.env.VITE_API_URL}', // API'nin kökü
 });
 
 // Her istekte güncel token header'a eklensin

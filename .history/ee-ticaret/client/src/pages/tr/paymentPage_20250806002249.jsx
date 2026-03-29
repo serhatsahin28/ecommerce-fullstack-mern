@@ -42,7 +42,7 @@ const PaymentPage = () => {
       if (token) {
         const fetchUserInfo = async () => {
           try {
-            const response = await axios.get('http://localhost:5000/profile', {
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/profile', {
               headers: { Authorization: `Bearer ${token}` }
             });
             

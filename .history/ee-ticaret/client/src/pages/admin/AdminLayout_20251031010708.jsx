@@ -21,7 +21,7 @@ const AdminOrdersPage = () => {
       setLoading(true);
       setError(null);
       const token = localStorage.getItem('token'); // opsiyonel auth
-      const res = await fetch('http://localhost:5000/admin/ordersAll', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/admin/ordersAll', {
         headers: token ? { Authorization: `Bearer ${token}` } : {}
       });
       if (!res.ok) throw new Error('Siparişler yüklenemedi');
@@ -58,7 +58,7 @@ const AdminOrdersPage = () => {
     setUpdating(true);
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch(`http://localhost:5000/admin/orders/${selectedOrder._id}/updateStatus`, {
+      const res = await fetch(`http://${import.meta.env.VITE_API_URL}/admin/orders/${selectedOrder._id}/updateStatus`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

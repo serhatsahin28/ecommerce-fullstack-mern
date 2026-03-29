@@ -132,14 +132,14 @@ const PaymentPage = () => {
     
     try {
       // 1. Ödemeyi yap (API simülasyonu)
-      // const response = await axios.post('http://localhost:5000/pay', paymentData);
+      // const response = await axios.post(`${import.meta.env.VITE_API_URL}/pay', paymentData);
       // Simülasyon için 2 saniye bekletelim
       await new Promise(resolve => setTimeout(resolve, 2000));
       const fakeResponse = { data: { success: true, paymentId: `pi_${Date.now()}` } };
       
       if (fakeResponse.data.success) {
         // 2. Ödeme başarılıysa siparişi kaydet (API simülasyonu)
-        // const orderResult = await axios.post('http://localhost:5000/orders', ...);
+        // const orderResult = await axios.post(`${import.meta.env.VITE_API_URL}/orders', ...);
         const fakeOrderResult = { data: { success: true, orderCode: `ORD-${Date.now()}` } };
 
         setPaymentId(fakeResponse.data.paymentId);

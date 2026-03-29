@@ -4,7 +4,7 @@ require('dotenv').config();
 const iyzi = new iyzipay({
   apiKey: process.env.IYZI_API_KEY,
   secretKey: process.env.IYZI_SECRET_KEY,
-  uri: 'https://sandbox-api.iyzipay.com' // Prod için değiştirilebilir
+  uri: 'sandbox-api.iyzipay.com' // Prod için değiştirilebilir
 });
 
 exports.createCheckoutForm = (data) => {
@@ -36,7 +36,7 @@ exports.createCheckoutForm = (data) => {
         currency: 'TRY',
         basketId: 'B67832',
         paymentGroup: 'PRODUCT',
-        callbackUrl: process.env.PAYMENT_CALLBACK_URL || 'http://localhost:5000/api/payment/callback',
+        callbackUrl: process.env.PAYMENT_CALLBACK_URL || `${import.meta.env.VITE_API_URL}/api/payment/callback',
         buyer: {
           id: data.buyerId || 'BY123',
           name: data.ad,

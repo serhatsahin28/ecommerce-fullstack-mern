@@ -78,7 +78,7 @@ const PaymentPage = () => {
         }
       };
 
-      const orderResponse = await axios.post('http://localhost:5000/orders', orderData);
+      const orderResponse = await axios.post(`${import.meta.env.VITE_API_URL}/orders', orderData);
       if (orderResponse.data.success) {
         setOrderCode(orderResponse.data.orderCode);
         return orderResponse.data;
@@ -131,7 +131,7 @@ const PaymentPage = () => {
     };
 
     try {
-      const paymentResponse = await axios.post('http://localhost:5000/pay', paymentData);
+      const paymentResponse = await axios.post(`${import.meta.env.VITE_API_URL}/pay', paymentData);
       if (paymentResponse.data.success) {
         await saveOrderToDatabase(paymentResponse.data);
         setPaymentId(paymentResponse.data.paymentId);

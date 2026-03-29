@@ -31,7 +31,7 @@ const PaymentPage = () => {
 
     // console.log(cart);
     try {
-      const res = await axios.post('http://localhost:5000/pay', {
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/pay', {
         ...guestInfo,
         sepet: cart,
         price,

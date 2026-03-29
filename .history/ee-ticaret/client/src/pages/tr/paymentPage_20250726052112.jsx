@@ -30,7 +30,7 @@ const PaymentPage = () => {
     const price = cart.reduce((acc, item) => acc + item.fiyat * item.adet, 0);
 
     try {
-      const res = await axios.post('http://localhost:5000/api/payment/pay', {
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/payment/pay', {
         ...guestInfo,
         sepet: cart,
         price,

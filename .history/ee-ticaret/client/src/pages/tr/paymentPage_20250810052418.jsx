@@ -33,7 +33,7 @@ const PaymentPage = () => {
     const fetchSavedCards = async () => {
       if (!token) return;
       try {
-        const response = await axios.get('http://localhost:5000/profile', {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/profile', {
           headers: { Authorization: `Bearer ${token}` }
         });
         setSavedCards(response.data.odeme_yontemleri || []);
@@ -52,7 +52,7 @@ const PaymentPage = () => {
       if (token) {
         (async () => {
           try {
-            const response = await axios.get('http://localhost:5000/profile', {
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/profile', {
               headers: { Authorization: `Bearer ${token}` }
             });
             setGuestInfo({
@@ -144,7 +144,7 @@ const PaymentPage = () => {
           savedCardUsed: selectedSavedCard !== null
         }
       };
-      const orderResponse = await axios.post('http://localhost:5000/orders', orderData, {
+      const orderResponse = await axios.post(`${import.meta.env.VITE_API_URL}/orders', orderData, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -239,7 +239,7 @@ const PaymentPage = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const paymentResponse = await axios.post('http://localhost:5000/pay', paymentData, {
+      const paymentResponse = await axios.post(`${import.meta.env.VITE_API_URL}/pay', paymentData, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
