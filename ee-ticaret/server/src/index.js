@@ -35,7 +35,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors({
   origin: [
     'http://localhost:5173',
-    process.env.VITE_API_URL
+    'https://ecommerce-fullstack-mern-qiyl.vercel.app'
   ],
   credentials: true
 }));
