@@ -1,9 +1,11 @@
 # 🛒 MERN Stack Full-Stack E-Commerce Application
 
+🌐 **Live Demo:** [https://ecommerce-fullstack-mern-qiyl.vercel.app](https://ecommerce-fullstack-mern-qiyl.vercel.app)
+
 A modern, responsive, and mobile-friendly **e-commerce web application** built with the MERN stack. Users can browse products, add items to their cart, and complete secure payments using **iyzico**. The admin panel provides full control over products, orders, and users. Features include guest checkout, multi-language support (TR/EN), stock tracking, order cancellation, and email notifications.
 
 **Project Status:** Completed and running in test environment  
-**Deployment:** Coming soon (Vercel / Render)
+**Deployment:** [Vercel (Frontend)](https://ecommerce-fullstack-mern-qiyl.vercel.app) | [Render (Backend)](https://ecommerce-fullstack-mern-gq2b.onrender.com)
 
 ---
 
