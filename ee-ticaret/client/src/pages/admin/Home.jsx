@@ -246,22 +246,11 @@ const availableProducts = useMemo(() => {
         <Modal.Body>
           <FormControl className="mb-3" placeholder="Ara..." onChange={(e) => setSearchTerm(e.target.value)} />
           <ListGroup style={{ maxHeight: '400px', overflowY: 'auto' }}>
-            {availableProductsList.map(p => (
-              <ListGroup.Item key={p._id} action className="d-flex justify-content-between align-items-center" onClick={() => {
-                const newProd = { product_id: p._id, image: p.image, translations: p.translations, price: p.price, stock: p.stock };
-                setHomePageData(prev => ({
-                  ...prev,
-                  categories: prev.categories.map(c => c.category_key === currentCategoryKey ? { ...c, products: [...(c.products || []), newProd] } : c)
-                }));
-                setShowProductModal(false);
-              }}>
-                <div className="d-flex align-items-center">
-                  <img src={getFullImagePath(p.image)} width="40" className="me-2" />
-                  {p.translations?.[currentLang]?.name}
-                </div>
-                <Badge bg="primary">{p.price} TL</Badge>
-              </ListGroup.Item>
-            ))}
+         {availableProducts && availableProducts.map(p => (
+         <ListGroup.Item key={p._id}>
+           {p.translations?.tr?.name}
+         </ListGroup.Item>
+      ))}
           </ListGroup>
         </Modal.Body>
       </Modal>
