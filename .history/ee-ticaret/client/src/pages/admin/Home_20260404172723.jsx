@@ -12,12 +12,12 @@ const SERVER_URL = `${import.meta.env.VITE_API_URL}`;
 // Resim yolunu tamamlama yardımcı fonksiyonu
 const getFullImagePath = (path) => {
   if (!path) return '/images/placeholder-slide.jpg';
-
+  
   // Eğer yol zaten bir tam URL ise (Firebase veya başka bir yer) direkt döndür
   if (path.startsWith('http')) {
     return path;
   }
-
+  
   // Eğer yol /images/ ile başlıyorsa ve tam URL değilse, sunucu adresini ekle
   // Ama Firebase'e geçtiğin için yeni yüklediğin hiçbir resim buraya girmeyecek
   return `${import.meta.env.VITE_API_URL}${path}`;
@@ -72,7 +72,7 @@ const AdminHome = () => {
   const [imageUploadContext, setImageUploadContext] = useState({ type: '', isModal: false });
   const [searchTerm, setSearchTerm] = useState('');
   const [imagePreview, setImagePreview] = useState('');
-  const [currentOldImageUrl, setCurrentOldImageUrl] = useState('');
+const [currentOldImageUrl, setCurrentOldImageUrl] = useState('');
   // --- VERİ ÇEKME ---
   const fetchData = useCallback(async () => {
     try {
@@ -119,11 +119,11 @@ const AdminHome = () => {
 
     try {
       const apiUrl = import.meta.env.VITE_API_URL.replace(/\/$/, ""); // Sondaki slash'ı temizle
-      const response = await fetch(`${apiUrl}/admin/home/${homePageData._id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(dataToSend),
-      });
+    const response = await fetch(`${apiUrl}/admin/home/${homePageData._id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(dataToSend),
+    });
 
       const result = await response.json();
       if (!response.ok) throw new Error(result.message || 'Bir hata oluştu.');
@@ -182,10 +182,8 @@ const AdminHome = () => {
     setEditingSlideIndex(null);
   };
 
-  // Düzenle butonuna tıklandığında mevcut resmi sakla
-  const openImageModal = (context, existingImageUrl = '') => {
+  const openImageModal = (context) => {
     setImageUploadContext(context);
-    setCurrentOldImageUrl(existingImageUrl); // Mevcut resmin URL'ini state'e at
     setShowImageModal(true);
     setImagePreview('');
   };
@@ -197,20 +195,10 @@ const AdminHome = () => {
     const formData = new FormData();
     formData.append('image', file);
 
-    // EĞER ESKİ BİR RESİM VARSA, ONUN URL'İNİ DE PAKETE EKLE
-    if (currentOldImageUrl) {
-      formData.append('oldImageUrl', currentOldImageUrl);
-    }
-
     try {
-      const response = await fetch(`${SERVER_URL}/admin/home/upload-image`, {
-        method: 'POST',
-        body: formData
-      });
-
+      const response = await fetch(`${SERVER_URL}/admin/home/upload-image`, { method: 'POST', body: formData });
       const result = await response.json();
       if (!response.ok) throw new Error(result.message || 'Resim yüklenemedi.');
-
       setImagePreview(result.imagePath);
     } catch (err) {
       setStatusMessage({ show: true, message: 'Resim yükleme hatası: ' + err.message, type: 'danger' });
@@ -429,7 +417,7 @@ const AdminHome = () => {
                   </div>
                   <Row className="g-2">
                     {(cat.products || [])
-                      .filter(product => Number(product.stock) > 0)
+                      .filter(product => Number(product.stock) > 0  )
                       .map(product => (
                         <Col key={`${cat.category_key}-${product.product_id}`} xs={6} sm={4} md={3} className="mb-2">
                           <Card className="h-100">
@@ -529,10 +517,7 @@ const AdminHome = () => {
                   <Form.Label>Slayt Resmi</Form.Label>
                   <div className="text-center border p-2 rounded">
                     <img src={getFullImagePath(currentSlide.image)} alt="Slide Preview" className="img-fluid mb-2" style={{ maxHeight: '150px' }} />
-                    <Button variant="outline-secondary" size="sm" className="w-100" // Modal içindeki butonun eski hali:
-                      // onClick={() => openImageModal({ type: 'heroSlides', isModal: true })}
-                      // Yeni hali:
-                      onClick={() => openImageModal({ type: 'heroSlides', isModal: true }, currentSlide.image)}>
+                    <Button variant="outline-secondary" size="sm" className="w-100" onClick={() => openImageModal({ type: 'heroSlides', isModal: true })}>
                       <FaImage /> Resmi Değiştir
                     </Button>
                   </div>

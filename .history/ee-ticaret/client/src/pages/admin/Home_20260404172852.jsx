@@ -531,6 +531,7 @@ const AdminHome = () => {
                     <img src={getFullImagePath(currentSlide.image)} alt="Slide Preview" className="img-fluid mb-2" style={{ maxHeight: '150px' }} />
                     <Button variant="outline-secondary" size="sm" className="w-100" // Modal içindeki butonun eski hali:
                       // onClick={() => openImageModal({ type: 'heroSlides', isModal: true })}
+
                       // Yeni hali:
                       onClick={() => openImageModal({ type: 'heroSlides', isModal: true }, currentSlide.image)}>
                       <FaImage /> Resmi Değiştir
