@@ -145,52 +145,39 @@ const saveHomePageData = async (req, res) => {
 // };
 
 
+
 const uploadHomeImage = async (req, res) => {
   try {
     const file = req.file;
-    // Frontend'den gelen eski resmin URL'i (Eğer varsa)
-    const oldImageUrl = req.body.oldImageUrl; 
 
     if (!file) {
       return res.status(400).json({ message: 'Lütfen bir resim dosyası seçin.' });
     }
 
-    // --- 1. ADIM: ESKİ RESMİ SİL ---
-    // Eğer bir eski URL geldiyse ve bu bir Firebase linkiyse silme işlemini başlat
-    if (oldImageUrl && oldImageUrl.includes("firebase")) {
-      try {
-        const oldStorageRef = ref(storage, oldImageUrl);
-        await deleteObject(oldStorageRef);
-        console.log("Eski resim başarıyla silindi.");
-      } catch (deleteErr) {
-        // Eski resim zaten silinmişse veya bulunamazsa hata verip süreci durdurmasın diye logluyoruz
-        console.warn("Eski resim silinirken bir sorun çıktı veya dosya bulunamadı:", deleteErr.message);
-      }
-    }
-
-    // --- 2. ADIM: YENİ RESMİ YÜKLE ---
+    // 1. Firebase'de dosyanın kaydedileceği yer ve isim (Klasör: home)
     const fileName = `home/${Date.now()}-${file.originalname}`;
     const storageRef = ref(storage, fileName);
 
+    // 2. Dosya tipini belirtiyoruz (önemli!)
     const metadata = {
       contentType: file.mimetype,
     };
 
-    // Dosyayı yüklüyoruz
+    // 3. Resmi Firebase'e fırlatıyoruz (MemoryStorage kullandığımız için file.buffer diyoruz)
     await uploadBytes(storageRef, file.buffer, metadata);
 
-    // Yeni linki alıyoruz
+    // 4. Firebase'den "herkese açık" internet linkini alıyoruz
     const firebaseUrl = await getDownloadURL(storageRef);
 
-    // 3. SONUÇ
+    // 5. Frontend'e artık yerel yol değil, internet linkini gönderiyoruz
     res.status(200).json({
-      message: 'Eski resim silindi ve yenisi başarıyla yüklendi.',
-      imagePath: firebaseUrl
+      message: 'Resim başarıyla buluta yüklendi.',
+      imagePath: firebaseUrl // ARTIK BU: https://firebasestorage.googleapis.com/...
     });
 
   } catch (err) {
-    console.error('Firebase işlem hatası:', err);
-    res.status(500).json({ message: 'Bulut hatası, resim güncellenemedi.' });
+    console.error('Firebase yükleme hatası:', err);
+    res.status(500).json({ message: 'Bulut hatası, resim yüklenemedi.' });
   }
 };
 

@@ -145,52 +145,45 @@ const saveHomePageData = async (req, res) => {
 // };
 
 
-const uploadHomeImage = async (req, res) => {
+const updateProduct = async (req, res) => {
   try {
-    const file = req.file;
-    // Frontend'den gelen eski resmin URL'i (Eğer varsa)
-    const oldImageUrl = req.body.oldImageUrl; 
+    const { id } = req.params;
+    const product = await Product.findById(id);
 
-    if (!file) {
-      return res.status(400).json({ message: 'Lütfen bir resim dosyası seçin.' });
-    }
+    if (!product) return res.status(404).json({ message: "Ürün bulunamadı!" });
 
-    // --- 1. ADIM: ESKİ RESMİ SİL ---
-    // Eğer bir eski URL geldiyse ve bu bir Firebase linkiyse silme işlemini başlat
-    if (oldImageUrl && oldImageUrl.includes("firebase")) {
-      try {
-        const oldStorageRef = ref(storage, oldImageUrl);
-        await deleteObject(oldStorageRef);
-        console.log("Eski resim başarıyla silindi.");
-      } catch (deleteErr) {
-        // Eski resim zaten silinmişse veya bulunamazsa hata verip süreci durdurmasın diye logluyoruz
-        console.warn("Eski resim silinirken bir sorun çıktı veya dosya bulunamadı:", deleteErr.message);
+    // Varsayılan olarak eski resim URL'ini tutuyoruz
+    let finalImageUrl = product.image; 
+
+    // EĞER YENİ BİR RESİM DOSYASI GELDİYSE (Süzgeç burada başlıyor)
+    if (req.file) {
+      console.log("Yeni resim algılandı, eski resim siliniyor...");
+
+      // 1. ESKİ RESMİ SİL: Eğer bir önceki resim varsa ve Firebase linkiyse siler
+      if (product.image) {
+        await deleteImageFromFirebase(product.image);
       }
+
+      // 2. YENİ RESMİ YÜKLE: Senin yazdığın o yükleme fonksiyonunu çağırıyoruz
+      finalImageUrl = await uploadImageToFirebase(req.file);
     }
 
-    // --- 2. ADIM: YENİ RESMİ YÜKLE ---
-    const fileName = `home/${Date.now()}-${file.originalname}`;
-    const storageRef = ref(storage, fileName);
-
-    const metadata = {
-      contentType: file.mimetype,
+    // 3. MONGODB GÜNCELLE: Diğer bilgilerle beraber finalImageUrl'i kaydediyoruz
+    const updatedData = {
+      ...req.body,
+      image: finalImageUrl // Yeni resim varsa o, yoksa eski resim kalır
     };
 
-    // Dosyayı yüklüyoruz
-    await uploadBytes(storageRef, file.buffer, metadata);
+    const updatedProduct = await Product.findByIdAndUpdate(id, updatedData, { new: true });
 
-    // Yeni linki alıyoruz
-    const firebaseUrl = await getDownloadURL(storageRef);
-
-    // 3. SONUÇ
     res.status(200).json({
-      message: 'Eski resim silindi ve yenisi başarıyla yüklendi.',
-      imagePath: firebaseUrl
+      message: "Ürün başarıyla güncellendi!",
+      product: updatedProduct
     });
 
-  } catch (err) {
-    console.error('Firebase işlem hatası:', err);
-    res.status(500).json({ message: 'Bulut hatası, resim güncellenemedi.' });
+  } catch (error) {
+    console.error("Güncelleme hatası:", error);
+    res.status(500).json({ message: "Sunucu hatası, güncelleme yapılamadı." });
   }
 };
 
