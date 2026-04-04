@@ -13,14 +13,17 @@ const SERVER_URL = `${import.meta.env.VITE_API_URL}`;
 const getFullImagePath = (path) => {
   if (!path) return '/images/placeholder-slide.jpg';
 
-  // EĞER BLOB VEYA HTTP İLE BAŞLIYORSA (Önizleme veya Firebase) DİREKT DÖN
-  if (typeof path === 'string' && (path.startsWith('blob:') || path.startsWith('http'))) {
+  // Eğer path bir string değilse (objeyse) hata vermemesi için
+  if (typeof path !== 'string') return '/images/placeholder-slide.jpg';
+
+  // ZATEN TAM URL İSE (Firebase, Blob veya Base64) OLDUĞU GİBİ DÖN
+  if (path.startsWith('blob:') || path.startsWith('http') || path.startsWith('data:')) {
     return path;
   }
 
-  // Geri kalan server path işlemleri...
+  // Sadece yerel dosya yolları için sunucu URL'sini ekle
   const baseUrl = import.meta.env.VITE_API_URL.replace(/\/$/, "");
-  const cleanPath = (typeof path === 'string' && path.startsWith('/')) ? path : `/${path}`;
+  const cleanPath = path.startsWith('/') ? path : `/${path}`;
   return `${baseUrl}${cleanPath}`;
 };
 
@@ -101,15 +104,15 @@ const AdminHome = () => {
   useEffect(() => {
     fetchData();
   }, [fetchData]);
-  
-useEffect(() => {
-  // Sadece sayfa tamamen kapandığında hafızayı temizle
-  return () => {
-    if (imagePreview?.url) {
-      URL.revokeObjectURL(imagePreview.url);
-    }
-  };
-}, []); // <--- Bağımlılık dizisini boş bırakıyoruz
+
+  useEffect(() => {
+    // Sadece sayfa tamamen kapandığında hafızayı temizle
+    return () => {
+      if (imagePreview?.url) {
+        URL.revokeObjectURL(imagePreview.url);
+      }
+    };
+  }, []); // <--- Bağımlılık dizisini boş bırakıyoruz
   // --- TÜM FONKSİYONLAR ---
 
   const handleSave = async () => {
@@ -122,38 +125,45 @@ useEffect(() => {
     try {
       const apiUrl = import.meta.env.VITE_API_URL.replace(/\/$/, '');
 
-      // 1. ADIM: rawFile olan slaytları backend üzerinden Firebase'e yükle
       const updatedSlides = await Promise.all(
         (homePageData.heroSlides || []).map(async (slide) => {
+          // slide nesnesinden rawFile ve diğer geçici alanları ayırın
           const { rawFile, slider_id, originalImage, ...cleanSlide } = slide;
 
           if (rawFile) {
-            // rawFile varsa Firebase'e yükle
             const formData = new FormData();
             formData.append('image', rawFile);
-            formData.append('oldImageUrl', currentOldImageUrl || '');
 
-            const uploadRes = await fetch(`${apiUrl}/admin/uploadHomeImage`, {
+            // Eğer eski bir resim varsa ve Firebase ise silinmesi için URL'yi gönderin
+            if (originalImage && originalImage.startsWith('http')) {
+              formData.append('oldImageUrl', originalImage);
+            }
+
+            // AdminHome.jsx içindeki handleSave fonksiyonunda şu satırı bulun:
+            const uploadRes = await fetch(`${apiUrl}/admin/home/upload-image`, { // URL'yi güncelledik
               method: 'POST',
               body: formData,
             });
 
-            if (!uploadRes.ok) throw new Error('Resim yüklenemedi.');
-            const uploadResult = await uploadRes.json();
+            if (!uploadRes.ok) {
+              const errorData = await uploadRes.json();
+              throw new Error(errorData.message || 'Resim yüklenemedi.');
+            }
 
-            return { ...cleanSlide, image: uploadResult.imagePath }; // ✅ Firebase URL
+            const uploadResult = await uploadRes.json();
+            return { ...cleanSlide, image: uploadResult.imagePath };
           }
 
-          // ✅ rawFile yoksa blob kontrolü yap, blob ise originalImage'a dön
-          if (cleanSlide.image && cleanSlide.image.startsWith('blob:')) {
-            cleanSlide.image = originalImage || '/images/placeholder-slide.jpg';
+          // Eğer resim hala blob ise ve rawFile yoksa (hata durumu), orijinaline dön
+          if (typeof cleanSlide.image === 'string' && cleanSlide.image.startsWith('blob:')) {
+            return { ...cleanSlide, image: originalImage || '/images/placeholder-slide.jpg' };
           }
 
           return cleanSlide;
         })
       );
 
-      // 2. ADIM: Güncellenmiş slaytlarla birlikte DB'ye kaydet
+      // 2. ADIM: Veritabanı Güncelleme
       const dataToSend = { ...homePageData, heroSlides: updatedSlides };
 
       const response = await fetch(`${apiUrl}/admin/home/${homePageData._id}`, {
@@ -163,16 +173,15 @@ useEffect(() => {
       });
 
       const result = await response.json();
-      if (!response.ok) throw new Error(result.message || 'Bir hata oluştu.');
+      if (!response.ok) throw new Error(result.message || 'Veritabanı kaydı başarısız.');
 
-      if (result.updatedData) {
-        setHomePageData(result.updatedData);
-      }
+      setHomePageData(result.updatedData);
+      setStatusMessage({ show: true, message: 'Başarıyla kaydedildi!', type: 'success' });
+      fetchData(); // Verileri tazeleyin
 
-      setStatusMessage({ show: true, message: 'Veriler başarıyla kaydedildi!', type: 'success' });
     } catch (err) {
       console.error('Save error:', err);
-      setStatusMessage({ show: true, message: 'Kaydetme hatası: ' + err.message, type: 'danger' });
+      setStatusMessage({ show: true, message: 'Hata: ' + err.message, type: 'danger' });
     } finally {
       setIsSaving(false);
     }
@@ -248,20 +257,21 @@ useEffect(() => {
   };
 
 
-  const saveImage = () => {
-    if (!imagePreview) return;
-    const { type, isModal } = imageUploadContext;
+ const saveImage = () => {
+  if (!imagePreview) return;
+  const { type, isModal } = imageUploadContext;
 
-    if (isModal && type === 'heroSlides') {
-      setCurrentSlide(prev => ({
-        ...prev,
-        image: imagePreview.url,        // Blob (önizleme için)
-        rawFile: imagePreview.file,     // Gerçek dosya (upload için)
-        originalImage: prev.image       // ✅ Eski Firebase URL'ini sakla
-      }));
-    }
-    setShowImageModal(false);
-  };
+  if (isModal && type === 'heroSlides') {
+    setCurrentSlide(prev => ({
+      ...prev,
+      image: imagePreview.url,        // Önizleme için Blob
+      rawFile: imagePreview.file,     // Backend'e gönderilecek dosya
+      originalImage: currentOldImageUrl // Firebase'den silinecek olan eski link
+    }));
+  }
+  setShowImageModal(false);
+  setImagePreview(''); // Temizle
+};
 
   const handleMultiLangChange = (field, subField, value, isTopLevel = false) => {
     if (isTopLevel) {
@@ -351,29 +361,29 @@ useEffect(() => {
   };
 
   const availableProducts = React.useMemo(() => {
-  if (!currentCategoryKey) return [];
+    if (!currentCategoryKey) return [];
 
-  const currentCategory = homePageData.categories.find(
-    c => c.category_key === currentCategoryKey
-  );
-  if (!currentCategory) return [];
-
-  const currentProductIds = new Set(
-    (currentCategory.products || []).map(p => p.product_id)
-  );
-
-  return allProducts
-    .filter(p =>
-      p.category_key === currentCategoryKey &&
-      !currentProductIds.has(p._id) &&
-      Number(p.stock) > 0
-    )
-    .filter(p =>
-      (p.translations?.[currentLang]?.name || p.translations?.tr?.name || '')
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase())
+    const currentCategory = homePageData.categories.find(
+      c => c.category_key === currentCategoryKey
     );
-}, [currentCategoryKey, homePageData.categories, allProducts, searchTerm, currentLang]);
+    if (!currentCategory) return [];
+
+    const currentProductIds = new Set(
+      (currentCategory.products || []).map(p => p.product_id)
+    );
+
+    return allProducts
+      .filter(p =>
+        p.category_key === currentCategoryKey &&
+        !currentProductIds.has(p._id) &&
+        Number(p.stock) > 0
+      )
+      .filter(p =>
+        (p.translations?.[currentLang]?.name || p.translations?.tr?.name || '')
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase())
+      );
+  }, [currentCategoryKey, homePageData.categories, allProducts, searchTerm, currentLang]);
 
   if (loading) return <Container className="text-center mt-5"><Spinner animation="border" variant="primary" /><h4>Yükleniyor...</h4></Container>;
   if (error && !homePageData._id) return <Container className="mt-5"><Alert variant="danger">Hata: {error}</Alert></Container>;

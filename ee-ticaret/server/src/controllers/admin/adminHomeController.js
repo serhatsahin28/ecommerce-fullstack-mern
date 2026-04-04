@@ -118,30 +118,6 @@ const saveHomePageData = async (req, res) => {
 
 
 
-
-// const uploadHomeImage = async (req, res) => {
-//   try {
-//     const file = req.file;
-
-//     if (!file) {
-//       return res.status(400).json({ message: 'Lütfen bir resim dosyası seçin.' });
-//     }
-
-//     // Sadece dosya yolunu oluşturup frontend'e geri gönderiyoruz.
-//     const imagePath = `/images/${file.filename}`;
-
-//     res.status(200).json({
-//       message: 'Resim başarıyla yüklendi.',
-//       imagePath: imagePath // Resim yolunu frontend'e iletiyoruz.
-//     });
-
-//   } catch (err) {
-//     console.error('Resim yükleme hatası:', err);
-//     res.status(500).json({ message: 'Sunucu hatası, resim yüklenemedi.' });
-//   }
-// };
-
-
 const uploadHomeImage = async (req, res) => {
   try {
     const file = req.file;
@@ -191,39 +167,6 @@ const uploadHomeImage = async (req, res) => {
   }
 };
 
-// const deleteItem = async (req, res) => {
-//   const { itemId, index } = req.params;
-//   const indexNum = parseInt(index, 10);
-
-//   try {
-//     const homeDoc = await home.findOne();  // Model adı büyük harfle olmalı
-
-//     if (!homeDoc) {
-//       return res.status(404).json({ message: 'Home verisi bulunamadı.' });
-//     }
-
-//     if (!homeDoc.heroSlides || !Array.isArray(homeDoc.heroSlides)) {
-//       return res.status(400).json({ message: 'Hero sliders verisi geçersiz.' });
-//     }
-
-//     if (indexNum < 0 || indexNum >= homeDoc.heroSlides.length) {
-//       return res.status(400).json({ message: 'Geçersiz slider indeksi.' });
-//     }
-
-//     const sliderItem = homeDoc.heroSlides[index];
-
-//     // Elemanı çıkar
-//     homeDoc.heroSlides.splice(indexNum, 1);
-
-//     // Kaydet
-//     await homeDoc.save();
-
-//     res.status(200).json({ message: 'Slider başarıyla silindi.' });
-//   } catch (error) {
-//     console.error("Silme hatası:", error);
-//     res.status(500).json({ message: 'Sunucu hatası.' });
-//   }
-// };
 
 
 
