@@ -11,17 +11,12 @@ const SERVER_URL = `${import.meta.env.VITE_API_URL}`;
 
 // Resim yolunu tamamlama yardımcı fonksiyonu
 const getFullImagePath = (path) => {
-  // Eğer path bir objeyse (içinde url varsa) onu kullan, yoksa kendisini, yoksa boş string
-  let finalPath = (path && typeof path === 'object') ? path.url : path;
-  
-  if (!finalPath || typeof finalPath !== 'string') return '/images/placeholder-slide.jpg';
+  if (!path) return '/images/placeholder-slide.jpg';
 
-  if (finalPath.startsWith('blob:') || finalPath.startsWith('http')) return finalPath;
-
-  const baseUrl = import.meta.env.VITE_API_URL.replace(/\/$/, ""); 
-  const cleanPath = finalPath.startsWith('/') ? finalPath : `/${finalPath}`;
-  return `${baseUrl}${cleanPath}`;
-};
+  // Firebase linklerini koru
+  if (path.startsWith('http')) {
+    return path;
+  }
 
   // Local/Server resimleri için URL birleştirmeyi sağlama al
   const baseUrl = import.meta.env.VITE_API_URL.replace(/\/$/, ""); 
@@ -243,20 +238,29 @@ const handleImageUpload = (event) => {
   });
 };
 
-const saveImage = () => {
-  if (!imagePreview) return;
-  const { type, isModal } = imageUploadContext;
+  const saveImage = () => {
+    if (!imagePreview) return;
+    const { type, isModal } = imageUploadContext;
 
-  if (isModal && type === 'heroSlides') {
-    setCurrentSlide(prev => ({
-      ...prev,
-      image: imagePreview.url, // BU BİR STRING (blob:...) OLMALI
-      rawFile: imagePreview.file // BU DOSYA (OBJE)
-    }));
-  }
-  setShowImageModal(false);
-  setImagePreview(null);
-};
+    // 1. Eğer bir modal (Slayt Ekle/Düzenle) içindeysek
+    if (isModal) {
+      if (type === 'heroSlides') {
+        handleSlideChange('image', imagePreview);
+      }
+    } else {
+      // 2. Eğer modal dışında bir yerse (Kategori resmi vb. için ileride lazım olur)
+      // Direkt ana state'i de güncelleyebilirsin
+      setHomePageData(prev => ({
+        ...prev,
+        [type]: imagePreview // Örnek kullanım
+      }));
+    }
+
+    setShowImageModal(false);
+    // ÖNEMLİ: Preview'ı hemen silme ki UI'da bir anlık kaybolma olmasın
+    // setImagePreview(''); // Bunu silebilirsin veya Modal onExited'a taşıyabilirsin
+  };
+
   const handleMultiLangChange = (field, subField, value, isTopLevel = false) => {
     if (isTopLevel) {
       setHomePageData(prev => ({
@@ -613,7 +617,7 @@ const saveImage = () => {
             <Form.Label>Bilgisayarınızdan bir resim dosyası seçin</Form.Label>
             <Form.Control type="file" accept="image/*" onChange={handleImageUpload} />
           </Form.Group>
-   {imagePreview && <img src={imagePreview.url} alt="Önizleme" className="img-fluid" style={{ maxHeight: '200px' }} />}
+          {imagePreview && <div className="text-center mb-3"><img src={getFullImagePath(imagePreview)} alt="Önizleme" className="img-fluid" style={{ maxHeight: '200px' }} /></div>}
         </Modal.Body>
         <Modal.Footer className="flex-column flex-sm-row gap-2">
           <Button variant="secondary" onClick={() => setShowImageModal(false)} className="flex-fill">İptal</Button>

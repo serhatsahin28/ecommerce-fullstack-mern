@@ -613,7 +613,7 @@ const saveImage = () => {
             <Form.Label>Bilgisayarınızdan bir resim dosyası seçin</Form.Label>
             <Form.Control type="file" accept="image/*" onChange={handleImageUpload} />
           </Form.Group>
-   {imagePreview && <img src={imagePreview.url} alt="Önizleme" className="img-fluid" style={{ maxHeight: '200px' }} />}
+          {imagePreview && <img src={imagePreview.url} alt="Önizleme" className="img-fluid" style={{ maxHeight: '200px' }} />}</div>}
         </Modal.Body>
         <Modal.Footer className="flex-column flex-sm-row gap-2">
           <Button variant="secondary" onClick={() => setShowImageModal(false)} className="flex-fill">İptal</Button>
