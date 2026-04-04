@@ -13,16 +13,14 @@ const SERVER_URL = `${import.meta.env.VITE_API_URL}`;
 const getFullImagePath = (path) => {
   if (!path) return '/images/placeholder-slide.jpg';
 
-  // Firebase linklerini koru
+  // Eğer yol zaten bir tam URL ise (Firebase veya başka bir yer) direkt döndür
   if (path.startsWith('http')) {
     return path;
   }
 
-  // Local/Server resimleri için URL birleştirmeyi sağlama al
-  const baseUrl = import.meta.env.VITE_API_URL.replace(/\/$/, ""); 
-  const cleanPath = path.startsWith('/') ? path : `/${path}`;
-  
-  return `${baseUrl}${cleanPath}`;
+  // Eğer yol /images/ ile başlıyorsa ve tam URL değilse, sunucu adresini ekle
+  // Ama Firebase'e geçtiğin için yeni yüklediğin hiçbir resim buraya girmeyecek
+  return `${import.meta.env.VITE_API_URL}${path}`;
 };
 
 // Anasayfa verisi boş gelirse diye yeni veri yapısına uygun varsayılan yapı
