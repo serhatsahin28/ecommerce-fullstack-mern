@@ -11,16 +11,11 @@ const SERVER_URL = `${import.meta.env.VITE_API_URL}`;
 
 // Resim yolunu tamamlama yardımcı fonksiyonu
 const getFullImagePath = (path) => {
-  if (!path) return '/images/placeholder-slide.jpg';
-  
-  // Eğer yol zaten bir tam URL ise (Firebase veya başka bir yer) direkt döndür
-  if (path.startsWith('http')) {
+  if (!path) return '/images/placeholder-slide.jpg'; // Varsayılan resim yolu
+  if (path.startsWith('http') || path.startsWith('/images/')) {
     return path;
   }
-  
-  // Eğer yol /images/ ile başlıyorsa ve tam URL değilse, sunucu adresini ekle
-  // Ama Firebase'e geçtiğin için yeni yüklediğin hiçbir resim buraya girmeyecek
-  return `${import.meta.env.VITE_API_URL}${path}`;
+  return `${SERVER_URL}${path}`;
 };
 
 // Anasayfa verisi boş gelirse diye yeni veri yapısına uygun varsayılan yapı
@@ -118,12 +113,11 @@ const AdminHome = () => {
     }
 
     try {
-      const apiUrl = import.meta.env.VITE_API_URL.replace(/\/$/, ""); // Sondaki slash'ı temizle
-    const response = await fetch(`${apiUrl}/admin/home/${homePageData._id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(dataToSend),
-    });
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/home/${homePageData._id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dataToSend),
+      });
 
       const result = await response.json();
       if (!response.ok) throw new Error(result.message || 'Bir hata oluştu.');

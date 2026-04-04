@@ -12,12 +12,12 @@ const SERVER_URL = `${import.meta.env.VITE_API_URL}`;
 // Resim yolunu tamamlama yardımcı fonksiyonu
 const getFullImagePath = (path) => {
   if (!path) return '/images/placeholder-slide.jpg';
-  
+
   // Eğer yol zaten bir tam URL ise (Firebase veya başka bir yer) direkt döndür
   if (path.startsWith('http')) {
     return path;
   }
-  
+
   // Eğer yol /images/ ile başlıyorsa ve tam URL değilse, sunucu adresini ekle
   // Ama Firebase'e geçtiğin için yeni yüklediğin hiçbir resim buraya girmeyecek
   return `${import.meta.env.VITE_API_URL}${path}`;
@@ -119,11 +119,11 @@ const AdminHome = () => {
 
     try {
       const apiUrl = import.meta.env.VITE_API_URL.replace(/\/$/, ""); // Sondaki slash'ı temizle
-    const response = await fetch(`${apiUrl}/admin/home/${homePageData._id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(dataToSend),
-    });
+      const response = await fetch(`${apiUrl}/admin/home/${homePageData._id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dataToSend),
+      });
 
       const result = await response.json();
       if (!response.ok) throw new Error(result.message || 'Bir hata oluştu.');
@@ -417,7 +417,7 @@ const AdminHome = () => {
                   </div>
                   <Row className="g-2">
                     {(cat.products || [])
-                      .filter(product => Number(product.stock) > 0  )
+                      .filter(product => Number(product.stock) > 0)
                       .map(product => (
                         <Col key={`${cat.category_key}-${product.product_id}`} xs={6} sm={4} md={3} className="mb-2">
                           <Card className="h-100">

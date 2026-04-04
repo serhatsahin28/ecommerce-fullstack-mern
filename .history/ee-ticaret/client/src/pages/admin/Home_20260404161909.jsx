@@ -118,12 +118,11 @@ const AdminHome = () => {
     }
 
     try {
-      const apiUrl = import.meta.env.VITE_API_URL.replace(/\/$/, ""); // Sondaki slash'ı temizle
-    const response = await fetch(`${apiUrl}/admin/home/${homePageData._id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(dataToSend),
-    });
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/home/${homePageData._id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dataToSend),
+      });
 
       const result = await response.json();
       if (!response.ok) throw new Error(result.message || 'Bir hata oluştu.');
