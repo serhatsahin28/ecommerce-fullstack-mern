@@ -177,7 +177,6 @@ const AdminHome = () => {
       }
       return { ...prev, heroSlides: updatedSlides };
     });
-    setTimeout(() => handleSave(), 100);
     setShowSlideModal(false);
     setCurrentSlide(null);
     setEditingSlideIndex(null);
@@ -434,7 +433,7 @@ const AdminHome = () => {
                       .map(product => (
                         <Col key={`${cat.category_key}-${product.product_id}`} xs={6} sm={4} md={3} className="mb-2">
                           <Card className="h-100">
-                            
+                            {/* {console.log(product)} */}
                             <Card.Img variant="top" src={getFullImagePath(product.image)} style={{ height: '80px', objectFit: 'cover' }} />
                             <Card.Body className="p-2 position-relative d-flex flex-column">
                               <Card.Title style={{ fontSize: '0.8rem', marginBottom: '25px', minHeight: '40px', lineHeight: '1.2' }}>

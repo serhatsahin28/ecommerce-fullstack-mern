@@ -177,7 +177,6 @@ const AdminHome = () => {
       }
       return { ...prev, heroSlides: updatedSlides };
     });
-    setTimeout(() => handleSave(), 100);
     setShowSlideModal(false);
     setCurrentSlide(null);
     setEditingSlideIndex(null);
