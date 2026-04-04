@@ -102,13 +102,14 @@ const AdminHome = () => {
     fetchData();
   }, [fetchData]);
   
-  useEffect(() => {
-    return () => {
-      if (imagePreview?.url) {
-        URL.revokeObjectURL(imagePreview.url);
-      }
-    };
-  }, [imagePreview]);
+useEffect(() => {
+  // Sadece sayfa tamamen kapandığında hafızayı temizle
+  return () => {
+    if (imagePreview?.url) {
+      URL.revokeObjectURL(imagePreview.url);
+    }
+  };
+}, []); // <--- Bağımlılık dizisini boş bırakıyoruz
   // --- TÜM FONKSİYONLAR ---
 
   const handleSave = async () => {
@@ -349,30 +350,30 @@ const AdminHome = () => {
     setShowProductModal(false);
   };
 
-  const getAvailableProducts = () => {
-    if (!currentCategoryKey) return [];
+  const availableProducts = React.useMemo(() => {
+  if (!currentCategoryKey) return [];
 
-    const currentCategory = homePageData.categories.find(
-      c => c.category_key === currentCategoryKey
+  const currentCategory = homePageData.categories.find(
+    c => c.category_key === currentCategoryKey
+  );
+  if (!currentCategory) return [];
+
+  const currentProductIds = new Set(
+    (currentCategory.products || []).map(p => p.product_id)
+  );
+
+  return allProducts
+    .filter(p =>
+      p.category_key === currentCategoryKey &&
+      !currentProductIds.has(p._id) &&
+      Number(p.stock) > 0
+    )
+    .filter(p =>
+      (p.translations?.[currentLang]?.name || p.translations?.tr?.name || '')
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase())
     );
-    if (!currentCategory) return [];
-
-    const currentProductIds = new Set(
-      (currentCategory.products || []).map(p => p.product_id)
-    );
-
-    return allProducts
-      .filter(p =>
-        p.category_key === currentCategoryKey &&
-        !currentProductIds.has(p._id) &&
-        Number(p.stock) > 0
-      )
-      .filter(p =>
-        (p.translations?.tr?.name || '')
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase())
-      );
-  };
+}, [currentCategoryKey, homePageData.categories, allProducts, searchTerm, currentLang]);
 
   if (loading) return <Container className="text-center mt-5"><Spinner animation="border" variant="primary" /><h4>Yükleniyor...</h4></Container>;
   if (error && !homePageData._id) return <Container className="mt-5"><Alert variant="danger">Hata: {error}</Alert></Container>;
@@ -709,10 +710,10 @@ const AdminHome = () => {
             />
           </InputGroup>
           <ListGroup style={{ maxHeight: '400px', overflowY: 'auto' }}>
-            {getAvailableProducts().length === 0 && (
+            {availableProducts().length === 0 && (
               <ListGroup.Item disabled>Eklenecek uygun ürün bulunamadı.</ListGroup.Item>
             )}
-            {getAvailableProducts().map(p => (
+            {availableProducts().map(p => (
               <ListGroup.Item
                 key={p._id}
                 action
