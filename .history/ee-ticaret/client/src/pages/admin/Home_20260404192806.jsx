@@ -108,90 +108,88 @@ const AdminHome = () => {
 
   // --- TÜM FONKSİYONLAR ---
   const handleSave = async () => {
-    if (!homePageData._id) {
-      alert("Hata: Kaydedilecek veri ID'si yok.");
-      return;
-    }
-    if (!downloadURL) {
-      throw new Error("Upload başarısız, URL alınamadı");
-    }
-    setIsSaving(true);
+  if (!homePageData._id) {
+    alert("Hata: Kaydedilecek veri ID'si yok.");
+    return;
+  }
 
-    try {
-      let updatedSlides = [...(homePageData.heroSlides || [])];
+  setIsSaving(true);
 
-      // 🔥 1. Firebase uploadları yap
-      for (const upload of pendingUploads) {
-        const downloadURL = await uploadToFirebase(upload.file);
+  try {
+    let updatedSlides = [...(homePageData.heroSlides || [])];
 
-        updatedSlides = updatedSlides.map(slide => {
-          if (slide.slider_id === upload.slider_id) {
-            return {
-              ...slide,
-              image: downloadURL // gerçek firebase URL
-            };
-          }
-          return slide;
-        });
-      }
+    // 🔥 1. Firebase uploadları yap
+    for (const upload of pendingUploads) {
+      const downloadURL = await uploadToFirebase(upload.file);
 
-      // 🔥 2. Temiz veri oluştur (rawFile vs yok!)
-      const dataToSend = {
-        ...homePageData,
-        heroSlides: updatedSlides.map(slide => {
-          const cleanSlide = { ...slide };
-
-          // geçici alanları temizle
-          delete cleanSlide.slider_id;
-
-          return cleanSlide;
-        })
-      };
-
-      // 🔥 3. Backend'e gönder
-      const apiUrl = import.meta.env.VITE_API_URL.replace(/\/$/, "");
-
-      const response = await fetch(`${apiUrl}/admin/home/${homePageData._id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(dataToSend)
+      updatedSlides = updatedSlides.map(slide => {
+        if (slide.slider_id === upload.slider_id) {
+          return {
+            ...slide,
+            image: downloadURL // gerçek firebase URL
+          };
+        }
+        return slide;
       });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.message || "Kaydetme hatası");
-      }
-
-      // 🔥 4. state güncelle
-      if (result.updatedData) {
-        setHomePageData(result.updatedData);
-      }
-
-      // 🔥 5. pending uploadları temizle
-      setPendingUploads([]);
-
-      setStatusMessage({
-        show: true,
-        message: "Veriler başarıyla kaydedildi!",
-        type: "success"
-      });
-
-    } catch (err) {
-      console.error("Save error:", err);
-
-      setStatusMessage({
-        show: true,
-        message: "Kaydetme hatası: " + err.message,
-        type: "danger"
-      });
-
-    } finally {
-      setIsSaving(false);
     }
-  };
+
+    // 🔥 2. Temiz veri oluştur (rawFile vs yok!)
+    const dataToSend = {
+      ...homePageData,
+      heroSlides: updatedSlides.map(slide => {
+        const cleanSlide = { ...slide };
+
+        // geçici alanları temizle
+        delete cleanSlide.slider_id;
+
+        return cleanSlide;
+      })
+    };
+
+    // 🔥 3. Backend'e gönder
+    const apiUrl = import.meta.env.VITE_API_URL.replace(/\/$/, "");
+
+    const response = await fetch(`${apiUrl}/admin/home/${homePageData._id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(dataToSend)
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.message || "Kaydetme hatası");
+    }
+
+    // 🔥 4. state güncelle
+    if (result.updatedData) {
+      setHomePageData(result.updatedData);
+    }
+
+    // 🔥 5. pending uploadları temizle
+    setPendingUploads([]);
+
+    setStatusMessage({
+      show: true,
+      message: "Veriler başarıyla kaydedildi!",
+      type: "success"
+    });
+
+  } catch (err) {
+    console.error("Save error:", err);
+
+    setStatusMessage({
+      show: true,
+      message: "Kaydetme hatası: " + err.message,
+      type: "danger"
+    });
+
+  } finally {
+    setIsSaving(false);
+  }
+};
 
   const handleOpenNewSlideModal = () => {
     setCurrentSlide({ ...newSlideTemplate, slider_id: uuidv4() });
