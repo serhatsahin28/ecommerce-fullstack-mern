@@ -120,7 +120,7 @@ const AdminProducts = () => {
     try {
       setUpdating(true);
       const response = await axios.put(
-        `${import.meta.env.VITE_API_URL}/admin/updateProduct/${id}`,
+        `http://${import.meta.env.VITE_API_URL}/admin/updateProduct/${id}`,
         formData,
         { headers: { 'Content-Type': 'multipart/form-data' } }
       );

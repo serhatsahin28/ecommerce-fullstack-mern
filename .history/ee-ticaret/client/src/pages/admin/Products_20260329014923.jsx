@@ -120,7 +120,7 @@ const AdminProducts = () => {
     try {
       setUpdating(true);
       const response = await axios.put(
-        `${import.meta.env.VITE_API_URL}/admin/updateProduct/${id}`,
+        `http://${import.meta.env.VITE_API_URL}/admin/updateProduct/${id}`,
         formData,
         { headers: { 'Content-Type': 'multipart/form-data' } }
       );
@@ -151,7 +151,7 @@ const AdminProducts = () => {
       setDeleting(true); // Yükleme durumunu başlat
 
       // Backend'e silme isteği gönder
-      await axios.delete(`${import.meta.env.VITE_API_URL}/admin/productsDelete/${productToDelete._id}`);
+      await axios.delete(`http://${import.meta.env.VITE_API_URL}/admin/productsDelete/${productToDelete._id}`);
       // UI'dan silinen ürünü kaldır
       setProducts(prev => prev.filter(p => p._id !== productToDelete._id));
 
