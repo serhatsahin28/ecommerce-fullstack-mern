@@ -5,6 +5,7 @@ import {
 } from 'react-bootstrap';
 import { FaPlus, FaTrash, FaSave, FaSearch, FaTimes, FaImage, FaEdit } from 'react-icons/fa';
 import { v4 as uuidv4 } from 'uuid';
+
 // Sunucu adresi - resim yollarını tamamlamak için
 const SERVER_URL = `${import.meta.env.VITE_API_URL}`;
 
@@ -22,12 +23,7 @@ const getFullImagePath = (path) => {
   const cleanPath = (typeof path === 'string' && path.startsWith('/')) ? path : `/${path}`;
   return `${baseUrl}${cleanPath}`;
 };
-const uploadToFirebase = async (file) => {
-  // örnek (sen kendi yapına göre düzenle)
-  const storageRef = ref(storage, `slides/${uuidv4()}`);
-  await uploadBytes(storageRef, file);
-  return await getDownloadURL(storageRef);
-};
+
 // Anasayfa verisi boş gelirse diye yeni veri yapısına uygun varsayılan yapı
 const initialData = {
   page_title: { tr: '', en: '' },
@@ -69,7 +65,7 @@ const AdminHome = () => {
   const [currentSlide, setCurrentSlide] = useState(null);
   const [isEditingSlide, setIsEditingSlide] = useState(false);
   const [editingSlideIndex, setEditingSlideIndex] = useState(null);
-  const [pendingUploads, setPendingUploads] = useState([]);
+
   // Diğer Modal Yönetimi
   const [showProductModal, setShowProductModal] = useState(false);
   const [showImageModal, setShowImageModal] = useState(false);
@@ -107,88 +103,44 @@ const AdminHome = () => {
 
   // --- TÜM FONKSİYONLAR ---
   const handleSave = async () => {
-  if (!homePageData._id) {
-    alert("Hata: Kaydedilecek veri ID'si yok.");
-    return;
-  }
+    if (!homePageData._id) {
+      alert("Hata: Kaydedilecek veri ID'si yok.");
+      return;
+    }
+    setIsSaving(true);
+    const dataToSend = JSON.parse(JSON.stringify(homePageData));
 
-  setIsSaving(true);
-
-  try {
-    let updatedSlides = [...(homePageData.heroSlides || [])];
-
-    // 🔥 1. Firebase uploadları yap
-    for (const upload of pendingUploads) {
-      const downloadURL = await uploadToFirebase(upload.file);
-
-      updatedSlides = updatedSlides.map(slide => {
-        if (slide.slider_id === upload.slider_id) {
-          return {
-            ...slide,
-            image: downloadURL // gerçek firebase URL
-          };
+    if (dataToSend.heroSlides) {
+      dataToSend.heroSlides.forEach(slide => {
+        if (slide.slider_id) {
+          delete slide.slider_id;
         }
-        return slide;
       });
     }
 
-    // 🔥 2. Temiz veri oluştur (rawFile vs yok!)
-    const dataToSend = {
-      ...homePageData,
-      heroSlides: updatedSlides.map(slide => {
-        const cleanSlide = { ...slide };
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL.replace(/\/$/, ""); // Sondaki slash'ı temizle
+      const response = await fetch(`${apiUrl}/admin/home/${homePageData._id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dataToSend),
+      });
 
-        // geçici alanları temizle
-        delete cleanSlide.slider_id;
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.message || 'Bir hata oluştu.');
 
-        return cleanSlide;
-      })
-    };
+      if (result.updatedData) {
+        setHomePageData(result.updatedData);
+      }
 
-    // 🔥 3. Backend'e gönder
-    const apiUrl = import.meta.env.VITE_API_URL.replace(/\/$/, "");
-
-    const response = await fetch(`${apiUrl}/admin/home/${homePageData._id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(dataToSend)
-    });
-
-    const result = await response.json();
-
-    if (!response.ok) {
-      throw new Error(result.message || "Kaydetme hatası");
+      setStatusMessage({ show: true, message: 'Veriler başarıyla kaydedildi!', type: 'success' });
+    } catch (err) {
+      console.error("Save error:", err);
+      setStatusMessage({ show: true, message: 'Kaydetme hatası: ' + err.message, type: 'danger' });
+    } finally {
+      setIsSaving(false);
     }
-
-    // 🔥 4. state güncelle
-    if (result.updatedData) {
-      setHomePageData(result.updatedData);
-    }
-
-    // 🔥 5. pending uploadları temizle
-    setPendingUploads([]);
-
-    setStatusMessage({
-      show: true,
-      message: "Veriler başarıyla kaydedildi!",
-      type: "success"
-    });
-
-  } catch (err) {
-    console.error("Save error:", err);
-
-    setStatusMessage({
-      show: true,
-      message: "Kaydetme hatası: " + err.message,
-      type: "danger"
-    });
-
-  } finally {
-    setIsSaving(false);
-  }
-};
+  };
 
   const handleOpenNewSlideModal = () => {
     setCurrentSlide({ ...newSlideTemplate, slider_id: uuidv4() });
@@ -256,27 +208,17 @@ const AdminHome = () => {
 
   const saveImage = () => {
     if (!imagePreview) return;
-
     const { type, isModal } = imageUploadContext;
 
     if (isModal && type === 'heroSlides') {
       setCurrentSlide(prev => ({
         ...prev,
-        image: imagePreview.url // sadece preview
+        image: imagePreview.url, // Önizleme için blob linki
+        rawFile: imagePreview.file // Arka planda bekleyen gerçek dosya
       }));
-
-      // 🔥 gerçek dosyayı ayrı yerde tut
-      setPendingUploads(prev => [
-        ...prev,
-        {
-          file: imagePreview.file,
-          target: 'heroSlides',
-          slider_id: currentSlide.slider_id
-        }
-      ]);
     }
-
     setShowImageModal(false);
+    // Modal kapandıktan sonra temizle (Ama render'da sorun olmasın diye dikkat)
   };
 
   const handleMultiLangChange = (field, subField, value, isTopLevel = false) => {
@@ -633,7 +575,7 @@ const AdminHome = () => {
         <Modal.Body>
           <Form.Group className="mb-3">
             <Form.Label>Bilgisayarınızdan bir resim dosyası seçin</Form.Label>
-            <Form.Control type="file" accept="image/*" onChange={handleImageUpload} />
+            <Form.Control type="file" accept="image/*"/>
           </Form.Group>
           {/* Resim Yükle Modalı İçindeki Kısım */}
           {imagePreview && (

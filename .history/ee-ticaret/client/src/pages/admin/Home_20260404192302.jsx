@@ -22,12 +22,7 @@ const getFullImagePath = (path) => {
   const cleanPath = (typeof path === 'string' && path.startsWith('/')) ? path : `/${path}`;
   return `${baseUrl}${cleanPath}`;
 };
-const uploadToFirebase = async (file) => {
-  // örnek (sen kendi yapına göre düzenle)
-  const storageRef = ref(storage, `slides/${uuidv4()}`);
-  await uploadBytes(storageRef, file);
-  return await getDownloadURL(storageRef);
-};
+
 // Anasayfa verisi boş gelirse diye yeni veri yapısına uygun varsayılan yapı
 const initialData = {
   page_title: { tr: '', en: '' },
@@ -107,87 +102,34 @@ const AdminHome = () => {
 
   // --- TÜM FONKSİYONLAR ---
   const handleSave = async () => {
-  if (!homePageData._id) {
-    alert("Hata: Kaydedilecek veri ID'si yok.");
-    return;
-  }
-
   setIsSaving(true);
 
-  try {
-    let updatedSlides = [...(homePageData.heroSlides || [])];
+  let updatedSlides = [...homePageData.heroSlides];
 
-    // 🔥 1. Firebase uploadları yap
-    for (const upload of pendingUploads) {
-      const downloadURL = await uploadToFirebase(upload.file);
+  // 🔥 pending uploadları işle
+  for (const upload of pendingUploads) {
+    const downloadURL = await uploadToFirebase(upload.file); // senin fonksiyon
 
-      updatedSlides = updatedSlides.map(slide => {
-        if (slide.slider_id === upload.slider_id) {
-          return {
-            ...slide,
-            image: downloadURL // gerçek firebase URL
-          };
-        }
-        return slide;
-      });
-    }
-
-    // 🔥 2. Temiz veri oluştur (rawFile vs yok!)
-    const dataToSend = {
-      ...homePageData,
-      heroSlides: updatedSlides.map(slide => {
-        const cleanSlide = { ...slide };
-
-        // geçici alanları temizle
-        delete cleanSlide.slider_id;
-
-        return cleanSlide;
-      })
-    };
-
-    // 🔥 3. Backend'e gönder
-    const apiUrl = import.meta.env.VITE_API_URL.replace(/\/$/, "");
-
-    const response = await fetch(`${apiUrl}/admin/home/${homePageData._id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(dataToSend)
+    updatedSlides = updatedSlides.map(slide => {
+      if (slide.slider_id === upload.slider_id) {
+        return {
+          ...slide,
+          image: downloadURL // gerçek URL ile değiştir
+        };
+      }
+      return slide;
     });
-
-    const result = await response.json();
-
-    if (!response.ok) {
-      throw new Error(result.message || "Kaydetme hatası");
-    }
-
-    // 🔥 4. state güncelle
-    if (result.updatedData) {
-      setHomePageData(result.updatedData);
-    }
-
-    // 🔥 5. pending uploadları temizle
-    setPendingUploads([]);
-
-    setStatusMessage({
-      show: true,
-      message: "Veriler başarıyla kaydedildi!",
-      type: "success"
-    });
-
-  } catch (err) {
-    console.error("Save error:", err);
-
-    setStatusMessage({
-      show: true,
-      message: "Kaydetme hatası: " + err.message,
-      type: "danger"
-    });
-
-  } finally {
-    setIsSaving(false);
   }
+
+  const dataToSend = {
+    ...homePageData,
+    heroSlides: updatedSlides
+  };
+
+  // 🔥 sonra backend'e gönder
+  await fetch(...);
+
+  setPendingUploads([]); // temizle
 };
 
   const handleOpenNewSlideModal = () => {

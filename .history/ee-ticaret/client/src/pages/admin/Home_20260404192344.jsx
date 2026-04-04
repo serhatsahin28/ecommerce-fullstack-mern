@@ -22,12 +22,7 @@ const getFullImagePath = (path) => {
   const cleanPath = (typeof path === 'string' && path.startsWith('/')) ? path : `/${path}`;
   return `${baseUrl}${cleanPath}`;
 };
-const uploadToFirebase = async (file) => {
-  // örnek (sen kendi yapına göre düzenle)
-  const storageRef = ref(storage, `slides/${uuidv4()}`);
-  await uploadBytes(storageRef, file);
-  return await getDownloadURL(storageRef);
-};
+
 // Anasayfa verisi boş gelirse diye yeni veri yapısına uygun varsayılan yapı
 const initialData = {
   page_title: { tr: '', en: '' },
