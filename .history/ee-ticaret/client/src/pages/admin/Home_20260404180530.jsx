@@ -104,74 +104,72 @@ const AdminHome = () => {
 
   // --- TÜM FONKSİYONLAR ---
   const handleSave = async () => {
-  if (!homePageData._id) {
-    alert("Hata: Kaydedilecek veri ID'si yok.");
-    return;
-  }
-
-  setIsSaving(true);
-  
-  try {
-    // 1. Orijinal state'i bozmamak için veriyi kopyala
+    
+    if (!homePageData._id) {
+      alert("Hata: Kaydedilecek veri ID'si yok.");
+      return;
+    }
+    setIsSaving(true);
     const dataToSend = JSON.parse(JSON.stringify(homePageData));
 
-    // 2. ADIM: Firebase'e yüklenmesi gereken (yeni) resimleri bul ve paralel yükle
-    if (dataToSend.heroSlides) {
-      const uploadPromises = dataToSend.heroSlides.map(async (slide) => {
-        // Eğer slide içinde rawFile varsa, bu resim henüz yüklenmemiştir
-        if (slide.rawFile) {
-          const formData = new FormData();
-          formData.append('image', slide.rawFile);
-
-          const uploadRes = await fetch(`${SERVER_URL}/admin/home/upload-image`, {
-            method: 'POST',
-            body: formData
-          });
-
-          if (!uploadRes.ok) throw new Error("Resim yükleme başarısız oldu.");
-          
-          const uploadData = await uploadRes.json();
-          
-          // Firebase'den gelen gerçek linki yerleştir
-          slide.image = uploadData.imagePath;
-        }
-
-        // MongoDB'ye göndermeden önce frontend'e özel geçici alanları temizle
-        delete slide.rawFile;
-        delete slide.isNew;
-        if (slide.slider_id) delete slide.slider_id;
+    // 1. ADIM: Firebase'e yüklenmesi gereken resimleri bul ve yükle
+    for (let slide of dataToSend.heroSlides) {
+      // Eğer resim bir File objesiyse veya base64 ise (yeni yüklenmişse)
+      if (slide.image && (slide.image.startsWith('data:') || slide.isNew)) {
         
-        return slide;
-      });
+        const formData = new FormData();
+        formData.append('image', slide.rawFile); // Dosyayı gönderiyoruz
 
-      // Tüm resimlerin yüklenmesini bekle
-      await Promise.all(uploadPromises);
+        const uploadRes = await fetch(`${SERVER_URL}/admin/home/upload-image`, {
+          method: 'POST',
+          body: formData
+        });
+        const uploadData = await uploadRes.json();
+        
+        // Firebase'den gelen gerçek linki objeye yaz
+        slide.image = uploadData.imagePath; 
+        delete slide.isNew;
+        delete slide.rawFile;
+      }
     }
 
-    // 3. ADIM: Temizlenmiş ve resim yolları güncellenmiş veriyi MongoDB'ye gönder
-    const apiUrl = import.meta.env.VITE_API_URL.replace(/\/$/, "");
-    const response = await fetch(`${apiUrl}/admin/home/${homePageData._id}`, {
+    // 2. ADIM: Artık tüm resimler gerçek URL olduğuna göre MongoDB'ye gönder
+    const response = await fetch(`${SERVER_URL}/admin/home/${homePageData._id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(dataToSend),
     });
-
-    const result = await response.json();
-    if (!response.ok) throw new Error(result.message || 'Veritabanı kaydı başarısız.');
-
-    // 4. ADIM: State'i veritabanından gelen en güncel veriyle yenile
-    if (result.updatedData) {
-      setHomePageData(result.updatedData);
+    if (dataToSend.heroSlides) {
+      dataToSend.heroSlides.forEach(slide => {
+        if (slide.slider_id) {
+          delete slide.slider_id;
+        }
+      });
     }
 
-    setStatusMessage({ show: true, message: 'Tüm değişiklikler başarıyla kaydedildi!', type: 'success' });
-  } catch (err) {
-    console.error("Kritik Kayıt Hatası:", err);
-    setStatusMessage({ show: true, message: 'Hata: ' + err.message, type: 'danger' });
-  } finally {
-    setIsSaving(false);
-  }
-};
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL.replace(/\/$/, ""); // Sondaki slash'ı temizle
+      const response = await fetch(`${apiUrl}/admin/home/${homePageData._id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dataToSend),
+      });
+
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.message || 'Bir hata oluştu.');
+
+      if (result.updatedData) {
+        setHomePageData(result.updatedData);
+      }
+
+      setStatusMessage({ show: true, message: 'Veriler başarıyla kaydedildi!', type: 'success' });
+    } catch (err) {
+      console.error("Save error:", err);
+      setStatusMessage({ show: true, message: 'Kaydetme hatası: ' + err.message, type: 'danger' });
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   const handleOpenNewSlideModal = () => {
     setCurrentSlide({ ...newSlideTemplate, slider_id: uuidv4() });
@@ -240,22 +238,23 @@ const handleImageUpload = (event) => {
   });
 };
 
- const saveImage = () => {
-  if (!imagePreview) return;
-  
-  const { type, isModal } = imageUploadContext;
-  if (isModal && type === 'heroSlides') {
-    // Slayta hem önizleme URL'sini hem de ham dosyayı veriyoruz
-    setCurrentSlide(prev => ({
-      ...prev,
-      image: imagePreview.url, // Ekranda görünecek geçici link
-      rawFile: imagePreview.file // Asıl dosya (henüz buluta gitmedi)
-    }));
-  }
-  
-  setShowImageModal(false);
-  setImagePreview(null);
-};
+  const saveImage = () => {
+    if (!imagePreview) return;
+    const { type, isModal } = imageUploadContext;
+
+    // 1. Eğer bir modal (Slayt Ekle/Düzenle) içindeysek
+    if (isModal) {
+      if (type === 'heroSlides') {
+        handleSlideChange('image', imagePreview);
+      }
+    } else {
+      // 2. Eğer modal dışında bir yerse (Kategori resmi vb. için ileride lazım olur)
+      // Direkt ana state'i de güncelleyebilirsin
+      setHomePageData(prev => ({
+        ...prev,
+        [type]: imagePreview // Örnek kullanım
+      }));
+    }
 
     setShowImageModal(false);
     // ÖNEMLİ: Preview'ı hemen silme ki UI'da bir anlık kaybolma olmasın
