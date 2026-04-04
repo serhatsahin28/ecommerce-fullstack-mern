@@ -6,23 +6,25 @@ import {
 import { FaPlus, FaTrash, FaSave, FaSearch, FaTimes, FaImage, FaEdit } from 'react-icons/fa';
 import { v4 as uuidv4 } from 'uuid';
 
+// Sunucu adresi - resim yollarını tamamlamak için
+const SERVER_URL = `${import.meta.env.VITE_API_URL}`;
+
 // Resim yolunu tamamlama yardımcı fonksiyonu
 const getFullImagePath = (path) => {
   if (!path) return '/images/placeholder-slide.jpg';
 
-  // Blob, http veya data ile başlıyorsa direkt dön (sunucuya ekleme)
-  if (
-    typeof path === 'string' &&
-    (path.startsWith('blob:') || path.startsWith('http') || path.startsWith('data:'))
-  ) {
+  // EĞER BLOB VEYA HTTP İLE BAŞLIYORSA (Önizleme veya Firebase) DİREKT DÖN
+  if (typeof path === 'string' && (path.startsWith('blob:') || path.startsWith('http'))) {
     return path;
   }
 
-  const baseUrl = import.meta.env.VITE_API_URL.replace(/\/$/, '');
-  const cleanPath = typeof path === 'string' && path.startsWith('/') ? path : `/${path}`;
+  // Geri kalan server path işlemleri...
+  const baseUrl = import.meta.env.VITE_API_URL.replace(/\/$/, "");
+  const cleanPath = (typeof path === 'string' && path.startsWith('/')) ? path : `/${path}`;
   return `${baseUrl}${cleanPath}`;
 };
 
+// Anasayfa verisi boş gelirse diye yeni veri yapısına uygun varsayılan yapı
 const initialData = {
   page_title: { tr: '', en: '' },
   page_subtitle: { tr: '', en: '' },
@@ -37,9 +39,10 @@ const initialData = {
   categories: [],
 };
 
+// Yeni bir slayt/avantaj/istatistik eklerken kullanılacak şablonlar
 const newSlideTemplate = {
-  slider_id: '',
-  image: '/images/placeholder-slide.jpg',
+  slider_id: '', // Modal açılırken uuidv4 ile atanacak
+  image: '/images/placeholder-slide.jpg', // Varsayılan placeholder
   title: { tr: '', en: '' },
   subtitle: { tr: '', en: '' },
   cta: { tr: '', en: '' },
@@ -48,6 +51,7 @@ const newAdvantageTemplate = { icon: '✨', text: { tr: '', en: '' } };
 const newStatTemplate = { value: '', desc: { tr: '', en: '' } };
 
 const AdminHome = () => {
+  // --- STATE YÖNETİMİ ---
   const [homePageData, setHomePageData] = useState(initialData);
   const [allProducts, setAllProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -56,17 +60,19 @@ const AdminHome = () => {
   const [statusMessage, setStatusMessage] = useState({ show: false, message: '', type: 'success' });
   const [currentLang, setCurrentLang] = useState('tr');
 
+  // --- YENİ EKLENEN STATE'LER (MODAL İÇİN) ---
   const [showSlideModal, setShowSlideModal] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(null);
   const [isEditingSlide, setIsEditingSlide] = useState(false);
   const [editingSlideIndex, setEditingSlideIndex] = useState(null);
 
+  // Diğer Modal Yönetimi
   const [showProductModal, setShowProductModal] = useState(false);
   const [showImageModal, setShowImageModal] = useState(false);
   const [currentCategoryKey, setCurrentCategoryKey] = useState('');
   const [imageUploadContext, setImageUploadContext] = useState({ type: '', isModal: false });
   const [searchTerm, setSearchTerm] = useState('');
-  const [imagePreview, setImagePreview] = useState(null);
+  const [imagePreview, setImagePreview] = useState('');
   const [currentOldImageUrl, setCurrentOldImageUrl] = useState('');
 
   // --- VERİ ÇEKME ---
@@ -82,7 +88,7 @@ const AdminHome = () => {
         setHomePageData({ ...initialData, ...result.homeData[0] });
       } else {
         setHomePageData(initialData);
-        setError('Anasayfa verisi bulunamadı. Yeni bir veri yapısı oluşturuluyor.');
+        setError("Anasayfa verisi bulunamadı. Yeni bir veri yapısı oluşturuluyor.");
       }
       setAllProducts(result.productData || []);
     } catch (err) {
@@ -96,9 +102,8 @@ const AdminHome = () => {
     fetchData();
   }, [fetchData]);
 
-  // --- KAYDET ---
-  // Akış: rawFile varsa → Firebase'e yükle → URL al → DB'ye kaydet
-  // rawFile yoksa → blob URL kontrolü yap → blob ise originalImage kullan
+  // --- TÜM FONKSİYONLAR ---
+
   const handleSave = async () => {
     if (!homePageData._id) {
       alert("Hata: Kaydedilecek veri ID'si yok.");
@@ -109,40 +114,38 @@ const AdminHome = () => {
     try {
       const apiUrl = import.meta.env.VITE_API_URL.replace(/\/$/, '');
 
-      // 1. ADIM: rawFile olan slaytları Firebase'e yükle
-      const updatedSlides = await Promise.all(
-        (homePageData.heroSlides || []).map(async (slide) => {
-          const { rawFile, slider_id, originalImage, ...cleanSlide } = slide;
+      // 1. ADIM: rawFile olan slaytları backend üzerinden Firebase'e yükle
+    const updatedSlides = await Promise.all(
+  (homePageData.heroSlides || []).map(async (slide) => {
+    const { rawFile, slider_id, originalImage, ...cleanSlide } = slide;
 
-          if (rawFile) {
-            // Gerçek dosya var → Firebase'e yükle
-            const formData = new FormData();
-            formData.append('image', rawFile);
-            formData.append('oldImageUrl', originalImage || '');
+    if (rawFile) {
+      // rawFile varsa Firebase'e yükle
+      const formData = new FormData();
+      formData.append('image', rawFile);
+      formData.append('oldImageUrl', currentOldImageUrl || '');
 
-            const uploadRes = await fetch(`${apiUrl}/admin/uploadHomeImage`, {
-              method: 'POST',
-              body: formData,
-            });
+      const uploadRes = await fetch(`${apiUrl}/admin/uploadHomeImage`, {
+        method: 'POST',
+        body: formData,
+      });
 
-            if (!uploadRes.ok) throw new Error('Resim yüklenemedi.');
-            const uploadResult = await uploadRes.json();
+      if (!uploadRes.ok) throw new Error('Resim yüklenemedi.');
+      const uploadResult = await uploadRes.json();
 
-            // Firebase URL'ini image'a yaz, blob URL'i at
-            return { ...cleanSlide, image: uploadResult.imagePath };
-          }
+      return { ...cleanSlide, image: uploadResult.imagePath }; // ✅ Firebase URL
+    }
 
-          // rawFile yok ama image blob mu? Blob URL DB'ye kaydedilemez!
-          if (cleanSlide.image && cleanSlide.image.startsWith('blob:')) {
-            // Eski Firebase URL'ine geri dön
-            cleanSlide.image = originalImage || '/images/placeholder-slide.jpg';
-          }
+    // ✅ rawFile yoksa blob kontrolü yap, blob ise originalImage'a dön
+    if (cleanSlide.image && cleanSlide.image.startsWith('blob:')) {
+      cleanSlide.image = originalImage || '/images/placeholder-slide.jpg';
+    }
 
-          return cleanSlide;
-        })
-      );
+    return cleanSlide;
+  })
+);
 
-      // 2. ADIM: Güncellenmiş slaytlarla DB'ye kaydet
+      // 2. ADIM: Güncellenmiş slaytlarla birlikte DB'ye kaydet
       const dataToSend = { ...homePageData, heroSlides: updatedSlides };
 
       const response = await fetch(`${apiUrl}/admin/home/${homePageData._id}`, {
@@ -167,7 +170,6 @@ const AdminHome = () => {
     }
   };
 
-  // --- SLAYT MODAL ---
   const handleOpenNewSlideModal = () => {
     setCurrentSlide({ ...newSlideTemplate, slider_id: uuidv4() });
     setIsEditingSlide(false);
@@ -185,7 +187,10 @@ const AdminHome = () => {
   const handleSlideChange = (field, value, isMultiLang = false) => {
     setCurrentSlide(prev => {
       if (isMultiLang) {
-        return { ...prev, [field]: { ...prev[field], [currentLang]: value } };
+        return {
+          ...prev,
+          [field]: { ...prev[field], [currentLang]: value }
+        };
       }
       return { ...prev, [field]: value };
     });
@@ -206,57 +211,61 @@ const AdminHome = () => {
     setEditingSlideIndex(null);
   };
 
-  // --- RESİM MODAL ---
+  // Düzenle butonuna tıklandığında mevcut resmi sakla
   const openImageModal = (context, existingImageUrl = '') => {
     setImageUploadContext(context);
-    // Eski Firebase URL'ini sakla (silmek + geri dönmek için)
-    setCurrentOldImageUrl(existingImageUrl);
+    setCurrentOldImageUrl(existingImageUrl); // Mevcut resmin URL'ini state'e at
     setShowImageModal(true);
-    setImagePreview(null);
+    setImagePreview('');
   };
 
-  const handleImageUpload = (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
+ // ESKİSİNİ SİL, BUNU YAPIŞTIR:
+const handleImageUpload = (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
 
-    // Sadece önizleme için blob URL oluştur — hiçbir yere GÖNDERMİYORUZ
-    const previewUrl = URL.createObjectURL(file);
-    setImagePreview({
-      file: file,      // handleSave'de Firebase'e yüklenecek
-      url: previewUrl, // Sadece önizleme
-    });
-  };
+  // Güvenlik: Sadece resim ve max 2MB
+  const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
+  if (!validTypes.includes(file.type)) {
+    alert("Sadece JPG, PNG veya WEBP formatında resim yükleyebilirsiniz.");
+    return;
+  }
+  if (file.size > 2 * 1024 * 1024) {
+    alert("Resim boyutu 2MB'den küçük olmalıdır.");
+    return;
+  }
 
-  const saveImage = () => {
-    if (!imagePreview) return;
-    const { type, isModal } = imageUploadContext;
+  const previewUrl = URL.createObjectURL(file);
+  setImagePreview({ file: file, url: previewUrl });
+};
+const saveImage = () => {
+  if (!imagePreview) return;
+  const { type, isModal } = imageUploadContext;
 
-    if (isModal && type === 'heroSlides') {
-      setCurrentSlide(prev => ({
-        ...prev,
-        image: imagePreview.url,           // Önizleme (blob) — DB'ye GİTMEZ
-        rawFile: imagePreview.file,        // handleSave'de Firebase'e yüklenecek
-        originalImage: currentOldImageUrl, // Eski Firebase URL'i (silme + geri dönüş için)
-      }));
-    }
-    setShowImageModal(false);
-    setImagePreview(null);
-  };
+  if (isModal && type === 'heroSlides') {
+    setCurrentSlide(prev => ({
+      ...prev,
+      image: imagePreview.url,        // Blob (önizleme için)
+      rawFile: imagePreview.file,     // Gerçek dosya (upload için)
+      originalImage: prev.image       // ✅ Eski Firebase URL'ini sakla
+    }));
+  }
+  setShowImageModal(false);
+};
 
-  // --- FORM HELPERS ---
   const handleMultiLangChange = (field, subField, value, isTopLevel = false) => {
     if (isTopLevel) {
       setHomePageData(prev => ({
         ...prev,
-        [field]: { ...prev[field], [currentLang]: value },
+        [field]: { ...prev[field], [currentLang]: value }
       }));
     } else {
       setHomePageData(prev => ({
         ...prev,
         [field]: {
           ...prev[field],
-          [subField]: { ...prev[field][subField], [currentLang]: value },
-        },
+          [subField]: { ...prev[field][subField], [currentLang]: value }
+        }
       }));
     }
   };
@@ -265,10 +274,7 @@ const AdminHome = () => {
     setHomePageData(prev => {
       const newArray = [...prev[arrayName]];
       if (isMultiLang) {
-        newArray[index] = {
-          ...newArray[index],
-          [field]: { ...newArray[index][field], [currentLang]: value },
-        };
+        newArray[index] = { ...newArray[index], [field]: { ...newArray[index][field], [currentLang]: value } };
       } else {
         newArray[index] = { ...newArray[index], [field]: value };
       }
@@ -279,19 +285,18 @@ const AdminHome = () => {
   const addArrayItem = (arrayName, newItemTemplate) => {
     setHomePageData(prev => ({
       ...prev,
-      [arrayName]: [...(prev[arrayName] || []), newItemTemplate],
+      [arrayName]: [...(prev[arrayName] || []), newItemTemplate]
     }));
   };
 
   const deleteArrayItem = (arrayName, index) => {
-    if (!window.confirm('Bu öğeyi silmek istediğinizden emin misiniz?')) return;
+    if (!window.confirm("Bu öğeyi silmek istediğinizden emin misiniz?")) return;
     setHomePageData(prev => ({
       ...prev,
-      [arrayName]: prev[arrayName].filter((_, i) => i !== index),
+      [arrayName]: prev[arrayName].filter((_, i) => i !== index)
     }));
   };
 
-  // --- KATEGORİ & ÜRÜN ---
   const removeProductFromCategory = (categoryKey, productId) => {
     setHomePageData(prev => ({
       ...prev,
@@ -317,13 +322,13 @@ const AdminHome = () => {
       rating: product.rating,
       image: product.image,
       images: product.images,
-      translations: product.translations,
+      translations: product.translations
     };
     setHomePageData(prev => {
       const newCategories = prev.categories.map(cat => {
         if (cat.category_key === currentCategoryKey) {
           if ((cat.products || []).some(p => p.product_id === product._id)) {
-            alert('Bu ürün zaten kategoride mevcut.');
+            alert("Bu ürün zaten kategoride mevcut.");
             return cat;
           }
           return { ...cat, products: [...(cat.products || []), productForHomePage] };
@@ -337,101 +342,63 @@ const AdminHome = () => {
 
   const getAvailableProducts = () => {
     if (!currentCategoryKey) return [];
+
     const currentCategory = homePageData.categories.find(
       c => c.category_key === currentCategoryKey
     );
     if (!currentCategory) return [];
 
-    const currentProductIds = new Set((currentCategory.products || []).map(p => p.product_id));
+    const currentProductIds = new Set(
+      (currentCategory.products || []).map(p => p.product_id)
+    );
 
     return allProducts
-      .filter(
-        p =>
-          p.category_key === currentCategoryKey &&
-          !currentProductIds.has(p._id) &&
-          Number(p.stock) > 0
+      .filter(p =>
+        p.category_key === currentCategoryKey &&
+        !currentProductIds.has(p._id) &&
+        Number(p.stock) > 0
       )
       .filter(p =>
-        (p.translations?.tr?.name || '').toLowerCase().includes(searchTerm.toLowerCase())
+        (p.translations?.tr?.name || '')
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase())
       );
   };
 
-  // --- RENDER ---
-  if (loading)
-    return (
-      <Container className="text-center mt-5">
-        <Spinner animation="border" variant="primary" />
-        <h4>Yükleniyor...</h4>
-      </Container>
-    );
-  if (error && !homePageData._id)
-    return (
-      <Container className="mt-5">
-        <Alert variant="danger">Hata: {error}</Alert>
-      </Container>
-    );
+  if (loading) return <Container className="text-center mt-5"><Spinner animation="border" variant="primary" /><h4>Yükleniyor...</h4></Container>;
+  if (error && !homePageData._id) return <Container className="mt-5"><Alert variant="danger">Hata: {error}</Alert></Container>;
 
   return (
     <Container fluid className="p-2 p-md-3 p-lg-4">
       {/* ÜST BAR */}
-      <div
-        className="mb-4 align-items-center bg-light p-3 rounded sticky-top shadow-sm d-flex flex-column flex-sm-row justify-content-between gap-2"
-        style={{ top: '60px', zIndex: 1020 }}
-      >
+      <div className="mb-4 align-items-center bg-light p-3 rounded sticky-top shadow-sm d-flex flex-column flex-sm-row justify-content-between gap-2" style={{ top: '60px', zIndex: 1020 }}>
         <h2 className="mb-2 mb-sm-0 me-sm-auto text-center text-sm-start">Anasayfa Yönetimi</h2>
         <div className="d-flex flex-column flex-sm-row align-items-center gap-2 w-100 w-sm-auto">
           <ButtonGroup className="mb-2 mb-sm-0 w-100 w-sm-auto">
-            <Button
-              variant={currentLang === 'tr' ? 'primary' : 'outline-primary'}
-              onClick={() => setCurrentLang('tr')}
-              className="flex-fill"
-            >
-              TR 🇹🇷
-            </Button>
-            <Button
-              variant={currentLang === 'en' ? 'primary' : 'outline-primary'}
-              onClick={() => setCurrentLang('en')}
-              className="flex-fill"
-            >
-              EN 🇬🇧
-            </Button>
+            <Button variant={currentLang === 'tr' ? 'primary' : 'outline-primary'} onClick={() => setCurrentLang('tr')} className="flex-fill">TR 🇹🇷</Button>
+            <Button variant={currentLang === 'en' ? 'primary' : 'outline-primary'} onClick={() => setCurrentLang('en')} className="flex-fill">EN 🇬🇧</Button>
           </ButtonGroup>
-          <Button
-            variant="success"
-            onClick={handleSave}
-            disabled={isSaving}
-            className="flex-fill flex-sm-grow-0"
-          >
+          <Button variant="success" onClick={handleSave} disabled={isSaving} className="flex-fill flex-sm-grow-0">
             <FaSave className="me-1 me-md-2" />
-            {isSaving ? (
-              <span className="d-none d-md-inline">Kaydediliyor...</span>
-            ) : (
-              <span className="d-none d-md-inline">Tüm Değişiklikleri Kaydet</span>
-            )}
+            {isSaving ? <span className="d-none d-md-inline">Kaydediliyor...</span> : <span className="d-none d-md-inline">Tüm Değişiklikleri Kaydet</span>}
             <span className="d-md-none">{isSaving ? '...' : 'Kaydet'}</span>
           </Button>
         </div>
       </div>
 
-      {/* DURUM MESAJI */}
+      {/* DURUM BİLDİRİM MESAJI */}
       {statusMessage.show && (
-        <Alert
-          variant={statusMessage.type}
-          onClose={() => setStatusMessage({ show: false })}
-          dismissible
-        >
+        <Alert variant={statusMessage.type} onClose={() => setStatusMessage({ show: false })} dismissible>
           {statusMessage.message}
         </Alert>
       )}
 
       <Row>
-        {/* ANA KOLON */}
+        {/* ANA İÇERİK KOLONU */}
         <Col xl={8} lg={7} className="mb-4 mb-lg-0">
-          {/* GENEL METİNLER */}
+          {/* GENEL AYARLAR KARTI */}
           <Card className="mb-4">
-            <Card.Header as="h5">
-              Genel Sayfa Metinleri ({currentLang.toUpperCase()})
-            </Card.Header>
+            <Card.Header as="h5">Genel Sayfa Metinleri ({currentLang.toUpperCase()})</Card.Header>
             <Card.Body>
               <Form.Group className="mb-3">
                 <Form.Label>Sayfa Başlığı</Form.Label>
@@ -453,16 +420,12 @@ const AdminHome = () => {
             </Card.Body>
           </Card>
 
-          {/* HERO SLIDER */}
+          {/* SLIDER YÖNETİMİ KARTI */}
           <Card className="mb-4">
-            <Card.Header
-              as="h5"
-              className="d-flex justify-content-between align-items-center flex-column flex-sm-row gap-2"
-            >
+            <Card.Header as="h5" className="d-flex justify-content-between align-items-center flex-column flex-sm-row gap-2">
               <span>Hero Slider</span>
               <Button variant="success" size="sm" onClick={handleOpenNewSlideModal}>
-                <FaPlus />{' '}
-                <span className="d-none d-sm-inline ms-1">Yeni Slayt Ekle</span>
+                <FaPlus /> <span className="d-none d-sm-inline ms-1">Yeni Slayt Ekle</span>
                 <span className="d-sm-none ms-1">Ekle</span>
               </Button>
             </Card.Header>
@@ -479,31 +442,17 @@ const AdminHome = () => {
                         alt="Slide"
                         className="img-thumbnail me-3 flex-shrink-0"
                         style={{ width: '80px', height: '50px', objectFit: 'cover' }}
-                        onError={e => { e.target.src = '/images/placeholder-slide.jpg'; }}
                       />
                       <div className="flex-grow-1 text-truncate">
-                        <h6 className="mb-0 text-truncate">
-                          {slide.title?.[currentLang] || 'Başlıksız Slayt'}
-                        </h6>
-                        <small className="text-muted text-truncate d-block">
-                          {slide.subtitle?.[currentLang] || 'Alt başlık yok'}
-                        </small>
+                        <h6 className="mb-0 text-truncate">{slide.title?.[currentLang] || 'Başlıksız Slayt'}</h6>
+                        <small className="text-muted text-truncate d-block">{slide.subtitle?.[currentLang] || 'Alt başlık yok'}</small>
                       </div>
                     </div>
                     <div className="d-flex align-items-center gap-1 ms-md-auto">
-                      <Button
-                        variant="outline-primary"
-                        size="sm"
-                        onClick={() => handleOpenEditSlideModal(slide, index)}
-                      >
-                        <FaEdit />{' '}
-                        <span className="d-none d-md-inline ms-1">Düzenle</span>
+                      <Button variant="outline-primary" size="sm" onClick={() => handleOpenEditSlideModal(slide, index)}>
+                        <FaEdit /> <span className="d-none d-md-inline ms-1">Düzenle</span>
                       </Button>
-                      <Button
-                        variant="outline-danger"
-                        size="sm"
-                        onClick={() => deleteArrayItem('heroSlides', index)}
-                      >
+                      <Button variant="outline-danger" size="sm" onClick={() => deleteArrayItem('heroSlides', index)}>
                         <FaTrash />
                       </Button>
                     </div>
@@ -513,24 +462,18 @@ const AdminHome = () => {
             </ListGroup>
           </Card>
 
-          {/* KATEGORİLER */}
+          {/* KATEGORİ VE ÜRÜN YÖNETİMİ */}
           <Card>
             <Card.Header as="h5">Anasayfa Kategorileri ve Ürünleri</Card.Header>
             <Card.Body className="p-2 p-md-3">
-              {homePageData.categories?.map(cat => (
+              {homePageData.categories?.map((cat) => (
                 <div key={cat.category_key} className="p-2 p-md-3 border rounded mb-3">
                   <div className="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
                     <h6 className="mb-0">
                       {cat.title?.[currentLang] || cat.category_key}{' '}
-                      <Badge pill bg="secondary">
-                        {cat.products?.length || 0} ürün
-                      </Badge>
+                      <Badge pill bg="secondary">{cat.products?.length || 0} ürün</Badge>
                     </h6>
-                    <Button
-                      variant="outline-primary"
-                      size="sm"
-                      onClick={() => openAddProductModal(cat.category_key)}
-                    >
+                    <Button variant="outline-primary" size="sm" onClick={() => openAddProductModal(cat.category_key)}>
                       <FaPlus /> Ürün Ekle
                     </Button>
                   </div>
@@ -538,13 +481,7 @@ const AdminHome = () => {
                     {(cat.products || [])
                       .filter(product => Number(product.stock) > 0)
                       .map(product => (
-                        <Col
-                          key={`${cat.category_key}-${product.product_id}`}
-                          xs={6}
-                          sm={4}
-                          md={3}
-                          className="mb-2"
-                        >
+                        <Col key={`${cat.category_key}-${product.product_id}`} xs={6} sm={4} md={3} className="mb-2">
                           <Card className="h-100">
                             <Card.Img
                               variant="top"
@@ -552,23 +489,14 @@ const AdminHome = () => {
                               style={{ height: '80px', objectFit: 'cover' }}
                             />
                             <Card.Body className="p-2 position-relative d-flex flex-column">
-                              <Card.Title
-                                style={{
-                                  fontSize: '0.8rem',
-                                  marginBottom: '25px',
-                                  minHeight: '40px',
-                                  lineHeight: '1.2',
-                                }}
-                              >
+                              <Card.Title style={{ fontSize: '0.8rem', marginBottom: '25px', minHeight: '40px', lineHeight: '1.2' }}>
                                 {product.translations?.tr?.name || 'İsimsiz Ürün'}
                               </Card.Title>
                               <Button
                                 variant="danger"
                                 size="sm"
                                 className="mt-auto align-self-end"
-                                onClick={() =>
-                                  removeProductFromCategory(cat.category_key, product.product_id)
-                                }
+                                onClick={() => removeProductFromCategory(cat.category_key, product.product_id)}
                               >
                                 <FaTimes />
                               </Button>
@@ -583,9 +511,9 @@ const AdminHome = () => {
           </Card>
         </Col>
 
-        {/* YAN BAR */}
+        {/* YAN BAR KOLONU */}
         <Col xl={4} lg={5}>
-          {/* BANNER */}
+          {/* BANNER KARTI */}
           <Card className="mb-4">
             <Card.Header as="h5">Özel Banner ({currentLang.toUpperCase()})</Card.Header>
             <Card.Body>
@@ -594,7 +522,7 @@ const AdminHome = () => {
                 <Form.Control
                   size="sm"
                   value={homePageData.banner?.title?.[currentLang] || ''}
-                  onChange={e => handleMultiLangChange('banner', 'title', e.target.value)}
+                  onChange={(e) => handleMultiLangChange('banner', 'title', e.target.value)}
                 />
               </Form.Group>
               <Form.Group className="mb-2">
@@ -604,7 +532,7 @@ const AdminHome = () => {
                   as="textarea"
                   rows={2}
                   value={homePageData.banner?.desc?.[currentLang] || ''}
-                  onChange={e => handleMultiLangChange('banner', 'desc', e.target.value)}
+                  onChange={(e) => handleMultiLangChange('banner', 'desc', e.target.value)}
                 />
               </Form.Group>
               <Form.Group>
@@ -612,7 +540,7 @@ const AdminHome = () => {
                 <Form.Control
                   size="sm"
                   value={homePageData.banner?.cta?.[currentLang] || ''}
-                  onChange={e => handleMultiLangChange('banner', 'cta', e.target.value)}
+                  onChange={(e) => handleMultiLangChange('banner', 'cta', e.target.value)}
                 />
               </Form.Group>
             </Card.Body>
@@ -622,11 +550,7 @@ const AdminHome = () => {
           <Card className="mb-4">
             <Card.Header as="h5" className="d-flex justify-content-between align-items-center">
               <span>Avantajlar</span>
-              <Button
-                variant="success"
-                size="sm"
-                onClick={() => addArrayItem('advantages', newAdvantageTemplate)}
-              >
+              <Button variant="success" size="sm" onClick={() => addArrayItem('advantages', newAdvantageTemplate)}>
                 <FaPlus />
               </Button>
             </Card.Header>
@@ -638,22 +562,14 @@ const AdminHome = () => {
                       style={{ flex: '0 0 50px' }}
                       placeholder="✨"
                       value={item.icon || ''}
-                      onChange={e =>
-                        handleArrayChange('advantages', index, 'icon', e.target.value)
-                      }
+                      onChange={e => handleArrayChange('advantages', index, 'icon', e.target.value)}
                     />
                     <Form.Control
                       placeholder={`Metin (${currentLang.toUpperCase()})`}
                       value={item.text?.[currentLang] || ''}
-                      onChange={e =>
-                        handleArrayChange('advantages', index, 'text', e.target.value, true)
-                      }
+                      onChange={e => handleArrayChange('advantages', index, 'text', e.target.value, true)}
                     />
-                    <Button
-                      variant="outline-danger"
-                      onClick={() => deleteArrayItem('advantages', index)}
-                      className="flex-shrink-0"
-                    >
+                    <Button variant="outline-danger" onClick={() => deleteArrayItem('advantages', index)} className="flex-shrink-0">
                       <FaTrash />
                     </Button>
                   </div>
@@ -666,11 +582,7 @@ const AdminHome = () => {
           <Card>
             <Card.Header as="h5" className="d-flex justify-content-between align-items-center">
               <span>İstatistikler</span>
-              <Button
-                variant="success"
-                size="sm"
-                onClick={() => addArrayItem('stats', newStatTemplate)}
-              >
+              <Button variant="success" size="sm" onClick={() => addArrayItem('stats', newStatTemplate)}>
                 <FaPlus />
               </Button>
             </Card.Header>
@@ -686,15 +598,9 @@ const AdminHome = () => {
                     <Form.Control
                       placeholder={`Açıklama (${currentLang.toUpperCase()})`}
                       value={item.desc?.[currentLang] || ''}
-                      onChange={e =>
-                        handleArrayChange('stats', index, 'desc', e.target.value, true)
-                      }
+                      onChange={e => handleArrayChange('stats', index, 'desc', e.target.value, true)}
                     />
-                    <Button
-                      variant="outline-danger"
-                      onClick={() => deleteArrayItem('stats', index)}
-                      className="flex-shrink-0"
-                    >
+                    <Button variant="outline-danger" onClick={() => deleteArrayItem('stats', index)} className="flex-shrink-0">
                       <FaTrash />
                     </Button>
                   </div>
@@ -708,13 +614,7 @@ const AdminHome = () => {
       {/* === MODALLAR === */}
 
       {/* Slayt Ekleme/Düzenleme Modalı */}
-      <Modal
-        show={showSlideModal}
-        onHide={() => setShowSlideModal(false)}
-        size="lg"
-        backdrop="static"
-        className="responsive-modal"
-      >
+      <Modal show={showSlideModal} onHide={() => setShowSlideModal(false)} size="lg" backdrop="static" className="responsive-modal">
         <Modal.Header closeButton>
           <Modal.Title>
             {isEditingSlide ? 'Slaytı Düzenle' : 'Yeni Slayt Ekle'} ({currentLang.toUpperCase()})
@@ -732,19 +632,12 @@ const AdminHome = () => {
                       alt="Slide Preview"
                       className="img-fluid mb-2"
                       style={{ maxHeight: '150px' }}
-                      onError={e => { e.target.src = '/images/placeholder-slide.jpg'; }}
                     />
-                    {/* Blob ise originalImage'ı ver, değilse mevcut resmi ver */}
                     <Button
                       variant="outline-secondary"
                       size="sm"
                       className="w-100"
-                      onClick={() =>
-                        openImageModal(
-                          { type: 'heroSlides', isModal: true },
-                          currentSlide.originalImage || currentSlide.image
-                        )
-                      }
+                      onClick={() => openImageModal({ type: 'heroSlides', isModal: true }, currentSlide.image)}
                     >
                       <FaImage /> Resmi Değiştir
                     </Button>
@@ -757,7 +650,7 @@ const AdminHome = () => {
                       type="text"
                       placeholder="Slayt başlığı..."
                       value={currentSlide.title[currentLang] || ''}
-                      onChange={e => handleSlideChange('title', e.target.value, true)}
+                      onChange={(e) => handleSlideChange('title', e.target.value, true)}
                     />
                   </Form.Group>
                   <Form.Group className="mb-3">
@@ -767,7 +660,7 @@ const AdminHome = () => {
                       rows={3}
                       placeholder="Slayt için kısa açıklama..."
                       value={currentSlide.subtitle[currentLang] || ''}
-                      onChange={e => handleSlideChange('subtitle', e.target.value, true)}
+                      onChange={(e) => handleSlideChange('subtitle', e.target.value, true)}
                     />
                   </Form.Group>
                   <Form.Group className="mb-3">
@@ -776,7 +669,7 @@ const AdminHome = () => {
                       type="text"
                       placeholder="Örn: Şimdi İncele"
                       value={currentSlide.cta[currentLang] || ''}
-                      onChange={e => handleSlideChange('cta', e.target.value, true)}
+                      onChange={(e) => handleSlideChange('cta', e.target.value, true)}
                     />
                   </Form.Group>
                 </Col>
@@ -785,13 +678,7 @@ const AdminHome = () => {
           )}
         </Modal.Body>
         <Modal.Footer className="flex-column flex-sm-row gap-2">
-          <Button
-            variant="secondary"
-            onClick={() => setShowSlideModal(false)}
-            className="flex-fill"
-          >
-            İptal
-          </Button>
+          <Button variant="secondary" onClick={() => setShowSlideModal(false)} className="flex-fill">İptal</Button>
           <Button variant="primary" onClick={handleSaveSlide} className="flex-fill">
             <FaSave /> {isEditingSlide ? 'Değişiklikleri Kaydet' : 'Slaytı Ekle'}
           </Button>
@@ -799,24 +686,17 @@ const AdminHome = () => {
       </Modal>
 
       {/* Ürün Ekleme Modalı */}
-      <Modal
-        show={showProductModal}
-        onHide={() => setShowProductModal(false)}
-        size="lg"
-        className="responsive-modal"
-      >
+      <Modal show={showProductModal} onHide={() => setShowProductModal(false)} size="lg" className="responsive-modal">
         <Modal.Header closeButton>
           <Modal.Title>Kategoriye Ürün Ekle</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <InputGroup className="mb-3">
-            <InputGroup.Text>
-              <FaSearch />
-            </InputGroup.Text>
+            <InputGroup.Text><FaSearch /></InputGroup.Text>
             <FormControl
               placeholder="Aramak için ürün adı yazın..."
               value={searchTerm}
-              onChange={e => setSearchTerm(e.target.value)}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
           </InputGroup>
           <ListGroup style={{ maxHeight: '400px', overflowY: 'auto' }}>
@@ -840,9 +720,7 @@ const AdminHome = () => {
                   />
                   <span className="text-truncate">{p.translations?.tr?.name || 'İsimsiz'}</span>
                 </div>
-                <Badge bg="primary" pill>
-                  {p.price} TL
-                </Badge>
+                <Badge bg="primary" pill>{p.price} TL</Badge>
               </ListGroup.Item>
             ))}
           </ListGroup>
@@ -850,12 +728,7 @@ const AdminHome = () => {
       </Modal>
 
       {/* Resim Yükleme Modalı */}
-      <Modal
-        show={showImageModal}
-        onHide={() => setShowImageModal(false)}
-        size="md"
-        className="responsive-modal"
-      >
+      <Modal show={showImageModal} onHide={() => setShowImageModal(false)} size="md" className="responsive-modal">
         <Modal.Header closeButton>
           <Modal.Title>Resim Yükle</Modal.Title>
         </Modal.Header>
@@ -866,37 +739,19 @@ const AdminHome = () => {
           </Form.Group>
           {imagePreview && (
             <div className="text-center mb-3">
-              <p className="text-muted small mb-2">
-                ✅ Önizleme — <strong>"Tüm Değişiklikleri Kaydet"</strong> ile Firebase'e yüklenir
-              </p>
-              <img
-                src={imagePreview.url}
-                alt="Önizleme"
-                className="img-fluid rounded"
-                style={{ maxHeight: '200px' }}
-              />
+              <img src={imagePreview.url} alt="Önizleme" className="img-fluid" style={{ maxHeight: '200px' }} />
             </div>
           )}
         </Modal.Body>
         <Modal.Footer className="flex-column flex-sm-row gap-2">
-          <Button
-            variant="secondary"
-            onClick={() => setShowImageModal(false)}
-            className="flex-fill"
-          >
-            İptal
-          </Button>
-          <Button
-            variant="primary"
-            onClick={saveImage}
-            disabled={!imagePreview}
-            className="flex-fill"
-          >
+          <Button variant="secondary" onClick={() => setShowImageModal(false)} className="flex-fill">İptal</Button>
+          <Button variant="primary" onClick={saveImage} disabled={!imagePreview} className="flex-fill">
             <FaSave /> Seçili Resmi Kullan
           </Button>
         </Modal.Footer>
       </Modal>
 
+      {/* Responsive için ek CSS */}
       <style>{`
         @media (max-width: 768px) {
           .responsive-modal .modal-dialog {
