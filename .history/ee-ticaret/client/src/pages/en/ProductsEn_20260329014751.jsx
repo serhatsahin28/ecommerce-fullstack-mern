@@ -40,7 +40,7 @@ export default function ProductsEn() {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
 
-  const baseUrl = `${import.meta.env.VITE_API_URL}`;
+  const baseUrl = `http://${import.meta.env.VITE_API_URL}`;
   const normalizedSlug = normalizeSlug(category);
   const categoryKey = categorySlugToKey[normalizedSlug];
 

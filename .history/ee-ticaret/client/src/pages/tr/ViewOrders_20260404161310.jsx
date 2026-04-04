@@ -123,7 +123,7 @@ const ViewOrdersPage = () => {
         }
 
         // API'den sipariş verilerini çekme
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/view-orders?token=${token}`);
+        const response = await axios.get(`http://${import.meta.env.VITE_API_URL}/view-orders?token=${token}`);
 
         if (response.data.success) {
           // Siparişleri tarihe göre sırala (en yeni üstte)
