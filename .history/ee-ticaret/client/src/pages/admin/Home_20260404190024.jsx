@@ -192,19 +192,19 @@ const AdminHome = () => {
     setShowImageModal(true);
     setImagePreview('');
   };
-  // const handleImageUpload = (event) => {
-  //   const file = event.target.files[0];
-  //   if (!file) return;
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
 
-  //   // Dosyayı sunucuya GÖNDERMİYORUZ. Sadece önizleme için yerel URL oluşturuyoruz.
-  //   const previewUrl = URL.createObjectURL(file);
+    // Dosyayı sunucuya GÖNDERMİYORUZ. Sadece önizleme için yerel URL oluşturuyoruz.
+    const previewUrl = URL.createObjectURL(file);
 
-  //   // imagePreview state'ini bir OBJE yapıyoruz ki hem dosyayı hem linki tutalım
-  //   setImagePreview({
-  //     file: file,     // Asıl dosya (Upload ederken lazım)
-  //     url: previewUrl // Önizleme linki (img src için)
-  //   });
-  // };
+    // imagePreview state'ini bir OBJE yapıyoruz ki hem dosyayı hem linki tutalım
+    setImagePreview({
+      file: file,     // Asıl dosya (Upload ederken lazım)
+      url: previewUrl // Önizleme linki (img src için)
+    });
+  };
 
   const saveImage = () => {
     if (!imagePreview) return;
