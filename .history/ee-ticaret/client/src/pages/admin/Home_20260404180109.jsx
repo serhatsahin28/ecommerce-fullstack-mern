@@ -104,13 +104,14 @@ const AdminHome = () => {
 
   // --- TÜM FONKSİYONLAR ---
   const handleSave = async () => {
-    
+
     if (!homePageData._id) {
       alert("Hata: Kaydedilecek veri ID'si yok.");
       return;
     }
     setIsSaving(true);
     const dataToSend = JSON.parse(JSON.stringify(homePageData));
+const dataToSend = JSON.parse(JSON.stringify(homePageData));
 
     // 1. ADIM: Firebase'e yüklenmesi gereken resimleri bul ve yükle
     for (let slide of dataToSend.heroSlides) {

@@ -104,7 +104,6 @@ const AdminHome = () => {
 
   // --- TÜM FONKSİYONLAR ---
   const handleSave = async () => {
-    
     if (!homePageData._id) {
       alert("Hata: Kaydedilecek veri ID'si yok.");
       return;
@@ -112,33 +111,6 @@ const AdminHome = () => {
     setIsSaving(true);
     const dataToSend = JSON.parse(JSON.stringify(homePageData));
 
-    // 1. ADIM: Firebase'e yüklenmesi gereken resimleri bul ve yükle
-    for (let slide of dataToSend.heroSlides) {
-      // Eğer resim bir File objesiyse veya base64 ise (yeni yüklenmişse)
-      if (slide.image && (slide.image.startsWith('data:') || slide.isNew)) {
-        
-        const formData = new FormData();
-        formData.append('image', slide.rawFile); // Dosyayı gönderiyoruz
-
-        const uploadRes = await fetch(`${SERVER_URL}/admin/home/upload-image`, {
-          method: 'POST',
-          body: formData
-        });
-        const uploadData = await uploadRes.json();
-        
-        // Firebase'den gelen gerçek linki objeye yaz
-        slide.image = uploadData.imagePath; 
-        delete slide.isNew;
-        delete slide.rawFile;
-      }
-    }
-
-    // 2. ADIM: Artık tüm resimler gerçek URL olduğuna göre MongoDB'ye gönder
-    const response = await fetch(`${SERVER_URL}/admin/home/${homePageData._id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(dataToSend),
-    });
     if (dataToSend.heroSlides) {
       dataToSend.heroSlides.forEach(slide => {
         if (slide.slider_id) {
