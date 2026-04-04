@@ -238,23 +238,22 @@ const handleImageUpload = (event) => {
   });
 };
 
-  const saveImage = () => {
-    if (!imagePreview) return;
-    const { type, isModal } = imageUploadContext;
-
-    // 1. Eğer bir modal (Slayt Ekle/Düzenle) içindeysek
-    if (isModal) {
-      if (type === 'heroSlides') {
-        handleSlideChange('image', imagePreview);
-      }
-    } else {
-      // 2. Eğer modal dışında bir yerse (Kategori resmi vb. için ileride lazım olur)
-      // Direkt ana state'i de güncelleyebilirsin
-      setHomePageData(prev => ({
-        ...prev,
-        [type]: imagePreview // Örnek kullanım
-      }));
-    }
+ const saveImage = () => {
+  if (!imagePreview) return;
+  
+  const { type, isModal } = imageUploadContext;
+  if (isModal && type === 'heroSlides') {
+    // Slayta hem önizleme URL'sini hem de ham dosyayı veriyoruz
+    setCurrentSlide(prev => ({
+      ...prev,
+      image: imagePreview.url, // Ekranda görünecek geçici link
+      rawFile: imagePreview.file // Asıl dosya (henüz buluta gitmedi)
+    }));
+  }
+  
+  setShowImageModal(false);
+  setImagePreview(null);
+};
 
     setShowImageModal(false);
     // ÖNEMLİ: Preview'ı hemen silme ki UI'da bir anlık kaybolma olmasın
@@ -621,7 +620,7 @@ const handleImageUpload = (event) => {
         </Modal.Body>
         <Modal.Footer className="flex-column flex-sm-row gap-2">
           <Button variant="secondary" onClick={() => setShowImageModal(false)} className="flex-fill">İptal</Button>
-          <Button variant="primary" /**onClick={saveImage}*/  disabled={!imagePreview} className="flex-fill"><FaSave /> Seçili Resmi Kullan</Button>
+          <Button variant="primary" onClick={saveImage} disabled={!imagePreview} className="flex-fill"><FaSave /> Seçili Resmi Kullan</Button>
         </Modal.Footer>
       </Modal>
 

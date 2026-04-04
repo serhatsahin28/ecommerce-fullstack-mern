@@ -621,7 +621,7 @@ const handleImageUpload = (event) => {
         </Modal.Body>
         <Modal.Footer className="flex-column flex-sm-row gap-2">
           <Button variant="secondary" onClick={() => setShowImageModal(false)} className="flex-fill">İptal</Button>
-          <Button variant="primary" /**onClick={saveImage}*/  disabled={!imagePreview} className="flex-fill"><FaSave /> Seçili Resmi Kullan</Button>
+          <Button variant="primary" onClick={saveImage} disabled={!imagePreview} className="flex-fill"><FaSave /> Seçili Resmi Kullan</Button>
         </Modal.Footer>
       </Modal>
 
