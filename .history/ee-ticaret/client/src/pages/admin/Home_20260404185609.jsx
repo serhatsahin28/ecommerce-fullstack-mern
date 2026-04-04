@@ -13,14 +13,15 @@ const SERVER_URL = `${import.meta.env.VITE_API_URL}`;
 const getFullImagePath = (path) => {
   if (!path) return '/images/placeholder-slide.jpg';
 
-  // EĞER BLOB VEYA HTTP İLE BAŞLIYORSA (Önizleme veya Firebase) DİREKT DÖN
-  if (typeof path === 'string' && (path.startsWith('blob:') || path.startsWith('http'))) {
+  // Firebase linklerini koru
+  if (path.startsWith('http')) {
     return path;
   }
 
-  // Geri kalan server path işlemleri...
-  const baseUrl = import.meta.env.VITE_API_URL.replace(/\/$/, "");
-  const cleanPath = (typeof path === 'string' && path.startsWith('/')) ? path : `/${path}`;
+  // Local/Server resimleri için URL birleştirmeyi sağlama al
+  const baseUrl = import.meta.env.VITE_API_URL.replace(/\/$/, ""); 
+  const cleanPath = path.startsWith('/') ? path : `/${path}`;
+  
   return `${baseUrl}${cleanPath}`;
 };
 
@@ -192,34 +193,34 @@ const AdminHome = () => {
     setShowImageModal(true);
     setImagePreview('');
   };
-  const handleImageUpload = (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
+const handleImageUpload = (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
 
-    // Dosyayı sunucuya GÖNDERMİYORUZ. Sadece önizleme için yerel URL oluşturuyoruz.
-    const previewUrl = URL.createObjectURL(file);
+  // Dosyayı sunucuya GÖNDERMİYORUZ. Sadece önizleme için yerel URL oluşturuyoruz.
+  const previewUrl = URL.createObjectURL(file);
+  
+  // imagePreview state'ini bir OBJE yapıyoruz ki hem dosyayı hem linki tutalım
+  setImagePreview({
+    file: file,     // Asıl dosya (Upload ederken lazım)
+    url: previewUrl // Önizleme linki (img src için)
+  });
+};
 
-    // imagePreview state'ini bir OBJE yapıyoruz ki hem dosyayı hem linki tutalım
-    setImagePreview({
-      file: file,     // Asıl dosya (Upload ederken lazım)
-      url: previewUrl // Önizleme linki (img src için)
-    });
-  };
+ const saveImage = () => {
+  if (!imagePreview) return;
+  const { type, isModal } = imageUploadContext;
 
-  const saveImage = () => {
-    if (!imagePreview) return;
-    const { type, isModal } = imageUploadContext;
-
-    if (isModal && type === 'heroSlides') {
-      setCurrentSlide(prev => ({
-        ...prev,
-        image: imagePreview.url, // Önizleme için blob linki
-        rawFile: imagePreview.file // Arka planda bekleyen gerçek dosya
-      }));
-    }
-    setShowImageModal(false);
-    // Modal kapandıktan sonra temizle (Ama render'da sorun olmasın diye dikkat)
-  };
+  if (isModal && type === 'heroSlides') {
+    setCurrentSlide(prev => ({
+      ...prev,
+      image: imagePreview.url, // Önizleme için blob linki
+      rawFile: imagePreview.file // Arka planda bekleyen gerçek dosya
+    }));
+  }
+  setShowImageModal(false);
+  // Modal kapandıktan sonra temizle (Ama render'da sorun olmasın diye dikkat)
+};
 
   const handleMultiLangChange = (field, subField, value, isTopLevel = false) => {
     if (isTopLevel) {
@@ -577,12 +578,7 @@ const AdminHome = () => {
             <Form.Label>Bilgisayarınızdan bir resim dosyası seçin</Form.Label>
             <Form.Control type="file" accept="image/*" onChange={handleImageUpload} />
           </Form.Group>
-          {/* Resim Yükle Modalı İçindeki Kısım */}
-          {imagePreview && (
-            <div className="text-center mb-3">
-              <img src={imagePreview.url} alt="Önizleme" className="img-fluid" style={{ maxHeight: '200px' }} />
-            </div>
-          )}
+          {imagePreview && <div className="text-center mb-3"><img src={getFullImagePath(imagePreview)} alt="Önizleme" className="img-fluid" style={{ maxHeight: '200px' }} /></div>}
         </Modal.Body>
         <Modal.Footer className="flex-column flex-sm-row gap-2">
           <Button variant="secondary" onClick={() => setShowImageModal(false)} className="flex-fill">İptal</Button>
