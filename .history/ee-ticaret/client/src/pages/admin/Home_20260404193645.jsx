@@ -115,35 +115,33 @@ const AdminHome = () => {
       const apiUrl = import.meta.env.VITE_API_URL.replace(/\/$/, '');
 
       // 1. ADIM: rawFile olan slaytları backend üzerinden Firebase'e yükle
-    const updatedSlides = await Promise.all(
-  (homePageData.heroSlides || []).map(async (slide) => {
-    const { rawFile, slider_id, originalImage, ...cleanSlide } = slide;
+      const updatedSlides = await Promise.all(
+        (homePageData.heroSlides || []).map(async (slide) => {
+          // rawFile ve slider_id'yi temizle, geri kalanı al
+          const { rawFile, slider_id, ...cleanSlide } = slide;
 
-    if (rawFile) {
-      // rawFile varsa Firebase'e yükle
-      const formData = new FormData();
-      formData.append('image', rawFile);
-      formData.append('oldImageUrl', currentOldImageUrl || '');
+          if (rawFile) {
+            // FormData oluştur (backend multer bekliyor)
+            const formData = new FormData();
+            formData.append('image', rawFile);
+            formData.append('oldImageUrl', currentOldImageUrl || '');
 
-      const uploadRes = await fetch(`${apiUrl}/admin/uploadHomeImage`, {
-        method: 'POST',
-        body: formData,
-      });
+            const uploadRes = await fetch(`${apiUrl}/admin/uploadHomeImage`, {
+              method: 'POST',
+              body: formData,
+            });
 
-      if (!uploadRes.ok) throw new Error('Resim yüklenemedi.');
-      const uploadResult = await uploadRes.json();
+            if (!uploadRes.ok) throw new Error('Resim yüklenemedi.');
+            const uploadResult = await uploadRes.json();
 
-      return { ...cleanSlide, image: uploadResult.imagePath }; // ✅ Firebase URL
-    }
+            // Firebase URL'ini image alanına yaz
+            return { ...cleanSlide, image: uploadResult.imagePath };
+          }
 
-    // ✅ rawFile yoksa blob kontrolü yap, blob ise originalImage'a dön
-    if (cleanSlide.image && cleanSlide.image.startsWith('blob:')) {
-      cleanSlide.image = originalImage || '/images/placeholder-slide.jpg';
-    }
-
-    return cleanSlide;
-  })
-);
+          // rawFile yoksa olduğu gibi döndür (slider_id temizlenmiş haliyle)
+          return cleanSlide;
+        })
+      );
 
       // 2. ADIM: Güncellenmiş slaytlarla birlikte DB'ye kaydet
       const dataToSend = { ...homePageData, heroSlides: updatedSlides };
