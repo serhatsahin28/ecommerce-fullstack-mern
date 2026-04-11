@@ -1,6 +1,7 @@
 const express = require('express');
 const products = require('../../models/products');
 const upload = require('../../middleware/admin/upload');
+const verifyAdmin = require('../../middleware/admin/adminMiddleware');
 
 const { getProductsList, addProduct, updateProduct, deleteProduct } = require("../../controllers/admin/adminProductController");
 
@@ -14,15 +15,15 @@ router.get('/admin/productsList', getProductsList);
 // ]), addProduct);
 
 // Eski upload.fields yapısını sil ve bunu kullan:
-router.post('/admin/addProduct', upload.any(), addProduct);
+router.post('/admin/addProduct',verifyAdmin,upload.any(), addProduct);
 
 // router.put('/admin/updateProduct/:id', upload.array('image'), updateProduct);
-router.put('/admin/updateProduct/:id', upload.any(), updateProduct);
+router.put('/admin/updateProduct/:id',verifyAdmin,upload.any(), updateProduct);
 
 
-router.put('/products/:id', updateProduct);
+router.put('/products/:id',verifyAdmin, updateProduct);
 
 
-router.delete('/admin/productsDelete/:id', deleteProduct);
+router.delete('/admin/productsDelete/:id',verifyAdmin, deleteProduct);
 
 module.exports = router;

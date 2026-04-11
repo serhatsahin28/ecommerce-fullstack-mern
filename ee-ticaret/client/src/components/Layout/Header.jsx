@@ -119,7 +119,7 @@ const Header = () => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
-              <Button onClick={handleLogout} variant="danger" type="submit" id="search-button">
+              <Button variant="danger" type="submit">
                 <FaSearch />
               </Button>
             </InputGroup>

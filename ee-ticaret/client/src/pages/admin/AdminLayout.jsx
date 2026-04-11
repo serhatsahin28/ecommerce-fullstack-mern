@@ -7,11 +7,10 @@ const AdminLayout = () => {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    navigate('/admin');
-  };
-
+const handleLogout = () => {
+  localStorage.clear(); // HER ŞEYİ SİLER
+  window.location.href = "/admin/login";
+};
   const menuItems = [
     { icon: <FaHome />, label: 'Anasayfa', path: '/admin' },
     { icon: <FaClipboardList />, label: 'Siparişler', path: '/admin/ordersAdmin' },

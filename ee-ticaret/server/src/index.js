@@ -13,6 +13,7 @@ const Order = require('./routes/Order');
 const MailRoutes = require("./routes/MailRoutes");
 const UsersAllAdmin = require('./routes/admin/adminUserList');
 const OrdersAllAdmin = require('./routes/admin/adminOrders');
+const AdminLogin = require('./routes/admin/adminLogin');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -30,7 +31,7 @@ mongoose.connect(MONGO_URI)
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// app.use(cors());
+//  app.use(cors());
 
 app.use(cors({
   origin: function (origin, callback) {
@@ -72,6 +73,8 @@ app.use('/', Order);
 app.use("/mail", MailRoutes);
 app.use("/", UsersAllAdmin);
 app.use("/", OrdersAllAdmin);
+app.use("/", AdminLogin);
+
 
 app.listen(PORT, () => {
   console.log(`🚀 Server is running on http://localhost:${PORT}`);

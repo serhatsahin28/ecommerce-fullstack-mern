@@ -6,7 +6,8 @@ import Products from '../pages/admin/Products';
 import AdminLayout from '../pages/admin/AdminLayout';
 import UsersAll from '../pages/admin/UsersAll';
 import OrdersAdmin from '../pages/admin/Orders';
-
+import AdminLogin from '../pages/admin/Login';
+import RequireAdmin from "../utils/RequireAdmin";
 import RequireAuth from '../utils/RequireAuth';
 
 // TR pages
@@ -120,15 +121,25 @@ export default function AppRouter() {
 
 
       {/* Admin */}
-      <Route path="/admin" element={<AdminLayout />}>
+      {/* ADMIN LOGIN (public) */}
+      <Route path="/admin/login" element={<AdminLogin />} />
+
+      {/* ADMIN PROTECTED AREA */}
+      <Route
+        path="/admin"
+        element={
+          <RequireAdmin>
+            <AdminLayout />
+          </RequireAdmin>
+        }
+      >
         <Route index element={<AdminHome />} />
-        <Route path="products" index element={<Products />} />
-        <Route path="usersAll" index element={<UsersAll />} />
-        <Route path="ordersAdmin" index element={<OrdersAdmin />} />
-
+        <Route path="products" element={<Products />} />
+        <Route path="usersAll" element={<UsersAll />} />
+        <Route path="ordersAdmin" element={<OrdersAdmin />} />
       </Route>
-
       {/* Fallback */}
+      
       <Route
         path="*"
         element={<Navigate to={`/${language || 'tr'}/404`} replace />}

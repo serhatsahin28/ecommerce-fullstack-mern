@@ -3,7 +3,8 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Container, Button, Spinner, Carousel } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+
+import { Link, useParams } from 'react-router-dom';
 import ProductList from '../components/product/ProductList';
 import './HomeBody.css';
 
@@ -20,34 +21,47 @@ const getLocalizedSlug = (categoryKey, lang) =>
 
 
 export default function HomeBody() {
-  const { i18n } = useTranslation();
-  const lang = i18n.language || 'tr';
+const { lang: urlLang } = useParams();
+
+const lang = urlLang || "tr";
+const { i18n } = useTranslation();
+
+
+useEffect(() => {
+  if (urlLang && i18n.language !== urlLang) {
+    i18n.changeLanguage(urlLang);
+  }
+}, [urlLang, i18n]);
+
 
   const [homeContent, setHomeContent] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+useEffect(() => {
+  const token = localStorage.getItem("adminToken");
 
-  useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL}/admin/homeList`)
-      .then(res => {
-        if (!res.ok) throw new Error('Network response was not ok');
-        return res.json();
-      })
-      .then(data => {
-        console.log("Gelen data:", data); // bunu ekle
-        if (data && data.homeData && data.homeData.length > 0) {
-          setHomeContent(data.homeData[0]);
-        } else {
-          setHomeContent(null);
-        }
-        setIsLoading(false);
-      })
-      .catch(err => {
-        console.error("Anasayfa verisi alınamadı:", err);
-        console.error("VITE_API_URL:", import.meta.env.VITE_API_URL); // bunu ekle
+  fetch(`${import.meta.env.VITE_API_URL}/admin/homeList`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    }
+  })
+    .then(res => {
+      if (!res.ok) throw new Error("Network response was not ok");
+      return res.json();
+    })
+    .then(data => {
+      if (data?.homeData?.length > 0) {
+        setHomeContent(data.homeData[0]);
+      } else {
         setHomeContent(null);
-        setIsLoading(false);
-      });
-  }, []);
+      }
+    })
+    .catch(err => {
+      console.error("Anasayfa verisi alınamadı:", err);
+    })
+    .finally(() => setIsLoading(false));
+}, []);
 
 
   const allFeaturedProductsPool = useMemo(() => {

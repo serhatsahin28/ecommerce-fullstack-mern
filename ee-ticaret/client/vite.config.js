@@ -1,7 +1,13 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+
+  server: {
+    hmr: true,
+    logLevel: 'error' // sadece hatalar görünür
+  },
+
+  clearScreen: false
 })
