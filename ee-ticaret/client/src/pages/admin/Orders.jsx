@@ -29,9 +29,9 @@ const AdminOrdersPage = () => {
     const fetchOrders = async () => {
         try {
             setLoading(true);
-            const token = localStorage.getItem('token');
+            const adminToken = localStorage.getItem('adminToken');
             const res = await fetch(`${import.meta.env.VITE_API_URL}/admin/ordersAll`, {
-                headers: token ? { Authorization: `Bearer ${token}` } : {}
+                headers: adminToken ? { Authorization: `Bearer ${adminToken}` } : {}
             });
             if (!res.ok) throw new Error('Siparişler yüklenemedi');
             const data = await res.json();
@@ -48,10 +48,10 @@ const AdminOrdersPage = () => {
     const updateOrderStatus = async (orderId, targetStatus) => {
         setUpdating(true);
         try {
-            const token = localStorage.getItem('token');
+            const adminToken = localStorage.getItem('adminToken');
             const res = await fetch(`${import.meta.env.VITE_API_URL}/admin/OrdersStatusUpdate`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${adminToken}` },
                 body: JSON.stringify({ order_id: orderId, status: targetStatus })
             });
 

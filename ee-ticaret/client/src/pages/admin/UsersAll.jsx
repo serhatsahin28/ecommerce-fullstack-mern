@@ -15,12 +15,15 @@ const UsersPage = () => {
   }, []);
 
   const fetchUsers = async () => {
+  
     try {
-      setLoading(true);
+  
       setError(null);
-      const token = localStorage.getItem('token'); // opsiyonel: auth varsa
+      const adminToken = localStorage.getItem('adminToken'); // opsiyonel: auth varsa
+    // console.log("LocalStorage'dan gelen adminToken:", adminToken);    setLoading(true);
+  
       const res = await fetch(`${import.meta.env.VITE_API_URL}/admin/userAll`, {
-        headers: token ? { Authorization: `Bearer ${token}` } : {}
+        headers: adminToken ? { Authorization: `Bearer ${adminToken}` } : {}
       });
 
       if (!res.ok) throw new Error('Kullanıcılar yüklenemedi');
